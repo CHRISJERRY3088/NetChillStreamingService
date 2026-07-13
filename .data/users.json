@@ -1,0 +1,46 @@
+[
+  {
+    "id": "local-1783886806245",
+    "fullName": "Automated Test User",
+    "email": "realtest@example.com",
+    "password": "test123",
+    "subscription": "Free",
+    "createdAt": "2026-07-12T20:06:46.295Z",
+    "updatedAt": "2026-07-12T20:06:46.295Z"
+  },
+  {
+    "id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free"
+  },
+  {
+    "id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free"
+  },
+  {
+    "id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free"
+  },
+  {
+    "id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free"
+  },
+  {
+    "id": "cookie-test-user",
+    "fullName": "Cookie Test User",
+    "email": "cookie-test@example.com",
+    "password": "cookie-pass",
+    "subscription": "Free"
+  }
+]

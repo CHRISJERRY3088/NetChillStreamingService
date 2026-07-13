@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - NetChill</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0f172a] text-white font-sans min-h-screen p-4 md:p-8">
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div class="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white">Confirm subscription change</h3>
+            <p id="confirmModalText" class="mt-3 text-sm text-gray-300">You are about to start a paid subscription. Continue?</p>
+            <div class="mt-6 flex justify-end gap-3">
+                <button id="confirmModalCancel" class="rounded-lg bg-white/10 px-4 py-2 text-sm text-gray-200">Cancel</button>
+                <button id="confirmModalConfirm" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="w-full bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-2xl shadow-2xl">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    User Account
+                </h1>
+                <p class="text-gray-400 text-sm mt-2">Manage your profile and subscription</p>
+            </div>
+
+            <form id="accountForm" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-300">Full Name</label>
+                    <input type="text" id="fullName" required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-500"
+                        placeholder="Enter your name">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-500">Email Address (Locked)</label>
+                    <input type="email" id="email" disabled
+                        class="w-full px-4 py-3 bg-black/40 border border-white/5 rounded-xl text-gray-500 cursor-not-allowed italic">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-300">Subscription Plan</label>
+                    <select id="subscription"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Lite" class="bg-[#1e293b]">Lite Package - $0.025 / 2 days</option>
+                        <option value="Basic" class="bg-[#1e293b]">Basic Package - $0.50 / 1 week</option>
+                        <option value="Premium" class="bg-[#1e293b]">Premium Package - $0.85 / month</option>
+                    </select>
+                </div>
+
+                <label class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                    <div>
+                        <p class="text-sm font-medium text-gray-200">Enable recurring billing</p>
+                        <p class="text-xs text-gray-400">Use provider-native renewals when available.</p>
+                    </div>
+                    <input id="recurringBillingEnabled" type="checkbox" class="h-5 w-5 rounded border-white/20 bg-transparent text-blue-500 focus:ring-blue-500">
+                </label>
+
+                <button type="submit"
+                    class="w-full py-3 mt-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transform active:scale-[0.98] transition-all">
+                    Update Account
+                </button>
+            </form>
+
+            <div class="my-7 border-t border-white/10"></div>
+
+            <form id="paymentForm" class="space-y-4">
+                <h2 class="text-xl font-bold text-blue-300">Pay Subscription (Flutterwave)</h2>
+                <p class="text-xs text-gray-400">Secure payment happens on Flutterwave checkout page.</p>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-300">Plan to Pay For</label>
+                    <select id="paymentPlan"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Lite" class="bg-[#1e293b]">Lite Package - $0.025 / 2 days</option>
+                        <option value="Basic" class="bg-[#1e293b]">Basic Package - $0.50 / 1 week</option>
+                        <option value="Premium" class="bg-[#1e293b]">Premium Package - $0.85 / month</option>
+                    </select>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transform active:scale-[0.98] transition-all">
+                    Continue To Flutterwave
+                </button>
+
+                <button id="simulateWebhookBtn" type="button"
+                    class="w-full py-3 bg-gradient-to-r from-fuchsia-600 to-purple-500 hover:from-fuchsia-500 hover:to-purple-400 text-white font-bold rounded-xl shadow-lg shadow-fuchsia-500/30 transform active:scale-[0.98] transition-all">
+                    Simulate Webhook Update
+                </button>
+            </form>
+
+            <div id="status" class="mt-6 text-center text-sm font-medium min-h-[20px]"></div>
+        </div>
+
+        <div class="w-full bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-2xl shadow-2xl space-y-8">
+            <div>
+                <h2 class="text-2xl font-bold text-blue-300 mb-1">Packages</h2>
+                <p class="text-sm text-gray-400">Choose the package that fits your screen time and device needs.</p>
+
+                <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <article class="rounded-2xl p-5 border border-cyan-300/30 bg-gradient-to-br from-cyan-500/20 to-blue-900/30 shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-cyan-200">Lite Package</h3>
+                            <span class="text-xs px-2 py-1 rounded-full bg-cyan-300/20 text-cyan-100">Starter</span>
+                        </div>
+                        <p class="mt-3 text-3xl font-black text-white">$0.025</p>
+                        <p class="text-sm text-cyan-100/80">For 2 days</p>
+                        <ul class="mt-4 text-sm text-gray-200 space-y-1">
+                            <li>1 device access</li>
+                            <li>Ads included</li>
+                            <li>Quick short-term access</li>
+                        </ul>
+                    </article>
+
+                    <article class="rounded-2xl p-5 border border-indigo-300/30 bg-gradient-to-br from-indigo-500/20 to-slate-900/40 shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-indigo-200">Basic Package</h3>
+                            <span class="text-xs px-2 py-1 rounded-full bg-indigo-300/20 text-indigo-100">Popular</span>
+                        </div>
+                        <p class="mt-3 text-3xl font-black text-white">$0.50</p>
+                        <p class="text-sm text-indigo-100/80">For 1 week</p>
+                        <ul class="mt-4 text-sm text-gray-200 space-y-1">
+                            <li>2 devices access</li>
+                            <li>Smooth weekly access</li>
+                            <li>Great for shared use</li>
+                        </ul>
+                    </article>
+
+                    <article class="rounded-2xl p-5 border border-amber-300/30 bg-gradient-to-br from-amber-500/20 to-orange-900/30 shadow-xl sm:col-span-2 xl:col-span-1">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-amber-200">Premium Package</h3>
+                            <span class="text-xs px-2 py-1 rounded-full bg-amber-300/20 text-amber-100">Best Value</span>
+                        </div>
+                        <p class="mt-3 text-3xl font-black text-white">$0.85</p>
+                        <p class="text-sm text-amber-100/80">For 1 month</p>
+                        <ul class="mt-4 text-sm text-gray-200 space-y-1">
+                            <li>No ads</li>
+                            <li>Multiple device access</li>
+                            <li>Best long-term experience</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold text-blue-300">Subscription History</h2>
+                    <button id="refreshHistoryBtn" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold">Refresh</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-left text-gray-300 border-b border-white/10">
+                                <th class="py-2 pr-2">Date</th>
+                                <th class="py-2 pr-2">Plan</th>
+                                <th class="py-2 pr-2">Amount</th>
+                                <th class="py-2 pr-2">Status</th>
+                                <th class="py-2">Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody" class="text-gray-200"></tbody>
+                    </table>
+                </div>
+                <p id="historyEmpty" class="text-gray-400 text-sm mt-4 hidden">No subscription payments yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="./api.js"></script>
+    <script>
+        function setStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            const classMap = {
+                info: 'mt-6 text-center text-sm text-blue-400',
+                success: 'mt-6 text-center text-sm text-green-400 font-bold',
+                error: 'mt-6 text-center text-sm text-red-400',
+            };
+            statusDiv.innerText = message;
+            statusDiv.className = classMap[type] || classMap.info;
+        }
+
+        function saveUserSnapshot(user) {
+            authStorage.saveUser({
+                id: user._id,
+                email: user.email,
+                fullName: user.fullName,
+                subscription: user.subscription,
+                paymentStatus: user.paymentStatus,
+                subscriptionStartDate: user.subscriptionStartDate,
+                subscriptionEndDate: user.subscriptionEndDate,
+                lastPaymentAmount: user.lastPaymentAmount,
+                lastPaymentDate: user.lastPaymentDate,
+                lastPaymentMethod: user.lastPaymentMethod,
+                lastPaymentTxnId: user.lastPaymentTxnId,
+                recurringBillingEnabled: Boolean(user.recurringBillingEnabled),
+            });
+        }
+
+        function formatDate(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? '-' : date.toLocaleDateString();
+        }
+
+        function renderHistory(history) {
+            const tbody = document.getElementById('historyBody');
+            const empty = document.getElementById('historyEmpty');
+            tbody.innerHTML = '';
+
+            if (!history || history.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            history.forEach((item) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-white/5';
+                tr.innerHTML = `
+                    <td class="py-2 pr-2">${formatDate(item.paidAt)}</td>
+                    <td class="py-2 pr-2">${item.plan || '-'}</td>
+                    <td class="py-2 pr-2">${item.currency || 'USD'} ${Number(item.amount || 0).toFixed(2)}</td>
+                    <td class="py-2 pr-2">${item.status || '-'}</td>
+                    <td class="py-2">${item.txRef || item.transactionId || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadAccount() {
+            try {
+                const data = await authAPI.getProfile();
+                document.getElementById('fullName').value = data.fullName || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('subscription').value = data.subscription || 'Lite';
+                document.getElementById('paymentPlan').value = data.subscription || 'Lite';
+                document.getElementById('recurringBillingEnabled').checked = Boolean(data.recurringBillingEnabled);
+                saveUserSnapshot(data);
+            } catch (err) {
+                console.error('Failed to load account:', err);
+                window.location.href = './login.html';
+            }
+        }
+
+        async function loadSubscriptionHistory() {
+            try {
+                const result = await authAPI.getSubscriptionHistory();
+                renderHistory(result.history || []);
+            } catch (err) {
+                console.error('Failed to load subscription history:', err);
+                renderHistory([]);
+            }
+        }
+
+        async function handleFlutterwaveReturn() {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('status');
+            const transactionId = params.get('transaction_id');
+            const txRef = params.get('tx_ref');
+
+            if (!status) return;
+
+            if (status === 'successful' && transactionId && txRef) {
+                setStatus('Verifying payment with Flutterwave...', 'info');
+                try {
+                    const verification = await authAPI.verifyFlutterwavePayment(transactionId, txRef);
+                    saveUserSnapshot(verification.user);
+                    setStatus('Payment verified. Subscription activated.', 'success');
+                } catch (err) {
+                    setStatus(err.message || 'Payment verification failed.', 'error');
+                }
+            } else if (status === 'cancelled') {
+                setStatus('Payment was cancelled.', 'error');
+            }
+
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        document.getElementById('accountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const subscription = document.getElementById('subscription').value;
+            const recurringBillingEnabled = document.getElementById('recurringBillingEnabled').checked;
+
+            setStatus('Updating account...', 'info');
+
+            try {
+                const result = await authAPI.updateProfile({ fullName, subscription, recurringBillingEnabled });
+                saveUserSnapshot(result);
+                setStatus('Account updated successfully.', 'success');
+            } catch (err) {
+                setStatus(err.message || 'Connection error', 'error');
+            }
+        });
+
+        let pendingSubscription = null;
+        let pendingPaymentModal = null;
+
+        function openConfirmModal(subscription) {
+            pendingSubscription = subscription;
+            const modal = document.getElementById('confirmModal');
+            const text = document.getElementById('confirmModalText');
+            const planLabel = subscription === 'Premium' ? 'Premium' : subscription === 'Basic' ? 'Basic' : 'Lite';
+            text.textContent = `You are about to continue with the ${planLabel} plan. Proceed to Flutterwave checkout?`;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeConfirmModal() {
+            pendingSubscription = null;
+            document.getElementById('confirmModal').classList.add('hidden');
+            document.getElementById('confirmModal').classList.remove('flex');
+        }
+
+        document.getElementById('confirmModalCancel').addEventListener('click', closeConfirmModal);
+        document.getElementById('confirmModalConfirm').addEventListener('click', async () => {
+            if (!pendingSubscription) return;
+            closeConfirmModal();
+            setStatus('Initializing Flutterwave checkout...', 'info');
+            try {
+                const recurringBillingEnabled = document.getElementById('recurringBillingEnabled').checked;
+                const init = await authAPI.initializeFlutterwavePayment(pendingSubscription, recurringBillingEnabled);
+                if (!init.paymentLink) {
+                    throw new Error('No payment link returned by server');
+                }
+                window.location.href = init.paymentLink;
+            } catch (err) {
+                setStatus(err.message || 'Unable to start payment', 'error');
+            }
+        });
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const subscription = document.getElementById('paymentPlan').value;
+
+            openConfirmModal(subscription);
+        });
+
+        document.getElementById('refreshHistoryBtn').addEventListener('click', async () => {
+            await loadSubscriptionHistory();
+        });
+
+        document.getElementById('simulateWebhookBtn').addEventListener('click', async () => {
+            const subscription = document.getElementById('paymentPlan').value || 'Lite';
+            setStatus('Simulating webhook event...', 'info');
+            try {
+                const result = await authAPI.simulateWebhook(subscription);
+                saveUserSnapshot(result.user);
+                await loadAccount();
+                await loadSubscriptionHistory();
+                setStatus(`Webhook simulation processed for ${result.subscription}.`, 'success');
+            } catch (err) {
+                setStatus(err.message || 'Webhook simulation failed', 'error');
+            }
+        });
+
+        function attachSse() {
+            try {
+                const eventSource = authAPI.subscribeToAccountUpdates();
+                if (!eventSource) return;
+                eventSource.addEventListener('subscription-updated', (event) => {
+                    try {
+                        const payload = JSON.parse(event.data);
+                        setStatus(`Subscription updated to ${payload.subscription || 'your plan'}.`, 'success');
+                        loadAccount().catch(() => {});
+                        loadSubscriptionHistory().catch(() => {});
+                    } catch (err) {
+                        console.error('SSE parse failed', err);
+                    }
+                });
+                eventSource.addEventListener('connected', () => {
+                    setStatus('Live account updates enabled.', 'info');
+                });
+                eventSource.onerror = () => {
+                    console.warn('SSE connection lost');
+                };
+            } catch (err) {
+                console.warn('SSE unavailable', err);
+            }
+        }
+
+        (async function initPage() {
+            await handleFlutterwaveReturn();
+            await loadAccount();
+            await loadSubscriptionHistory();
+            attachSse();
+        })();
+    </script>
+</body>
+</html>

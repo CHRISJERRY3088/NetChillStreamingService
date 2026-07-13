@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetChill Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
+        .sidebar-link { transition: all 0.2s; }
+        .sidebar-link:hover, .sidebar-link.active { background: #e50914; color: white; }
+        .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border: 1px solid #374151; }
+        .stat-card:hover { border-color: #e50914; transform: translateY(-2px); transition: all 0.2s; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
+    </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex">
+
+    <!-- SIDEBAR -->
+    <aside class="fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 z-50 flex flex-col">
+        <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-800">
+            <span class="text-red-500 text-3xl font-black tracking-tight">NetChill</span>
+            <span class="text-xs bg-red-600 px-2 py-0.5 rounded font-bold">ADMIN</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+            <a href="#" onclick="showSection('overview',this)" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium">
+                <span>📊</span> Overview
+            </a>
+            <a href="#" onclick="showSection('content',this)" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400">
+                <span>🎬</span> Content
+            </a>
+            <a href="#" onclick="showSection('users',this)" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400">
+                <span>👥</span> Users
+            </a>
+            <a href="#" onclick="showSection('analytics',this)" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400">
+                <span>📈</span> Analytics
+            </a>
+            <a href="#" onclick="showSection('subscriptions',this)" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400">
+                <span>💳</span> Subscriptions
+            </a>
+            <div class="pt-4 pb-1 px-4 text-xs text-gray-600 uppercase tracking-widest">Settings</div>
+            <a href="./index.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400">
+                <span>🌐</span> View Site
+            </a>
+        </nav>
+        <div class="px-4 py-4 border-t border-gray-800 flex items-center gap-3">
+            <div class="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center font-bold text-sm">A</div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold truncate">Admin</p>
+                <p class="text-xs text-gray-500 truncate">admin@netchill.com</p>
+            </div>
+            <button onclick="logout()" class="text-gray-500 hover:text-red-500 text-lg" title="Logout">↩</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="ml-64 flex-1 flex flex-col">
+
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-40 bg-gray-950/90 backdrop-blur border-b border-gray-800 flex items-center justify-between px-8 py-4">
+            <div>
+                <h1 id="page-title" class="text-xl font-bold">Overview</h1>
+                <p class="text-xs text-gray-500 mt-0.5">Welcome back, Admin</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="live-time" class="text-xs text-gray-500"></span>
+                <button class="relative text-gray-400 hover:text-white">🔔<span class="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-xs rounded-full flex items-center justify-center">3</span></button>
+                <button onclick="document.documentElement.classList.toggle('dark')" class="bg-gray-800 px-3 py-1.5 rounded-lg text-xs hover:bg-gray-700">🌓 Theme</button>
+            </div>
+        </header>
+
+        <!-- OVERVIEW -->
+        <section id="section-overview" class="p-8 space-y-8">
+            <!-- Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div class="stat-card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4"><span class="text-3xl">👥</span><span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">+12%</span></div>
+                    <p class="text-3xl font-black" id="stat-users">—</p><p class="text-sm text-gray-400 mt-1">Total Users</p>
+                </div>
+                <div class="stat-card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4"><span class="text-3xl">▶️</span><span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">+8%</span></div>
+                    <p class="text-3xl font-black" id="stat-views">—</p><p class="text-sm text-gray-400 mt-1">Total Views</p>
+                </div>
+                <div class="stat-card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4"><span class="text-3xl">⬇️</span><span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full">+5%</span></div>
+                    <p class="text-3xl font-black" id="stat-downloads">—</p><p class="text-sm text-gray-400 mt-1">Downloads</p>
+                </div>
+                <div class="stat-card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4"><span class="text-3xl">🎬</span><span class="text-xs bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full">+2</span></div>
+                    <p class="text-3xl font-black" id="stat-content">—</p><p class="text-sm text-gray-400 mt-1">Total Content</p>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="font-bold text-lg">Activity Overview</h2>
+                        <select onchange="updateChartRange(this.value)" class="bg-gray-800 text-sm px-3 py-1.5 rounded-lg border border-gray-700 text-gray-300">
+                            <option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                    <canvas id="activityChart" height="120"></canvas>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="font-bold text-lg mb-6">Subscriptions</h2>
+                    <canvas id="subChart" height="180"></canvas>
+                    <div class="mt-4 space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>Free</span><span id="sub-free" class="text-gray-400">—</span></div>
+                        <div class="flex justify-between"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>Basic</span><span id="sub-basic" class="text-gray-400">—</span></div>
+                        <div class="flex justify-between"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block"></span>Premium</span><span id="sub-premium" class="text-gray-400">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Users + Activity -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="font-bold text-lg">Recent Users</h2>
+                        <button onclick="showSection('users', document.querySelector('[onclick*=users]'))" class="text-xs text-red-400 hover:text-red-300">View all →</button>
+                    </div>
+                    <div id="recent-users-list" class="space-y-3"></div>
+                </div>
+                <div class="glass rounded-2xl p-6">
+                    <h2 class="font-bold text-lg mb-4">Recent Activity</h2>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3"><span class="w-2 h-2 bg-green-500 rounded-full mt-1.5 shrink-0"></span><div><p class="text-gray-300">New user signed up</p><p class="text-xs text-gray-500">2 min ago</p></div></div>
+                        <div class="flex items-start gap-3"><span class="w-2 h-2 bg-blue-500 rounded-full mt-1.5 shrink-0"></span><div><p class="text-gray-300">EP-01 downloaded (720p)</p><p class="text-xs text-gray-500">5 min ago</p></div></div>
+                        <div class="flex items-start gap-3"><span class="w-2 h-2 bg-yellow-500 rounded-full mt-1.5 shrink-0"></span><div><p class="text-gray-300">User upgraded to Premium</p><p class="text-xs text-gray-500">12 min ago</p></div></div>
+                        <div class="flex items-start gap-3"><span class="w-2 h-2 bg-red-500 rounded-full mt-1.5 shrink-0"></span><div><p class="text-gray-300">New content added</p><p class="text-xs text-gray-500">1 hour ago</p></div></div>
+                        <div class="flex items-start gap-3"><span class="w-2 h-2 bg-purple-500 rounded-full mt-1.5 shrink-0"></span><div><p class="text-gray-300">EP-02 watched (1080p)</p><p class="text-xs text-gray-500">2 hours ago</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTENT -->
+        <section id="section-content" class="p-8 space-y-6 hidden">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold">Content Management</h2>
+                <button onclick="openAddContentModal()" class="bg-red-600 hover:bg-red-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition">+ Add Content</button>
+            </div>
+            <div id="content-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+        </section>
+
+        <!-- USERS -->
+        <section id="section-users" class="p-8 space-y-6 hidden">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold">User Management</h2>
+                <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()" class="bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-sm w-64 focus:border-red-500 outline-none">
+            </div>
+            <div class="glass rounded-2xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead><tr class="border-b border-gray-800 text-gray-400 text-xs uppercase">
+                        <th class="px-6 py-4 text-left">User</th><th class="px-6 py-4 text-left">Email</th>
+                        <th class="px-6 py-4 text-left">Plan</th><th class="px-6 py-4 text-left">Joined</th><th class="px-6 py-4 text-left">Actions</th>
+                    </tr></thead>
+                    <tbody id="users-table-body"><tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section id="section-analytics" class="p-8 space-y-6 hidden">
+            <h2 class="text-xl font-bold">Analytics</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="glass rounded-2xl p-6"><h3 class="font-semibold mb-4 text-gray-300">Downloads by Quality</h3><canvas id="qualityChart" height="200"></canvas></div>
+                <div class="glass rounded-2xl p-6"><h3 class="font-semibold mb-4 text-gray-300">User Growth (6 Months)</h3><canvas id="growthChart" height="200"></canvas></div>
+                <div class="glass rounded-2xl p-6 lg:col-span-2"><h3 class="font-semibold mb-4 text-gray-300">Full History</h3><canvas id="fullChart" height="100"></canvas></div>
+            </div>
+        </section>
+
+        <!-- SUBSCRIPTIONS -->
+        <section id="section-subscriptions" class="p-8 space-y-6 hidden">
+            <h2 class="text-xl font-bold">Subscription Plans</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 border border-gray-700">
+                    <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Free</h3><span class="bg-gray-700 text-xs px-2 py-1 rounded-full">Active</span></div>
+                    <p class="text-3xl font-black mb-1">$0<span class="text-lg font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-sm text-gray-400 space-y-2 mt-4"><li>✅ 360p / 480p only</li><li>✅ Limited downloads</li><li>❌ No HD / 4K</li></ul>
+                    <div class="mt-6 pt-4 border-t border-gray-700"><p class="text-sm text-gray-400">Users on this plan</p><p class="text-2xl font-bold text-red-400" id="plan-free-count">—</p></div>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-blue-500/50">
+                    <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Basic</h3><span class="bg-blue-600 text-xs px-2 py-1 rounded-full">Popular</span></div>
+                    <p class="text-3xl font-black mb-1">$5<span class="text-lg font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-sm text-gray-400 space-y-2 mt-4"><li>✅ Up to 720p</li><li>✅ Unlimited downloads</li><li>❌ No 4K</li></ul>
+                    <div class="mt-6 pt-4 border-t border-gray-700"><p class="text-sm text-gray-400">Users on this plan</p><p class="text-2xl font-bold text-blue-400" id="plan-basic-count">—</p></div>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-yellow-500/50">
+                    <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">Premium</h3><span class="bg-yellow-600 text-xs px-2 py-1 rounded-full">Best</span></div>
+                    <p class="text-3xl font-black mb-1">$12<span class="text-lg font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-sm text-gray-400 space-y-2 mt-4"><li>✅ 1080p / 4K</li><li>✅ Unlimited everything</li><li>✅ Early access</li></ul>
+                    <div class="mt-6 pt-4 border-t border-gray-700"><p class="text-sm text-gray-400">Users on this plan</p><p class="text-2xl font-bold text-yellow-400" id="plan-premium-count">—</p></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ADD CONTENT MODAL -->
+    <div id="add-content-modal" class="fixed inset-0 bg-black/80 backdrop-blur z-[100] flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 rounded-2xl w-full max-w-lg p-8 border border-gray-700">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold">Add New Content</h2>
+                <button onclick="closeAddContentModal()" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addContent(event)" class="space-y-4">
+                <div><label class="text-sm text-gray-400 mb-1 block">Title</label><input id="content-title" type="text" required placeholder="e.g. Avatar: The Last Airbender" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm focus:border-red-500 outline-none"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-sm text-gray-400 mb-1 block">Type</label><select id="content-type" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm outline-none"><option>Series</option><option>Movie</option><option>Anime</option><option>K-Drama</option></select></div>
+                    <div><label class="text-sm text-gray-400 mb-1 block">Status</label><select id="content-status" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm outline-none"><option>Published</option><option>Draft</option><option>Coming Soon</option></select></div>
+                </div>
+                <div><label class="text-sm text-gray-400 mb-1 block">Thumbnail URL (optional)</label><input id="content-thumb" type="url" placeholder="https://..." class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm outline-none"></div>
+                <div><label class="text-sm text-gray-400 mb-1 block">Description</label><textarea id="content-desc" rows="3" placeholder="Short description..." class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm outline-none resize-none"></textarea></div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl font-semibold transition">Add Content</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ── API BASE ──────────────────────────────────────────────────────────
+        const API = 'https://your-backend.onrender.com/api/data/admin';
+
+        // ── FETCH HELPERS ─────────────────────────────────────────────────────
+        async function apiFetch(path) {
+            const res = await fetch(API + path, { credentials: 'include' });
+            if (res.status === 401) { window.location.href = './login.html'; return null; }
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
+        // ── LOAD OVERVIEW (users, subscriptions, recent users) ────────────────
+        async function loadOverview() {
+            try {
+                const data = await apiFetch('/overview');
+                if (!data) return;
+
+                animateCount('stat-users', data.totalUsers);
+                animateCount('stat-downloads', 0); // update when download tracking is live
+                animateCount('stat-views', 0);     // update when view tracking is live
+                animateCount('stat-content', 0);
+
+                const subs = data.subscriptions;
+                document.getElementById('sub-free').textContent    = subs.Free    || 0;
+                document.getElementById('sub-basic').textContent   = subs.Basic   || 0;
+                document.getElementById('sub-premium').textContent = subs.Premium || 0;
+                document.getElementById('plan-free-count').textContent    = subs.Free    || 0;
+                document.getElementById('plan-basic-count').textContent   = subs.Basic   || 0;
+                document.getElementById('plan-premium-count').textContent = subs.Premium || 0;
+
+                // Update subscription pie chart
+                subChartInstance.data.datasets[0].data = [subs.Free || 0, subs.Basic || 0, subs.Premium || 0];
+                subChartInstance.update();
+
+                // Recent users list
+                const rl = document.getElementById('recent-users-list');
+                rl.innerHTML = '';
+                (data.recentUsers || []).forEach(u => {
+                    const joined = new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    rl.innerHTML += `<div class="flex items-center gap-3"><div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-xs font-bold shrink-0">${u.fullName[0]}</div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${u.fullName}</p><p class="text-xs text-gray-500 truncate">${u.email}</p></div><span class="text-xs px-2 py-1 rounded-full ${planBadge(u.subscription)}">${u.subscription}</span></div>`;
+                });
+            } catch (e) {
+                console.error('Overview error:', e);
+            }
+        }
+
+        // ── LOAD ACTIVITY CHART ───────────────────────────────────────────────
+        async function loadActivityChart(days = 7) {
+            try {
+                const data = await apiFetch(`/activity?days=${days}`);
+                if (!data) return;
+
+                // Build labels for last N days
+                const labels = Array.from({ length: days }, (_, i) => {
+                    const d = new Date(); d.setDate(d.getDate() - (days - 1 - i));
+                    return d.toISOString().split('T')[0];
+                });
+
+                const get = (action) => labels.map(day => {
+                    const found = data.find(d => d._id.day === day && d._id.action === action);
+                    return found ? found.count : 0;
+                });
+
+                actChart.data.labels = labels.map(l => { const d = new Date(l); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); });
+                actChart.data.datasets[0].data = get('visit');
+                actChart.data.datasets[1].data = get('watch');
+                actChart.data.datasets[2].data = get('download');
+                actChart.update();
+            } catch (e) {
+                console.error('Activity chart error:', e);
+            }
+        }
+
+        // ── LOAD USERS TABLE ──────────────────────────────────────────────────
+        async function loadUsersTable() {
+            try {
+                const users = await apiFetch('/users');
+                if (!users) return;
+                allUsers = users.map(u => ({
+                    name:   u.fullName,
+                    email:  u.email,
+                    plan:   u.subscription,
+                    joined: new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                }));
+                renderUsersTable(allUsers);
+            } catch (e) {
+                console.error('Users table error:', e);
+            }
+        }
+
+        let allUsers = [];
+
+        // ── CLOCK ─────────────────────────────────────────────────────────────
+        setInterval(() => { document.getElementById('live-time').textContent = new Date().toLocaleTimeString(); }, 1000);
+
+        // ── SECTION SWITCH ────────────────────────────────────────────────────
+        function showSection(name, el) {
+            document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + name).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => { l.classList.remove('active','bg-red-600','text-white'); l.classList.add('text-gray-400'); });
+            if (el) { el.classList.add('active','bg-red-600','text-white'); el.classList.remove('text-gray-400'); }
+            document.getElementById('page-title').textContent = { overview:'Overview',content:'Content',users:'Users',analytics:'Analytics',subscriptions:'Subscriptions' }[name] || name;
+            if (name === 'analytics') renderAnalyticsCharts();
+        }
+
+        // ── STAT COUNTER ANIMATION ────────────────────────────────────────────
+        function animateCount(id, target) {
+            let n = 0, step = Math.ceil(target / 60) || 1;
+            const t = setInterval(() => { n = Math.min(n + step, target); document.getElementById(id).textContent = n.toLocaleString(); if (n >= target) clearInterval(t); }, 20);
+        }
+
+        // ── ACTIVITY CHART ────────────────────────────────────────────────────
+        const actCtx = document.getElementById('activityChart').getContext('2d');
+        const actChart = new Chart(actCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jun 30','Jul 1','Jul 2','Jul 3','Jul 4','Jul 5','Jul 6'],
+                datasets: [
+                    { label:'Visits',    data:[420,580,510,720,680,790,850], borderColor:'#3b82f6', backgroundColor:'#3b82f620', tension:0.4, fill:true },
+                    { label:'Watches',   data:[210,320,280,410,390,460,510], borderColor:'#22c55e', backgroundColor:'#22c55e20', tension:0.4, fill:true },
+                    { label:'Downloads', data:[80,140,110,190,170,210,240],  borderColor:'#e50914', backgroundColor:'#e5091420', tension:0.4, fill:true },
+                ]
+            },
+            options: { responsive:true, plugins:{ legend:{ labels:{ color:'#9ca3af', boxWidth:12 } } }, scales:{ x:{ grid:{ color:'#1f2937' }, ticks:{ color:'#6b7280' } }, y:{ grid:{ color:'#1f2937' }, ticks:{ color:'#6b7280' } } } }
+        });
+        function updateChartRange(days) { loadActivityChart(+days); }
+
+        // ── SUBSCRIPTION PIE ──────────────────────────────────────────────────
+        const subChartInstance = new Chart(document.getElementById('subChart').getContext('2d'), {
+            type: 'doughnut',
+            data: { labels:['Free','Basic','Premium'], datasets:[{ data:[0,0,0], backgroundColor:['#e50914','#3b82f6','#eab308'], borderWidth:0 }] },
+            options: { responsive:true, plugins:{ legend:{ display:false } }, cutout:'65%' }
+        });
+
+        // ── PLAN BADGE HELPER ─────────────────────────────────────────────────
+        const planBadge = p => ({ Premium:'bg-yellow-500/20 text-yellow-400', Basic:'bg-blue-500/20 text-blue-400', Free:'bg-gray-500/20 text-gray-400' }[p]||'');
+
+        // ── USERS TABLE ───────────────────────────────────────────────────────
+        function renderUsersTable(list) {
+            const tb = document.getElementById('users-table-body');
+            if (!list.length) { tb.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No users found</td></tr>'; return; }
+            tb.innerHTML = list.map(u => `<tr class="border-b border-gray-800/60 hover:bg-white/[0.02]"><td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-xs font-bold">${u.name[0]}</div><span>${u.name}</span></div></td><td class="px-6 py-4 text-gray-400">${u.email}</td><td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full ${planBadge(u.plan)}">${u.plan}</span></td><td class="px-6 py-4 text-gray-400 text-xs">${u.joined}</td><td class="px-6 py-4"><button class="text-xs text-blue-400 hover:text-blue-300 mr-3">Edit</button><button class="text-xs text-red-400 hover:text-red-300">Remove</button></td></tr>`).join('');
+        }
+        function filterUsers() { const q = document.getElementById('user-search').value.toLowerCase(); renderUsersTable(allUsers.filter(u => u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q))); }
+
+        // ── CONTENT GRID ──────────────────────────────────────────────────────
+        function renderContent() {
+            document.getElementById('content-grid').innerHTML = contentList.map(c => `<div class="glass rounded-2xl overflow-hidden"><div class="h-36 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-5xl">🎬</div><div class="p-4"><div class="flex items-start justify-between gap-2 mb-2"><h3 class="font-semibold text-sm leading-tight">${c.title}</h3><span class="text-xs px-2 py-0.5 rounded-full shrink-0 ${c.status==='Published'?'bg-green-500/20 text-green-400':'bg-yellow-500/20 text-yellow-400'}">${c.status}</span></div><p class="text-xs text-gray-500 mb-3">${c.type}</p><div class="flex gap-2"><button class="flex-1 text-xs bg-gray-700 hover:bg-gray-600 py-1.5 rounded-lg transition">Edit</button><button onclick="deleteContent(${c.id})" class="flex-1 text-xs bg-red-900/40 hover:bg-red-600 py-1.5 rounded-lg transition text-red-400 hover:text-white">Delete</button></div></div></div>`).join('');
+        }
+        renderContent();
+        function deleteContent(id) { contentList = contentList.filter(c => c.id !== id); renderContent(); }
+        function openAddContentModal()  { document.getElementById('add-content-modal').classList.remove('hidden'); }
+        function closeAddContentModal() { document.getElementById('add-content-modal').classList.add('hidden'); }
+        function addContent(e) {
+            e.preventDefault();
+            contentList.push({ id: Date.now(), title: document.getElementById('content-title').value, type: document.getElementById('content-type').value, status: document.getElementById('content-status').value });
+            renderContent(); closeAddContentModal(); e.target.reset();
+        }
+
+        // ── ANALYTICS CHARTS (lazy render) ────────────────────────────────────
+        let analyticsBuilt = false;
+        function renderAnalyticsCharts() {
+            if (analyticsBuilt) return; analyticsBuilt = true;
+            new Chart(document.getElementById('qualityChart').getContext('2d'), { type:'bar', data:{ labels:['360p','480p','720p','1080p','4K'], datasets:[{ label:'Downloads', data:[1200,1800,3400,2600,870], backgroundColor:['#374151','#374151','#e50914','#e50914','#eab308'] }] }, options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:'#6b7280' } }, y:{ grid:{ color:'#1f2937' }, ticks:{ color:'#6b7280' } } } } });
+            new Chart(document.getElementById('growthChart').getContext('2d'), { type:'line', data:{ labels:['Feb','Mar','Apr','May','Jun','Jul'], datasets:[{ label:'New Users', data:[80,145,210,390,650,1284], borderColor:'#e50914', backgroundColor:'#e5091420', tension:0.4, fill:true }] }, options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:'#6b7280' } }, y:{ grid:{ color:'#1f2937' }, ticks:{ color:'#6b7280' } } } } });
+            new Chart(document.getElementById('fullChart').getContext('2d'), { type:'bar', data:{ labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'], datasets:[{ label:'Visits', data:[2400,3100,2800,4200,5100,6300,7200], backgroundColor:'#3b82f6' },{ label:'Watches', data:[1200,1600,1400,2300,2800,3500,4100], backgroundColor:'#22c55e' },{ label:'Downloads', data:[400,600,520,890,1100,1500,1800], backgroundColor:'#e50914' }] }, options:{ responsive:true, plugins:{ legend:{ labels:{ color:'#9ca3af', boxWidth:12 } } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:'#6b7280' } }, y:{ grid:{ color:'#1f2937' }, ticks:{ color:'#6b7280' } } } } });
+        }
+
+        // ── LOGOUT ────────────────────────────────────────────────────────────
+        function logout() { if (confirm('Log out of admin?')) window.location.href = './login.html'; }
+
+        // ── INIT — load real data on page ready ───────────────────────────────
+        loadOverview();
+        loadActivityChart(7);
+        loadUsersTable();
+
+        // Re-load users table when switching to Users section
+        const origShowSection = showSection;
+        function showSection(name, el) {
+            origShowSection(name, el);
+            if (name === 'users' && allUsers.length === 0) loadUsersTable();
+        }
+    </script>
+</body>
+</html>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+async function loadStats() {
+  const res = await fetch('https://your-backend.onrender.com/api/data/admin/stats');
+  const data = await res.json();
+
+  // Process data for Chart.js
+  const labels = [...new Set(data.map(item => item._id.day))];
+  const visits = labels.map(day => data.find(d => d._id.day === day && d._id.action === 'visit')?.count || 0);
+  const watches = labels.map(day => data.find(d => d._id.day === day && d._id.action === 'watch')?.count || 0);
+  const downloads = labels.map(day => data.find(d => d._id.day === day && d._id.action === 'download')?.count || 0);
+
+  const ctx = document.getElementById('statsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Visits', data: visits, borderColor: 'blue', fill: false },
+        { label: 'Watches', data: watches, borderColor: 'green', fill: false },
+        { label: 'Downloads', data: downloads, borderColor: 'red', fill: false }
+      ]
+    },
+    options: { responsive: true }
+  });
+}
+
+loadStats();
+</script>

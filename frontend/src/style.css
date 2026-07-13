@@ -1,0 +1,28 @@
+/* The Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Base card styling when visible */
+.card {
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 8px;
+  opacity: 1;
+  transform: scale(1);
+  /* Smooth transition for fading and shrinking */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Step 1: The visual animation state */
+.card.hidden {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* Step 2: Removing the item from the grid layout completely */
+.is-hidden {
+  display: none !important;
+}
