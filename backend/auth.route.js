@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { signup, login, logout, updateProfile } from "./controllers/auth.controllers.js";
+import { signup, login, logout, updateProfile, forgotPassword, completeReset } from "./controllers/auth.controllers.js";
 import { protectRoute } from './middleware/auth.middleware.js';
 import { findUserById, updateUserById } from './lib/user.repository.js';
 import { findById as findLocalById, findByEmail as findLocalByEmail } from './lib/local_user_store.js';
@@ -41,6 +41,8 @@ const cookieOptions = {
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-complete", completeReset);
 router.put("/update-profile", protectRoute, updateProfile);
 
 // ─── GOOGLE OAUTH ROUTES ────────────────────────────────────

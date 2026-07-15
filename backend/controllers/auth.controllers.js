@@ -193,6 +193,75 @@ export const logout = async (req, res) => {
     }
 };
 
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        if (ENV.SUPABASE_URL && (ENV.SUPABASE_ANON_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY)) {
+const redirectTo = `${ENV.CLIENT_URL || 'http://localhost:10000'}/reset-password.html`;
+            const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+
+            if (error) {
+                console.warn('Password reset request error:', error.message || error);
+                // Do not expose whether the email exists
+            }
+
+            return res.status(200).json({ message: "If that email is registered, you will receive password reset instructions shortly." });
+        }
+
+        const localUser = await findByEmail(email);
+        if (localUser) {
+            console.warn(`Forgot password requested for local user: ${email}`);
+        }
+
+        return res.status(200).json({ message: "If that email is registered, you will receive password reset instructions shortly." });
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        return res.status(500).json({ message: "Unable to process password reset request" });
+    }
+};
+
+    export const completeReset = async (req, res) => {
+        try {
+            const { access_token, password } = req.body;
+
+            if (!access_token || !password) {
+                return res.status(400).json({ message: 'access_token and password are required' });
+            }
+
+            if (!ENV.SUPABASE_URL) {
+                return res.status(500).json({ message: 'Supabase not configured' });
+            }
+
+            const supabaseAuthUrl = ENV.SUPABASE_URL.replace(/\/$/, '') + '/auth/v1/user';
+
+            const resp = await fetch(supabaseAuthUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`,
+                },
+                body: JSON.stringify({ password }),
+            });
+
+            const data = await resp.json().catch(() => null);
+
+            if (!resp.ok) {
+                console.error('Reset complete failed', data);
+                return res.status(resp.status || 400).json({ message: data?.error || data?.message || 'Failed to update password' });
+            }
+
+            return res.json({ message: 'Password updated successfully' });
+        } catch (err) {
+            console.error('completeReset error', err);
+            return res.status(500).json({ message: 'Server error' });
+        }
+    };
+
 export const updateProfile = async (req, res) => {
     try {
         const { fullName, subscription } = req.body;

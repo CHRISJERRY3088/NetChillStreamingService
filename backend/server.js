@@ -19,13 +19,15 @@ import { ENV } from "./lib/env.js";
 
 // ✅ 5. Initialize App (Only Once)
 const app = express();
-const PORT = Number(process.env.PORT || ENV.PORT || 3000);
+const PORT = Number(process.env.PORT || ENV.PORT || 10000);
 
 // ✅ 6. CORRECT CORS SETUP (Render-Ready, with Login/Auth)
 const allowedOrigins = [
   ENV.CLIENT_URL, // Your frontend's production URL (e.g., "https://your-frontend.vercel.app")
-  "http://localhost:3000", // Local dev
+  "http://localhost:10000", // Local dev
+  "http://localhost:3000",
   "http://localhost:3001",
+  "http://127.0.0.1:10000",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3001",
   process.env.RENDER_EXTERNAL_URL || "https://your-backend.onrender.com", // Auto-detect Render backend URL
@@ -68,8 +70,14 @@ import authRoute from "./auth.route.js";
 import adminRoute from "./route/admin.route.js";
 import billingRoute from "./route/billing.route.js";
 import sseRoute from "./route/sse.route.js";
+import { signup, login, logout, forgotPassword, completeReset } from "./controllers/auth.controllers.js";
 
 // ✅ 9. API Routes
+app.post("/api/auth/signup", signup);
+app.post("/api/auth/login", login);
+app.post("/api/auth/logout", logout);
+app.post("/api/auth/forgot-password", forgotPassword);
+app.post("/api/auth/reset-complete", completeReset);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/billing", billingRoute);
@@ -80,7 +88,13 @@ app.get("/api/health", (req, res) => {
 });
 
 // ✅ 10. Root Path
+const FRONTEND_ROOT = path.join(__dirname, "../frontend");
+
 app.get('/', (req, res) => {
+  const indexPath = path.join(FRONTEND_ROOT, "index.html");
+  if (existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
   res.status(200).send('API is active and running');
 });
 
@@ -91,8 +105,6 @@ app.post('/login', (req, res) => {
 });
 
 // ✅ 12. Frontend Serving (unchanged)
-const FRONTEND_ROOT = path.join(__dirname, "../frontend");
-
 const ROUTE_TO_PAGE = {
   "/": "index.html",
   "/login": "login.html",
@@ -100,6 +112,7 @@ const ROUTE_TO_PAGE = {
   "/dashboard": "dashboard.html",
   "/account": "account.html",
   "/admin": "admin.html",
+  "/reset-password": "reset-password.html",
 };
 
 function resolveFrontendPage(requestPath) {

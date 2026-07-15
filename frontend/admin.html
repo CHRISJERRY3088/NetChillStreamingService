@@ -222,7 +222,7 @@
 
     <script>
         // ── API BASE ──────────────────────────────────────────────────────────
-        const API = 'https://your-backend.onrender.com/api/data/admin';
+        const API = 'https://your-backend.onrender.com/api/admin';
 
         // ── FETCH HELPERS ─────────────────────────────────────────────────────
         async function apiFetch(path) {
@@ -411,7 +411,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 async function loadStats() {
-  const res = await fetch('https://your-backend.onrender.com/api/data/admin/stats');
+  const res = await fetch('https://your-backend.onrender.com/api/admin/stats');
   const data = await res.json();
 
   // Process data for Chart.js

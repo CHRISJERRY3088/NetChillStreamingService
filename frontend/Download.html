@@ -29,24 +29,81 @@
             background: rgba(59, 130, 246, 0.1);
             color: #bfdbfe;
         }
+
+        .selection-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(15, 23, 42, 0.7);
+            transition: all 0.25s ease;
+        }
+
+        .selection-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.9), rgba(14,165,233,0.95), rgba(255,255,255,0));
+            background-size: 220% 220%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderGlow 3.2s linear infinite;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .selection-card:hover::before,
+        .selection-card:focus-within::before {
+            opacity: 1;
+        }
+
+        .selection-card:hover,
+        .selection-card:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        html:not(.dark) .selection-card:hover,
+        html:not(.dark) .selection-card:focus-within {
+            background: rgba(59, 130, 246, 0.12);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25), 0 0 24px rgba(59, 130, 246, 0.16);
+        }
+
+        html.dark .selection-card:hover,
+        html.dark .selection-card:focus-within {
+            background: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 0 24px rgba(255, 255, 255, 0.12);
+        }
     </style>
 </head>
 
 <body class="bg-slate-950 text-slate-100 transition-colors duration-300">
 
     <!-- NAVBAR -->
-    <nav class="fixed z-50 top-0 left-0 w-full h-16 flex items-center justify-between px-4 md:px-6 backdrop-blur-md bg-white/10 dark:bg-black/50 border-b border-white/10">
+    <nav class="fixed z-50 top-0 left-0 w-full h-16 flex items-center justify-between px-4 md:px-6 backdrop-blur-xl bg-white/10 dark:bg-white/10 border-b border-white/20 dark:border-white/20 shadow-[0_0_0_1px_rgba(255,255,255,0.08)]">
         <div class="flex items-center space-x-4 md:space-x-6 flex-1">
             <button id="hamburger-button" class="text-3xl cursor-pointer hover:text-blue-500">☰</button>
             
             <div class="flex items-center space-x-2 shrink-0">
-                <img src="./assets/logo.png" alt="Logo" class="w-10 h-10 md:w-16 md:h-12 object-contain">
+                <img src="./assets/logo.png" alt="Logo" class="w-10 h-10 md:w-16 md:h-12 text-2xl font-bolddark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] text-white hidden shadow-2xl dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:shadow-2xl object-contain">
                 <button onclick="window.location.href='../frontend/index.html'" class="hidden sm:block text-xl md:text-2xl font-bold text-blue-500">NetChill</button>
             </div>
 
             <!-- RESPONSIVE SEARCH BAR -->
             <div class="hidden md:flex flex-1 max-w-md items-center px-4 py-1.5 rounded-full bg-gray-200 dark:bg-white/10 border border-transparent focus-within:border-blue-500">
-                <input type="text" placeholder="Search movies..." class="w-full bg-transparent outline-none text-sm">
+                <input type="text" placeholder="Search movies..." class="w-full bg-transparent outline-none text-sm hover:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] hover:bg-shadow-2xl  border border-white/30 hover:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:hover:bg-shadow-2xl dark:bg-blue-200/20 dark:border dark:border-blue-200/30">
                 <button class="text-blue-500 font-bold ml-2">Search</button>
             </div>
         </div>
@@ -59,21 +116,31 @@
         </div>
     </nav>
 
+    <div id="menu-backdrop" class="fixed inset-0 z-[55] hidden bg-slate-950/40 backdrop-blur-md transition-opacity duration-300"></div>
+
     <!-- MOBILE MENU -->
-    <div id="mobile-menu" class="border border-blue-500 rounded-lg backdrop-blur scroll-auto max-h-[400px] overflow-y-auto transition-all duration-300 ease-in-out fixed inset-y-0 left-0 w-64 bg-white/50 dark:bg-gray-800 z-[60] shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col p-6">
+    <div id="mobile-menu" class="rounded-2xl backdrop-blur-xl scroll-auto max-h-[400px] overflow-y-auto transition-all duration-300 ease-in-out fixed inset-y-0 left-0 w-64 bg-white/15 dark:bg-white/10 border border-white/20 dark:border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.35)] z-[60] transform -translate-x-full transition-transform duration-300 flex flex-col p-6">
         <button id="close-menu-button" class="text-3xl self-end">&times;</button>
         <div class="flex flex-col space-y-4 mt-7">
-            <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Series</a>
-            <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Movies</a>
-            <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">K-Drama</a>
-            <a href="../frontend/index.html#Animation" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Animation</a>
-            <a href="../frontend/Download.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Dashboard</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Account</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Live Show</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Porn</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Sport</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Religion</a>
-            <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Action/Adventure</a>
+            <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Upcoming Movie</a>
+                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Series</a>
+                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Movies</a>
+                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">K-Drama</a>
+                <a href="../frontend/dashboard.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Dashboard</a>
+                <a href="../frontend/index.html#Animation" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Animation</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Account</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Live Show</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Porn</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Sport</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Religion</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Action/Adventure</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Nollywood</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">bollywood</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">spanish</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Southafrica</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Ghana</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Arabic</a>
+            </div>
         </div>
     </div>
 
@@ -191,6 +258,57 @@
 
     <!-- DOWNLOAD MODAL (THE PANEL) -->
     <div id="download-container" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+        <!-- Quality Selector Modal -->
+        <div id="qualitySelectModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+            <div class="selection-card relative w-full max-w-xl rounded-[2rem] border border-white/10 bg-slate-950/95 p-6 md:p-8 shadow-2xl">
+                <button onclick="closeQualityModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition text-2xl">×</button>
+                <div class="mb-6">
+                    <p class="text-xs uppercase tracking-[0.35em] text-cyan-400">Download Setup</p>
+                    <h3 class="mt-2 text-2xl font-bold text-white">Choose quality, language and subtitle</h3>
+                    <p class="mt-2 text-sm text-slate-400">These options are saved with your download so they stay ready for offline viewing.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
+                        <p class="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Quality</p>
+                        <div class="grid gap-2 sm:grid-cols-3">
+                            <button type="button" onclick="selectQualityAndDownload('480p')" class="selection-card w-full rounded-2xl bg-slate-800/80 px-3 py-3 text-sm font-semibold text-slate-100 transition">480p</button>
+                            <button type="button" onclick="selectQualityAndDownload('720p')" class="selection-card w-full rounded-2xl bg-slate-800/80 px-3 py-3 text-sm font-semibold text-slate-100 transition">720p</button>
+                            <button type="button" onclick="selectQualityAndDownload('1080p')" class="selection-card w-full rounded-2xl bg-slate-800/80 px-3 py-3 text-sm font-semibold text-slate-100 transition">1080p</button>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 md:grid-cols-2">
+                        <label class="rounded-2xl border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-300">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Language</span>
+                            <select id="download-language-select" class="w-full rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-white outline-none focus:border-cyan-500">
+                                <option value="English">English</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                            </select>
+                        </label>
+
+                        <label class="rounded-2xl border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-300">
+                            <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Subtitle</span>
+                            <select id="download-subtitle-select" class="w-full rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-white outline-none focus:border-cyan-500">
+                                <option value="Off">Off</option>
+                                <option value="English">English</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD MODAL (THE PANEL) -->
+    <div id="download-container-old" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"></div>
         <div class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950/95 p-6 md:p-10 shadow-2xl">
             <button id="close-download-btn" class="absolute top-5 right-6 text-4xl text-slate-400 hover:text-white transition">&times;</button>
@@ -225,49 +343,17 @@
                         <div id="quality-container" class="space-y-4">
                             <div id="ep1-box" class="quality-box hidden">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <button onclick="startDownload('EP-01', '360p', 'MP4', '95 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">360p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">95 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-01', '480p', 'MP4', '145 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">480p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">145 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-01', '720p', 'MP4', '210 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">720p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">210 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-01', '1080p', 'MP4', '550 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">1080p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">550 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-01', '2160p', '4K MP4', '1.8 GB')" class="rounded-3xl border border-emerald-500 bg-slate-900/80 p-4 text-left hover:border-emerald-400 transition">
-                                        <p class="font-semibold text-emerald-300">2160p · 4K MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">1.8 GB</p>
+                                    <button onclick="openQualitySelector('EP-01', 'MP4', '95 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
+                                        <p class="font-semibold text-white">Download · MP4</p>
+                                        <p class="mt-1 text-sm text-slate-500">Choose quality</p>
                                     </button>
                                 </div>
                             </div>
                             <div id="ep2-box" class="quality-box hidden">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <button onclick="startDownload('EP-02', '360p', 'MP4', '98 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">360p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">98 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-02', '480p', 'MP4', '152 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">480p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">152 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-02', '720p', 'MP4', '225 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">720p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">225 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-02', '1080p', 'MP4', '580 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">1080p · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">580 MB</p>
-                                    </button>
-                                    <button onclick="startDownload('EP-02', '2160p', '4K MP4', '1.9 GB')" class="rounded-3xl border border-emerald-500 bg-slate-900/80 p-4 text-left hover:border-emerald-400 transition">
-                                        <p class="font-semibold text-emerald-300">2160p · 4K MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">1.9 GB</p>
+                                    <button onclick="openQualitySelector('EP-02', 'MP4', '98 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
+                                        <p class="font-semibold text-white">Download · MP4</p>
+                                        <p class="mt-1 text-sm text-slate-500">Choose quality</p>
                                     </button>
                                 </div>
                             </div>
@@ -313,11 +399,30 @@
 
         // 1. HAMBURGER MENU LOGIC
         const menu = document.getElementById('mobile-menu');
+        const menuBackdrop = document.getElementById('menu-backdrop');
         const openMenu = document.getElementById('hamburger-button');
         const closeMenu = document.getElementById('close-menu-button');
 
-        openMenu.addEventListener('click', () => menu.classList.remove('-translate-x-full'));
-        closeMenu.addEventListener('click', () => menu.classList.add('-translate-x-full'));
+        function openSidebar() {
+            menu.classList.remove('-translate-x-full');
+            menuBackdrop.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeSidebar() {
+            menu.classList.add('-translate-x-full');
+            menuBackdrop.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        openMenu.addEventListener('click', openSidebar);
+        closeMenu.addEventListener('click', closeSidebar);
+        menuBackdrop.addEventListener('click', closeSidebar);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
 
         // 2. DOWNLOAD MODAL LOGIC
         const dlContainer = document.getElementById('download-container');
@@ -339,7 +444,9 @@
         let selectedStream = {
             episode: 'EP-01',
             quality: '720p',
-            format: 'MP4'
+            format: 'MP4',
+            language: 'English',
+            subtitle: 'Off'
         };
 
         openDl.addEventListener('click', () => {
@@ -426,9 +533,40 @@
         };
 
         // 4. DOWNLOAD FUNCTION - Triggered when clicking any quality option
-        function startDownload(episode, quality, format, size) {
-            selectedStream = { episode, quality, format };
-            const subtitle = document.querySelector('[data-selected-subtitle]')?.textContent || 'No Subtitle';
+        let pendingDownload = { episode: null, format: null, size: null, language: 'English', subtitle: 'Off' };
+
+        function openQualitySelector(episode, format, size) {
+            pendingDownload = { episode, format, size, language: document.getElementById('download-language-select')?.value || 'English', subtitle: document.getElementById('download-subtitle-select')?.value || 'Off' };
+            const modal = document.getElementById('qualitySelectModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeQualityModal() {
+            const modal = document.getElementById('qualitySelectModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            pendingDownload = { episode: null, format: null, size: null, language: 'English', subtitle: 'Off' };
+        }
+
+        function selectQualityAndDownload(quality) {
+            const { episode, format, size } = pendingDownload;
+            const language = document.getElementById('download-language-select')?.value || pendingDownload.language || 'English';
+            const subtitle = document.getElementById('download-subtitle-select')?.value || pendingDownload.subtitle || 'Off';
+            if (!episode) return;
+
+            pendingDownload = { ...pendingDownload, language, subtitle };
+            closeQualityModal();
+            startDownload(episode, quality, format, size, language, subtitle);
+        }
+
+        function startDownload(episode, quality, format, size, language = 'English', subtitle = 'Off') {
+            selectedStream = { episode, quality, format, language, subtitle };
+            const movieTitle = document.querySelector('#preview-placeholder')?.textContent || document.title || 'NetChill Movie';
             const filename = `NetChill-${episode}-${quality}-${format}.${format.includes('MKV') ? 'mkv' : 'mp4'}`;
             const fileUrl = DOWNLOAD_URLS[`${episode}|${quality}|${format}`];
 
@@ -437,8 +575,24 @@
                 return;
             }
 
+            // Persist this download in local storage so the dashboard can show offline saved movies
+            try {
+                downloadStorage.saveDownload({
+                    title: movieTitle,
+                    episode,
+                    quality,
+                    format,
+                    size,
+                    language,
+                    subtitle,
+                    fileUrl,
+                });
+            } catch (error) {
+                console.warn('Unable to save download metadata', error);
+            }
+
             // Show download notification
-            showDownloadNotification(episode, quality, format, size, subtitle);
+            showDownloadNotification(episode, quality, format, size, language, subtitle);
 
             // Trigger browser download from cloud URL
             triggerDownload(filename, fileUrl);
@@ -456,8 +610,24 @@
         }
 
         function startWatchOnline() {
-            const { episode, quality, format } = selectedStream;
+            const { episode, quality, format, language = 'English', subtitle = 'Off' } = selectedStream;
             const streamUrl = resolveWatchUrl(episode, quality, format);
+            const movieTitle = document.querySelector('#preview-placeholder')?.textContent || document.title || 'NetChill Movie';
+
+            try {
+                downloadStorage.saveLastViewed({
+                    title: movieTitle,
+                    episode,
+                    quality,
+                    format,
+                    language,
+                    subtitle,
+                    viewedUrl: streamUrl,
+                });
+            } catch (error) {
+                console.warn('Unable to save last viewed movie', error);
+            }
+
             if (!watchModal || !watchModalPlayer) return;
 
             watchEpisodeSelect.value = episode;
@@ -530,15 +700,16 @@
         });
 
         // Show green notification when download starts
-        function showDownloadNotification(episode, quality, format, size, subtitle) {
+        function showDownloadNotification(episode, quality, format, size, language, subtitle) {
             const notification = document.createElement('div');
             notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 animate-pulse';
             notification.innerHTML = `
                 <p class="font-bold text-lg">✓ Download Started!</p>
                 <p class="text-sm mt-2">Episode: <strong>${episode}</strong></p>
                 <p class="text-sm">Quality: <strong>${quality} ${format}</strong></p>
-                <p class="text-sm">Size: <strong>${size}</strong></p>
+                <p class="text-sm">Language: <strong>${language}</strong></p>
                 <p class="text-sm">Subtitle: <strong>${subtitle}</strong></p>
+                <p class="text-sm">Size: <strong>${size}</strong></p>
                 <p class="text-xs mt-2 opacity-80">Check your Downloads folder</p>
             `;
             document.body.appendChild(notification);

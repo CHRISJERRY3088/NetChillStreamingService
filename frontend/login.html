@@ -7,81 +7,367 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./src/output.css">
     <style>
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        .tab-active { border-bottom: 2px solid #3b82f6; color: white; padding-bottom: 8px; font-weight: bold; }
-        .tab-inactive { color: #9ca3af; padding-bottom: 8px; font-weight: bold; }
-        .tab-inactive:hover { color: #e5e7eb; }
+        * { scrollbar-width: thin; scrollbar-color: #0ea5e9 transparent; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 10px; }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        .form-container {
+            position: relative;
+            animation: slideUp 0.5s ease-out;
+            overflow: hidden;
+            border: 1px solid rgba(14, 165, 233, 0.22);
+            background:
+                radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 38%),
+                linear-gradient(135deg, rgba(15, 23, 42, 0.86), rgba(15, 23, 42, 0.72));
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 20px 55px rgba(2, 8, 23, 0.45);
+            backdrop-filter: blur(20px);
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1.2px;
+            background: conic-gradient(from 0deg, rgba(14, 165, 233, 0), #38bdf8, #22d3ee, #60a5fa, rgba(14, 165, 233, 0));
+            background-size: 220% 220%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderGlow 3.4s linear infinite;
+            pointer-events: none;
+            opacity: 0.95;
+        }
+
+        .form-container::after {
+            content: '';
+            position: absolute;
+            inset: auto 10% 10% auto;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.16), transparent 70%);
+            filter: blur(30px);
+            pointer-events: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .input-field {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input,
+        .input-field select {
+            transition: all 0.3s ease;
+            background: rgba(15, 23, 42, 0.6) !important;
+            border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        }
+
+        .input-field input:focus,
+        .input-field select:focus {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-color: #0ea5e9 !important;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .tab-button {
+            position: relative;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            padding: 12px 4px;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .tab-button:hover {
+            color: #cbd5e1;
+        }
+
+        .tab-button.active {
+            color: #0ea5e9;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+        }
+
+        .divider span {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 50%, #0f172a 100%);
+            padding: 0 12px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin: 0 0 8px 0;
+        }
+
+        .form-header p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 0;
+        }
     </style>
 </head>
-<body class="bg-[#0f172a] font-sans selection:bg-blue-500 selection:text-white">
+<body>
+    <div class="relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <!-- Background Grid Effect -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%230ea5e9\" fill-opacity=\"0.1\"><path d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/></g></g></svg>'); background-size: 60px 60px;"></div>
+        </div>
 
-    <div class="relative min-h-screen w-full flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&q=80')] bg-cover bg-center">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
-
-        <div class="relative z-10 w-full max-w-md p-6">
-            <div class="text-center mb-8">
-                <h1 class="text-5xl font-black text-white italic tracking-tighter drop-shadow-lg">
-                    NET<span class="text-blue-500">CHILL</span>
-                </h1>
-                <p class="text-gray-300 mt-2 font-medium">Your streaming entertainment hub</p>
-                <p class="text-blue-300 mt-2 text-sm font-semibold">New users get 14 days free access.</p>
+        <!-- Main Container -->
+        <div class="relative z-10 w-full max-w-sm">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="logo mb-2">NetChill</div>
+                <p class="text-slate-400 text-sm font-medium">Premium Streaming Entertainment</p>
             </div>
 
-            <!-- Tab Navigation -->
-            <div class="flex gap-4 mb-6 border-b border-white/20">
-                <button id="loginTab" onclick="switchTab('login')" class="tab-inactive">LOGIN</button>
-                <button id="signupTab" onclick="switchTab('signup')" class="tab-active">SIGN UP</button>
+            <!-- Form Card -->
+            <div class="bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden form-container">
+                
+                <!-- Tab Navigation -->
+                <div class="px-8 pt-8 border-b border-slate-700/50">
+                    <div class="flex gap-8">
+                        <button id="loginTab" onclick="switchTab('login')" class="tab-button active">
+                            Sign In
+                        </button>
+                        <button id="signupTab" onclick="switchTab('signup')" class="tab-button">
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm" class="p-8 hidden">
+                    <div class="form-header">
+                        <h2>Welcome Back</h2>
+                        <p>Sign in to your NetChill account</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Email Address</label>
+                            <input type="email" id="loginEmail" required placeholder="you@example.com" 
+                                class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Password</label>
+                            <input type="password" id="loginPassword" required placeholder="••••••••" 
+                                class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="w-full btn-primary py-3 rounded-lg text-white mb-4">
+                        Sign In
+                    </button>
+
+                    <div class="flex justify-end mb-4">
+                        <button type="button" id="forgotPasswordToggle" class="text-sm text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
+                    </div>
+
+                    <div id="forgotPasswordForm" class="hidden space-y-4 mb-4">
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Email for reset</label>
+                            <input type="email" id="forgotEmail" placeholder="you@example.com" class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+                        <button type="button" id="forgotBtn" class="w-full btn-primary py-3 rounded-lg text-white">
+                            Send password reset email
+                        </button>
+                        <div id="forgotError" class="hidden alert alert-error"></div>
+                        <div id="forgotSuccess" class="hidden alert alert-success"></div>
+                    </div>
+
+                    <div id="loginError" class="hidden alert alert-error"></div>
+                    <div id="loginSuccess" class="hidden alert alert-success"></div>
+                </form>
+
+                <!-- SIGNUP FORM -->
+                <form id="signupForm" class="p-8">
+                    <div class="form-header">
+                        <h2>Create Account</h2>
+                        <p>Join NetChill and start streaming today</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Full Name</label>
+                            <input type="text" id="signupName" required placeholder="John Doe" 
+                                class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Email Address</label>
+                            <input type="email" id="signupEmail" required placeholder="you@example.com" 
+                                class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Password</label>
+                            <input type="password" id="signupPassword" required placeholder="••••••••" 
+                                class="w-full px-4 py-3 rounded-lg text-slate-100 placeholder-slate-500 transition-all">
+                        </div>
+
+                        <div class="input-field">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">Plan</label>
+                            <select id="signupPackage" class="w-full px-4 py-3 rounded-lg text-slate-100 transition-all appearance-none">
+                                <option value="Free">Free Trial - 14 Days</option>
+                                <option value="Premium">Premium - $9.99/mo</option>
+                                <option value="Pro">Pro - $14.99/mo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="signupBtn" class="w-full btn-primary py-3 rounded-lg text-white mb-4">
+                        Create Account
+                    </button>
+
+                    <div id="signupError" class="hidden alert alert-error"></div>
+                    <div id="signupSuccess" class="hidden alert alert-success"></div>
+                </form>
+
+                <!-- Footer -->
+                <div class="px-8 py-6 border-t border-slate-700/50 bg-slate-900/30">
+                    <p class="text-slate-400 text-xs text-center">
+                        By signing up, you agree to our <a href="#" class="text-cyan-400 hover:text-cyan-300 transition">Terms</a> and <a href="#" class="text-cyan-400 hover:text-cyan-300 transition">Privacy Policy</a>
+                    </p>
+                </div>
             </div>
 
-            <!-- LOGIN FORM -->
-            <form id="loginForm" class="hidden bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl space-y-5">
-                <h2 class="text-2xl font-bold text-white text-center mb-6">Welcome Back</h2>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Email</label>
-                    <input type="email" id="loginEmail" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="your@email.com">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Password</label>
-                    <input type="password" id="loginPassword" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="••••••••">
-                </div>
-                <button type="submit" id="loginBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-[0.98]">LOGIN</button>
-                <div id="loginError" class="hidden text-red-400 text-sm text-center"></div>
-                <div id="loginSuccess" class="hidden text-green-400 text-sm text-center"></div>
-            </form>
-
-            <!-- SIGNUP FORM (Hidden by default) -->
-            <form id="signupForm" class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl space-y-5">
-                <h2 class="text-2xl font-bold text-white text-center mb-6">Create Account</h2>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Full Name</label>
-                    <input type="text" id="signupName" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Your Name">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Email</label>
-                    <input type="email" id="signupEmail" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="your@email.com">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Password</label>
-                    <input type="password" id="signupPassword" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="••••••••">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-300 uppercase ml-1">Package Plan</label>
-                    <select id="signupPackage" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
-                        <option class="bg-slate-900" value="Free">Start 14-Day Free Trial</option>
-                    </select>
-                </div>
-                <button type="submit" id="signupBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-xl shadow-lg transition-all active:scale-[0.98]">SIGN UP NOW</button>
-                <div id="signupError" class="hidden text-red-400 text-sm text-center"></div>
-                <div id="signupSuccess" class="hidden text-green-400 text-sm text-center"></div>
-            </form>
+            <!-- Trust Indicators -->
+            <div class="mt-8 text-center">
+                <p class="text-slate-400 text-sm">🔒 Secure • 256-bit Encryption • GDPR Compliant</p>
+            </div>
         </div>
     </div>
 
+
     <!-- API Config and Logic -->
     <script>
-        window.__API_BASE_URL__ = "https://your-backend.onrender.com/api/data"; // Replace with your actual Render URL
+        window.__API_BASE_URL__ = "https://netchillstreamingservice.onrender.com/api";
     </script>
     <script src="./api.js"></script>
 
@@ -95,24 +381,24 @@
             if (tab === 'login') {
                 loginForm.classList.remove('hidden');
                 signupForm.classList.add('hidden');
-                loginTab.className = 'tab-active';
-                signupTab.className = 'tab-inactive';
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
             } else {
                 loginForm.classList.add('hidden');
                 signupForm.classList.remove('hidden');
-                loginTab.className = 'tab-inactive';
-                signupTab.className = 'tab-active';
+                loginTab.classList.remove('active');
+                signupTab.classList.add('active');
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const storedUser = localStorage.getItem('netchill_user') || localStorage.getItem('user');
             if (!storedUser) {
-                switchTab('signup');
+                switchTab('login');
             }
         });
 
-        // Improved Login Handler
+        // Login Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -120,16 +406,16 @@
             const successEl = document.getElementById('loginSuccess');
             
             btn.disabled = true;
-            btn.innerText = "WAITING FOR SERVER..."; // Helpful for Render users
+            const originalText = btn.innerText;
+            btn.innerText = "Signing in...";
             errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
 
             try {
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
                 
                 const response = await authAPI.login(email, password);
-                
-                // Logic to handle different response structures
                 const userPayload = response.user || response.data || response;
 
                 localStorage.setItem('netchill_user', JSON.stringify({
@@ -139,27 +425,33 @@
                     subscription: userPayload.subscription || 'Free'
                 }));
 
-                successEl.textContent = "Success! Opening NetChill...";
+                successEl.textContent = "✓ Welcome back! Redirecting...";
                 successEl.classList.remove('hidden');
 
                 setTimeout(() => {
-                    window.location.replace('./index.html');
-                }, 1000);
+                    window.location.replace('./dashboard.html');
+                }, 800);
 
             } catch (error) {
                 btn.disabled = false;
-                btn.innerText = "LOGIN";
-                errorEl.textContent = error.message || "Invalid credentials or server error.";
+                btn.innerText = originalText;
+                errorEl.textContent = "✗ " + (error.message || "Invalid credentials or server error.");
                 errorEl.classList.remove('hidden');
             }
         });
 
-        // Signup form handler remains similar but with the window.location.replace fix
+        // Signup Handler
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('signupBtn');
+            const errorEl = document.getElementById('signupError');
+            const successEl = document.getElementById('signupSuccess');
+            
             btn.disabled = true;
-            btn.innerText = "CREATING ACCOUNT...";
+            const originalText = btn.innerText;
+            btn.innerText = "Creating account...";
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
 
             try {
                 const fullName = document.getElementById('signupName').value;
@@ -169,19 +461,56 @@
 
                 await authAPI.signup(fullName, email, password, subscription);
                 
-                // Store the signed-up user locally and open the main page.
-                localStorage.setItem('netchill_user', JSON.stringify({ email, fullName, subscription }));
-                document.getElementById('signupSuccess').textContent = 'Account created successfully. Opening NetChill...';
-                document.getElementById('signupSuccess').classList.remove('hidden');
+                localStorage.setItem('netchill_user', JSON.stringify({
+                    email,
+                    fullName,
+                    subscription,
+                    createdAt: new Date().toISOString(),
+                }));
+                successEl.textContent = '✓ Account created! Redirecting...';
+                successEl.classList.remove('hidden');
 
                 setTimeout(() => {
-                    window.location.replace('./index.html');
-                }, 1000);
+                    window.location.replace('./dashboard.html');
+                }, 800);
             } catch (error) {
                 btn.disabled = false;
-                btn.innerText = "SIGN UP NOW";
-                document.getElementById('signupError').textContent = error.message;
-                document.getElementById('signupError').classList.remove('hidden');
+                btn.innerText = originalText;
+                errorEl.textContent = "✗ " + (error.message || "Failed to create account");
+                errorEl.classList.remove('hidden');
+            }
+        });
+
+        // Forgot Password Handler
+        document.getElementById('forgotPasswordToggle').addEventListener('click', () => {
+            const forgotForm = document.getElementById('forgotPasswordForm');
+            forgotForm.classList.toggle('hidden');
+            document.getElementById('forgotError').classList.add('hidden');
+            document.getElementById('forgotSuccess').classList.add('hidden');
+        });
+
+        document.getElementById('forgotBtn').addEventListener('click', async () => {
+            const email = document.getElementById('forgotEmail').value;
+            const errorEl = document.getElementById('forgotError');
+            const successEl = document.getElementById('forgotSuccess');
+            const btn = document.getElementById('forgotBtn');
+
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+            btn.disabled = true;
+            const originalText = btn.innerText;
+            btn.innerText = 'Sending reset email...';
+
+            try {
+                await authAPI.forgotPassword(email);
+                successEl.textContent = '✓ If that email is registered, reset instructions have been sent.';
+                successEl.classList.remove('hidden');
+            } catch (error) {
+                errorEl.textContent = '✗ ' + (error.message || 'Unable to send reset email.');
+                errorEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
             }
         });
     </script>

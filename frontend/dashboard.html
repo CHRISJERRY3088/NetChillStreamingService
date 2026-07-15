@@ -105,6 +105,28 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
+                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-blue-300">Saved for Offline</h2>
+                            <span id="offlineStatus" class="text-xs px-2 py-1 rounded-full bg-green-600/20 text-green-300">Available</span>
+                        </div>
+                        <div id="savedDownloadsList" class="space-y-4 text-gray-300">
+                            <p class="text-gray-500">No downloads yet. Download a movie to save it here.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-blue-300">Last Viewed</h2>
+                            <span id="lastViewedStatus" class="text-xs px-2 py-1 rounded-full bg-blue-600/20 text-blue-200">Recent</span>
+                        </div>
+                        <div id="lastViewedCard" class="space-y-4 text-gray-300">
+                            <p class="text-gray-500">Start watching a movie to see it here.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-10 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold text-blue-300">Billing Status</h2>
@@ -124,7 +146,7 @@
                 </div>
 
                 <!-- Edit Profile Modal -->
-                <div id="editModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div id="editModal" class="hidden fixed inset-0 bg-black/50 items-center justify-center z-50">
                     <div class="bg-slate-900 border border-white/20 rounded-2xl p-8 w-full max-w-md">
                         <h3 class="text-2xl font-bold mb-6">Edit Profile</h3>
                         
@@ -157,6 +179,20 @@
                     </div>
                 </div>
 
+                <!-- Offline Player Modal -->
+                <div id="offlinePlayerModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/80 p-4">
+                    <div class="relative w-full max-w-4xl rounded-3xl bg-slate-950 border border-white/10 shadow-2xl overflow-hidden">
+                        <button id="offlinePlayerClose" class="absolute top-4 right-4 z-10 rounded-full bg-white/10 px-3 py-2 text-white transition hover:bg-white/20">×</button>
+                        <div class="p-4 border-b border-white/10 bg-slate-900/80">
+                            <h3 id="offlinePlayerTitle" class="text-lg font-bold text-white">Playing saved movie</h3>
+                            <p id="offlinePlayerMeta" class="text-sm text-gray-400">Offline playback</p>
+                        </div>
+                        <div class="bg-black">
+                            <video id="offlinePlayerVideo" class="w-full h-[calc(100vh-220px)] bg-black" controls playsinline></video>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Recent Activity -->
                 <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
                     <h2 class="text-2xl font-bold mb-6">Your Content</h2>
@@ -180,8 +216,14 @@
 
                 displayProfile(profile);
             } catch (error) {
-                console.error('Not authenticated:', error);
-                window.location.href = './login.html';
+                console.warn('Profile load failed, using cached profile if available:', error);
+                const cachedUser = authStorage.getUser();
+                if (!cachedUser) {
+                    window.location.href = './login.html';
+                    return;
+                }
+                displayProfile(cachedUser);
+                renderSavedMovies();
             }
         });
 
@@ -212,7 +254,7 @@
             document.getElementById('latestTxnId').textContent = latestTxnId;
 
             authStorage.saveUser({
-                id: user._id,
+                id: user._id || user.id,
                 email: user.email,
                 fullName: user.fullName,
                 subscription: user.subscription,
@@ -222,7 +264,122 @@
                 lastPaymentAmount: user.lastPaymentAmount,
                 lastPaymentDate: user.lastPaymentDate,
                 lastPaymentMethod: user.lastPaymentMethod,
+                createdAt: user.createdAt,
             });
+
+            renderSavedMovies();
+        }
+
+        function renderSavedMovies() {
+            const downloads = downloadStorage.getDownloads();
+            const lastViewed = downloadStorage.getLastViewed();
+            const downloadsContainer = document.getElementById('savedDownloadsList');
+            const lastViewedCard = document.getElementById('lastViewedCard');
+            const offlineStatus = document.getElementById('offlineStatus');
+            const lastViewedStatus = document.getElementById('lastViewedStatus');
+
+            downloadsContainer.innerHTML = '';
+            if (!downloads || downloads.length === 0) {
+                downloadsContainer.innerHTML = '<p class="text-gray-500">No downloads yet. Download a movie to save it here.</p>';
+                offlineStatus.textContent = 'Empty';
+                offlineStatus.className = 'text-xs px-2 py-1 rounded-full bg-yellow-600/20 text-yellow-200';
+            } else {
+                downloads.forEach((item) => {
+                    const downloadItem = document.createElement('div');
+                    downloadItem.className = 'bg-black/30 border border-white/10 rounded-2xl p-4';
+                    downloadItem.innerHTML = `
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <p class="text-white font-semibold">${item.title || 'Saved Movie'}</p>
+                                <p class="text-sm text-gray-400">${item.episode} • ${item.quality} • ${item.format}</p>
+                            </div>
+                            <span class="text-xs text-gray-400">${new Date(item.downloadedAt).toLocaleDateString() || '-'}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">${item.size || 'Downloaded file'}</p>
+                    `;
+
+                    const playButton = document.createElement('button');
+                    playButton.type = 'button';
+                    playButton.className = 'mt-4 inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500 transition';
+                    playButton.textContent = 'Play Offline';
+                    playButton.addEventListener('click', () => playOfflineMovie(item));
+                    downloadItem.appendChild(playButton);
+
+                    downloadsContainer.appendChild(downloadItem);
+                });
+                offlineStatus.textContent = 'Available';
+                offlineStatus.className = 'text-xs px-2 py-1 rounded-full bg-green-600/20 text-green-300';
+            }
+
+            lastViewedCard.innerHTML = '';
+            if (!lastViewed) {
+                lastViewedCard.innerHTML = '<p class="text-gray-500">Start watching a movie to have it appear here.</p>';
+                lastViewedStatus.textContent = 'None';
+                lastViewedStatus.className = 'text-xs px-2 py-1 rounded-full bg-yellow-600/20 text-yellow-200';
+            } else {
+                const viewedItem = document.createElement('div');
+                viewedItem.className = 'bg-black/30 border border-white/10 rounded-2xl p-4';
+                viewedItem.innerHTML = `
+                    <p class="text-white font-semibold">${lastViewed.title || 'Last Viewed Movie'}</p>
+                    <p class="text-sm text-gray-400">${lastViewed.episode} • ${lastViewed.quality} • ${lastViewed.format}</p>
+                    <p class="text-sm text-gray-500 mt-2">Viewed on ${new Date(lastViewed.viewedAt).toLocaleDateString() || '-'}</p>
+                `;
+
+                const viewButton = document.createElement('button');
+                viewButton.type = 'button';
+                viewButton.className = 'mt-4 inline-flex items-center justify-center rounded-full bg-slate-700 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-600 transition';
+                viewButton.textContent = 'Play Last Viewed';
+                viewButton.addEventListener('click', () => playOfflineMovie(lastViewed));
+                viewedItem.appendChild(viewButton);
+
+                lastViewedCard.appendChild(viewedItem);
+                lastViewedStatus.textContent = 'Saved';
+                lastViewedStatus.className = 'text-xs px-2 py-1 rounded-full bg-blue-600/20 text-blue-200';
+            }
+        }
+
+        function playOfflineMovie(movie) {
+            if (!movie) {
+                alert('No saved movie data available.');
+                return;
+            }
+
+            const url = movie.fileUrl || movie.viewedUrl;
+            if (!url) {
+                alert('This movie does not have a playable URL saved.');
+                return;
+            }
+
+            const title = movie.title || 'Saved Movie';
+            const meta = `${movie.episode || ''}${movie.quality ? ' • ' + movie.quality : ''}${movie.format ? ' • ' + movie.format : ''}`;
+
+            const modal = document.getElementById('offlinePlayerModal');
+            const video = document.getElementById('offlinePlayerVideo');
+            const titleEl = document.getElementById('offlinePlayerTitle');
+            const metaEl = document.getElementById('offlinePlayerMeta');
+
+            titleEl.textContent = title;
+            metaEl.textContent = meta;
+            video.src = url;
+            video.load();
+            video.play().catch(() => {
+                console.warn('Inline playback failed, falling back to new tab.');
+                window.open(url, '_blank', 'noopener,noreferrer');
+                return;
+            });
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeOfflinePlayer() {
+            const modal = document.getElementById('offlinePlayerModal');
+            const video = document.getElementById('offlinePlayerVideo');
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         function editProfile() {
@@ -233,11 +390,15 @@
             
             document.getElementById('editName').value = profile.fullName;
             document.getElementById('editPlan').value = profile.subscription;
-            document.getElementById('editModal').classList.remove('hidden');
+            const editModal = document.getElementById('editModal');
+            editModal.classList.remove('hidden');
+            editModal.classList.add('flex');
         }
 
         function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
+            const editModal = document.getElementById('editModal');
+            editModal.classList.add('hidden');
+            editModal.classList.remove('flex');
             document.getElementById('editError').classList.add('hidden');
         }
 
@@ -272,6 +433,13 @@
                 window.location.href = './login.html';
             }
         }
+
+        document.getElementById('offlinePlayerClose').addEventListener('click', closeOfflinePlayer);
+        document.getElementById('offlinePlayerModal').addEventListener('click', (event) => {
+            if (event.target === event.currentTarget) {
+                closeOfflinePlayer();
+            }
+        });
     </script>
 </body>
 </html>

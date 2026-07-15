@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend-Backend Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background: #0a0a0a;
+            border: 2px solid #00d4ff;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+            margin-top: 0;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status.success {
+            background-color: #0d3d2d;
+            border: 2px solid #00d962;
+            color: #00d962;
+        }
+        .status.error {
+            background-color: #3d0d0d;
+            border: 2px solid #ff4444;
+            color: #ff6666;
+        }
+        .status.testing {
+            background-color: #3d3d0d;
+            border: 2px solid #ffcc00;
+            color: #ffee00;
+        }
+        .log {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #00d4ff;
+            padding-left: 10px;
+        }
+        .log-entry.success {
+            border-left-color: #00d962;
+            color: #00d962;
+        }
+        .log-entry.error {
+            border-left-color: #ff4444;
+            color: #ff6666;
+        }
+        .log-entry.info {
+            border-left-color: #00d4ff;
+            color: #00d4ff;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #00f0ff;
+        }
+        button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            color: #999;
+        }
+        .backend-url {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 Connection Test</h1>
+        <div id="status" class="status testing">Testing Connection...</div>
+        <div class="log" id="log"></div>
+        <button id="testBtn" onclick="runTest()">Run Test Again</button>
+        <div class="backend-url" id="urlDisplay"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://netchillstreamingservice.onrender.com/api';
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log');
+        const testBtn = document.getElementById('testBtn');
+        const urlDisplay = document.getElementById('urlDisplay');
+
+        urlDisplay.textContent = `Backend: ${BACKEND_URL}`;
+
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        async function runTest() {
+            testBtn.disabled = true;
+            logEl.innerHTML = '';
+            statusEl.className = 'status testing';
+            statusEl.textContent = '🔄 Testing Connection...';
+            addLog('Starting connection test...', 'info');
+
+            try {
+                // Test 1: Basic connectivity
+                addLog('Step 1: Testing basic connectivity...', 'info');
+                const response = await fetch(`${BACKEND_URL}/auth/me`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                addLog(`Response Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+
+                const data = await response.json();
+                addLog(`Response Data: ${JSON.stringify(data)}`, 'info');
+
+                // Test 2: Test with a health check endpoint (if available)
+                addLog('Step 2: Testing health endpoint...', 'info');
+                try {
+                    const healthResponse = await fetch(`${BACKEND_URL.replace('/api', '')}/`, {
+                        method: 'GET',
+                    });
+                    addLog(`Health Check Status: ${healthResponse.status}`, 'success');
+                } catch (healthErr) {
+                    addLog(`Health Check: Not available (optional)`, 'info');
+                }
+
+                // Final status
+                statusEl.className = 'status success';
+                statusEl.textContent = '✅ Connection Successful!';
+                addLog('✅ Frontend is connected to backend!', 'success');
+
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Connection Failed';
+                addLog(`Error: ${error.message}`, 'error');
+                addLog('Make sure backend is running on port 3000', 'error');
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+
+        // Run test on page load
+        window.addEventListener('load', runTest);
+    </script>
+</body>
+</html>

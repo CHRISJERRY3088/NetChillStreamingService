@@ -16,6 +16,6 @@ export const getResendClient = () => {
 };
 
 export const sender = {
-    email: process.env.EMAIL_FROM,
-    name: process.env.EMAIL_FROM_NAME,
+    email: ENV.EMAIL_FROM || process.env.EMAIL_FROM || "onboarding@resend.dev",
+    name: ENV.EMAIL_FROM_NAME || process.env.EMAIL_FROM_NAME || "NetChill",
 };

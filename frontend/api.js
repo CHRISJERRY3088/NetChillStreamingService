@@ -1,5 +1,5 @@
 // API Configuration - Frontend connection to Backend
-const DEFAULT_BACKEND_BASE_URL = 'https://your-backend.onrender.com/api/data';
+const DEFAULT_BACKEND_BASE_URL = 'https://netchillstreamingservice.onrender.com/api';
 
 function resolveApiBaseUrl() {
   if (typeof window !== 'undefined' && window.__API_BASE_URL__) {
@@ -14,7 +14,7 @@ function resolveApiBaseUrl() {
       return DEFAULT_BACKEND_BASE_URL;
     }
 
-    return 'https://your-backend.onrender.com/api/data';
+    return DEFAULT_BACKEND_BASE_URL;
   }
 
   if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
@@ -75,6 +75,13 @@ const authAPI = {
     return apiCall('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+    });
+  },
+
+  forgotPassword: async (email) => {
+    return apiCall('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
     });
   },
 
@@ -164,7 +171,41 @@ const authStorage = {
   },
 };
 
+const downloadStorage = {
+  STORAGE_KEY: 'netchill_downloads',
+  LAST_VIEWED_KEY: 'netchill_last_viewed',
+
+  getDownloads: () => {
+    const raw = localStorage.getItem(downloadStorage.STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  },
+
+  saveDownload: (download) => {
+    if (!download) return;
+    const downloads = downloadStorage.getDownloads();
+    const existingIndex = downloads.findIndex((item) => item.episode === download.episode && item.quality === download.quality && item.format === download.format);
+    if (existingIndex !== -1) {
+      downloads[existingIndex] = { ...downloads[existingIndex], ...download, downloadedAt: download.downloadedAt || new Date().toISOString() };
+    } else {
+      downloads.unshift({ ...download, downloadedAt: new Date().toISOString() });
+    }
+    localStorage.setItem(downloadStorage.STORAGE_KEY, JSON.stringify(downloads.slice(0, 30)));
+  },
+
+  getLastViewed: () => {
+    const raw = localStorage.getItem(downloadStorage.LAST_VIEWED_KEY);
+    return raw ? JSON.parse(raw) : null;
+  },
+
+  saveLastViewed: (movie) => {
+    if (!movie) return;
+    const payload = { ...movie, viewedAt: new Date().toISOString() };
+    localStorage.setItem(downloadStorage.LAST_VIEWED_KEY, JSON.stringify(payload));
+  },
+};
+
 if (typeof window !== 'undefined') {
   window.authAPI = authAPI;
   window.authStorage = authStorage;
+  window.downloadStorage = downloadStorage;
 }
