@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabaseClient.js"; // Ensure you have this hel
 import { sendWelcomeEmail } from "../Emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 import jwt from 'jsonwebtoken';
-import { findByEmail } from "../lib/local_user_store.js";
+import { canLoginNow, findByEmail, getNextAllowedLoginAt, rememberLogin } from "../lib/local_user_store.js";
 
 function setAuthCookies(req, res, session) {
     if (!session?.access_token) return;
@@ -101,6 +101,14 @@ export const signup = async (req, res) => {
             setAuthCookies(req, res, data.session);
         }
 
+        rememberLogin({
+            id: data?.user?.id || email,
+            _id: data?.user?.id || email,
+            fullName,
+            email,
+            subscription,
+        });
+
         // 2. Send Welcome Email
         sendWelcomeEmail(email, fullName, ENV.CLIENT_URL)
             .catch(err => console.error("Email failed:", err));
@@ -133,6 +141,13 @@ export const login = async (req, res) => {
                 refresh_token: "dev_refresh_token",
             };
             setAuthCookies(req, res, fakeSession);
+            rememberLogin({
+                id: "dev-1",
+                _id: "dev-1",
+                fullName: "Dev Test User",
+                email,
+                subscription: "Free",
+            });
             return res.status(200).json({
                 user: {
                     _id: "dev-1",
@@ -145,9 +160,18 @@ export const login = async (req, res) => {
             });
         }
 
-        const localUser = await findByEmail(email);
+        const existingUser = findByEmail(email);
+        if (existingUser && !canLoginNow(existingUser)) {
+            const nextAllowedAt = getNextAllowedLoginAt(existingUser);
+            return res.status(429).json({
+                message: `You can log in again after ${new Date(nextAllowedAt).toLocaleString()}. Login is limited to once every 24 hours.`,
+            });
+        }
+
+        const localUser = existingUser;
         if (localUser && localUser.password === password) {
-            return sendLocalUserSession(req, res, localUser);
+            const updatedUser = rememberLogin(localUser, new Date().toISOString());
+            return sendLocalUserSession(req, res, updatedUser);
         }
 
         if (!ENV.SUPABASE_URL || !(ENV.SUPABASE_ANON_KEY || ENV.SUPABASE_SERVICE_ROLE_KEY)) {
@@ -173,8 +197,17 @@ export const login = async (req, res) => {
 
         setAuthCookies(req, res, data.session);
 
+        const profile = buildUserPayload(data.user);
+        rememberLogin({
+            id: data.user.id,
+            _id: data.user.id,
+            fullName: profile?.fullName || data.user.email,
+            email: data.user.email,
+            subscription: profile?.subscription || 'Free',
+        });
+
         return res.status(200).json({
-            user: buildUserPayload(data.user),
+            user: profile,
             session: data.session,
         });
 

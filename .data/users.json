@@ -10,10 +10,12 @@
   },
   {
     "id": "node-test-user",
+    "_id": "node-test-user",
     "fullName": "Node Test User",
     "email": "node-test@example.com",
     "password": "node-pass",
-    "subscription": "Free"
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-15T19:22:00.998Z"
   },
   {
     "id": "node-test-user",
@@ -38,9 +40,34 @@
   },
   {
     "id": "cookie-test-user",
+    "_id": "cookie-test-user",
+    "fullName": "Cookie Test User",
+    "email": "cookie-test@example.com",
+    "password": "cookie-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-15T19:22:03.473Z"
+  },
+  {
+    "id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free"
+  },
+  {
+    "id": "cookie-test-user",
     "fullName": "Cookie Test User",
     "email": "cookie-test@example.com",
     "password": "cookie-pass",
     "subscription": "Free"
+  },
+  {
+    "id": "cooldown-test-user",
+    "_id": "cooldown-test-user",
+    "fullName": "Cooldown Test User",
+    "email": "cooldown-test@example.com",
+    "password": "cooldown-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-15T19:22:03.480Z"
   }
 ]

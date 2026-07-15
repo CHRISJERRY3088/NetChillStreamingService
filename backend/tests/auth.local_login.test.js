@@ -75,3 +75,26 @@ test('login sets non-secure cookies for local HTTP development', async () => {
   assert.equal(res.statusCode, 200);
   assert.equal(res.cookies.jwt.options.secure, false);
 });
+
+test('login blocks repeated sign-ins within 24 hours for the same user', async () => {
+  const email = 'cooldown-test@example.com';
+  addUser({
+    id: 'cooldown-test-user',
+    fullName: 'Cooldown Test User',
+    email,
+    password: 'cooldown-pass',
+    subscription: 'Free',
+    lastLoginAt: new Date().toISOString(),
+  });
+
+  const req = {
+    body: { email, password: 'cooldown-pass' },
+    headers: {},
+  };
+  const res = createRes();
+
+  await login(req, res);
+
+  assert.equal(res.statusCode, 429);
+  assert.match(res.body.message, /24 hours/i);
+});
