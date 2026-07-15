@@ -14,7 +14,22 @@
     <script src="./menu.js" defer></script>
     <script src="./display.js" defer></script>
     <script>
-        window.__API_BASE_URL__ = window.__API_BASE_URL__ || "https://netchillstreamingservice.onrender.com/api";
+        (function() {
+            if (window.__API_BASE_URL__) return;
+            const localHosts = ['localhost', '127.0.0.1', '::1'];
+            const host = window.location.hostname;
+            const query = new URLSearchParams(window.location.search).get('api');
+            if (query) {
+                const normalized = query.replace(/\/$/, '');
+                window.__API_BASE_URL__ = normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+                return;
+            }
+            if (localHosts.includes(host)) {
+                window.__API_BASE_URL__ = `${window.location.origin}/api`;
+                return;
+            }
+            window.__API_BASE_URL__ = 'https://netchillstreamingservice.onrender.com/api';
+        })();
     </script>
     <script src="./api.js" defer></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
@@ -174,6 +189,7 @@
                 <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Religion</a>
                 <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Ramance</a>
                 <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Comedy</a>
+                <a href="../frontend/account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Horror</a>
             </div>
         </nav>
     </div>
@@ -181,7 +197,7 @@
     <!-- Ad Section -->
     <div class="mt-8 overflow-hidden max-w-2xl mx-auto rounded-lg">
         <div class="animate-ad flex justify-center">
-            <div class="dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] bg-shadow-2xl bg-white/20 border border-blue-white/50 text-white px-10 py-2 rounded font-bold whitespace-nowrap">
+            <div id="ad" class="dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] bg-shadow-2xl bg-white/20 border border-blue-white/50 text-white px-10 py-2 rounded font-bold whitespace-nowrap">
                 SPECIAL OFFER: UPGRADE TO PREMIUM FOR 4K STREAMING
             </div>
         </div>

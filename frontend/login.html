@@ -367,7 +367,22 @@
 
     <!-- API Config and Logic -->
     <script>
-        window.__API_BASE_URL__ = "https://netchillstreamingservice.onrender.com/api";
+        (function() {
+            if (window.__API_BASE_URL__) return;
+            const localHosts = ['localhost', '127.0.0.1', '::1'];
+            const host = window.location.hostname;
+            const query = new URLSearchParams(window.location.search).get('api');
+            if (query) {
+                const normalized = query.replace(/\/$/, '');
+                window.__API_BASE_URL__ = normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+                return;
+            }
+            if (localHosts.includes(host)) {
+                window.__API_BASE_URL__ = `${window.location.origin}/api`;
+                return;
+            }
+            window.__API_BASE_URL__ = 'https://netchillstreamingservice.onrender.com/api';
+        })();
     </script>
     <script src="./api.js"></script>
 

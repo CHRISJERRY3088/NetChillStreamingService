@@ -1,27 +1,45 @@
 // API Configuration - Frontend connection to Backend
 const DEFAULT_BACKEND_BASE_URL = 'https://netchillstreamingservice.onrender.com/api';
 
+function getApiUrlFromQuery() {
+  if (typeof window === 'undefined' || !window.location || !window.location.search) {
+    return null;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const apiUrl = params.get('api');
+  if (!apiUrl) {
+    return null;
+  }
+
+  const normalizedUrl = apiUrl.replace(/\/$/, '');
+  return normalizedUrl.endsWith('/api') ? normalizedUrl : `${normalizedUrl}/api`;
+}
+
 function resolveApiBaseUrl() {
   if (typeof window !== 'undefined' && window.__API_BASE_URL__) {
     return window.__API_BASE_URL__;
   }
 
+  const queryApi = getApiUrlFromQuery();
+  if (queryApi) {
+    return queryApi;
+  }
+
   if (typeof window !== 'undefined' && window.location && /^https?:$/i.test(window.location.protocol)) {
-    const { hostname } = window.location;
+    const { hostname, origin } = window.location;
     const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
 
     if (isLocalHost) {
-      return DEFAULT_BACKEND_BASE_URL;
+      return `${origin}/api`;
     }
-
-    return DEFAULT_BACKEND_BASE_URL;
   }
 
   if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
-    return process.env.REACT_APP_API_URL;
+    const normalizedUrl = process.env.REACT_APP_API_URL.replace(/\/$/, '');
+    return normalizedUrl.endsWith('/api') ? normalizedUrl : `${normalizedUrl}/api`;
   }
 
-  // Fallback when opened as file:// or in other non-http contexts.
   return DEFAULT_BACKEND_BASE_URL;
 }
 
