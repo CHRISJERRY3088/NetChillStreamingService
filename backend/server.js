@@ -34,8 +34,10 @@ const allowedOrigins = [
   "https://netchillstreamingservice.vercel.app", // Replace with your actual frontend URL
 ].filter(Boolean);
 
+const isDevelopment = ENV.NODE_ENV !== 'production';
 const isAllowedOrigin = (origin) => {
   if (!origin || origin === "null") return true;
+  if (isDevelopment) return true;
 
   const normalizedOrigin = origin.toLowerCase();
   return allowedOrigins.some((allowedOrigin) => allowedOrigin.toLowerCase() === normalizedOrigin) ||
@@ -56,7 +58,7 @@ app.use(cors({
   },
   credentials: true, // ✅ Required for login sessions/cookies
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Device-Id", "X-Requested-With"],
 }));
 
 // ✅ 7. Middleware (After CORS)

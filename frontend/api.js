@@ -27,12 +27,8 @@ function resolveApiBaseUrl() {
   }
 
   if (typeof window !== 'undefined' && window.location && /^https?:$/i.test(window.location.protocol)) {
-    const { hostname, origin } = window.location;
-    const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
-
-    if (isLocalHost) {
-      return `${origin}/api`;
-    }
+    const { origin } = window.location;
+    return `${origin}/api`;
   }
 
   if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
