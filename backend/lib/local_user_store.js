@@ -4,7 +4,6 @@ import { supabase } from './supabaseClient.js';
 
 const DATA_DIR = path.resolve(process.cwd(), '.data');
 const STORE_FILE = path.join(DATA_DIR, 'users.json');
-const LOGIN_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 function ensureStore() {
   try {
@@ -41,6 +40,7 @@ function normalizeUser(user = {}) {
     password: user.password || '',
     subscription: user.subscription || 'Free',
     lastLoginAt: user.lastLoginAt || user.last_login_at || null,
+    activeDeviceId: user.activeDeviceId || user.active_device_id || null,
   };
 }
 
@@ -52,6 +52,7 @@ function toSupabaseProfile(user) {
     full_name: normalized.fullName,
     subscription: normalized.subscription,
     last_login_at: normalized.lastLoginAt,
+    active_device_id: normalized.activeDeviceId,
     updated_at: new Date().toISOString(),
   };
 }
@@ -90,8 +91,12 @@ export function findById(id) {
   return all.find((u) => String(u.id) === String(id)) || null;
 }
 
-export function rememberLogin(user, loginAt = new Date().toISOString()) {
-  const normalized = normalizeUser({ ...user, lastLoginAt: loginAt });
+export function rememberLogin(user, loginAt = new Date().toISOString(), deviceId = null) {
+  const normalized = normalizeUser({
+    ...user,
+    lastLoginAt: loginAt,
+    activeDeviceId: deviceId || user?.activeDeviceId || user?.active_device_id || null,
+  });
   const all = readAll();
   const existingIndex = all.findIndex((entry) => String(entry.email).toLowerCase() === String(normalized.email).toLowerCase());
   if (existingIndex >= 0) {
@@ -104,18 +109,35 @@ export function rememberLogin(user, loginAt = new Date().toISOString()) {
   return normalized;
 }
 
-export function canLoginNow(user) {
-  if (!user?.lastLoginAt) return true;
-  const lastLogin = Date.parse(user.lastLoginAt);
-  if (Number.isNaN(lastLogin)) return true;
-  return Date.now() - lastLogin >= LOGIN_WINDOW_MS;
+export function canLoginNow() {
+  return true;
 }
 
-export function getNextAllowedLoginAt(user) {
-  if (!user?.lastLoginAt) return null;
-  const lastLogin = Date.parse(user.lastLoginAt);
-  if (Number.isNaN(lastLogin)) return null;
-  return new Date(lastLogin + LOGIN_WINDOW_MS).toISOString();
+export function clearDeviceSession(user, deviceId = null) {
+  const all = readAll();
+  const targetEmail = user?.email ? String(user.email).toLowerCase() : '';
+  const targetId = user?.id || user?._id || '';
+  const existingIndex = all.findIndex((entry) => {
+    const sameEmail = targetEmail && String(entry.email).toLowerCase() === targetEmail;
+    const sameId = targetId && String(entry.id) === String(targetId);
+    return sameEmail || sameId;
+  });
+
+  if (existingIndex < 0) return null;
+
+  const entry = all[existingIndex];
+  const shouldClear = !deviceId || !entry.activeDeviceId || entry.activeDeviceId === deviceId;
+  if (!shouldClear) return entry;
+
+  const updated = normalizeUser({ ...entry, activeDeviceId: null });
+  all[existingIndex] = updated;
+  writeAll(all);
+  void syncToSupabase(updated);
+  return updated;
+}
+
+export function getNextAllowedLoginAt() {
+  return null;
 }
 
 export function allUsers() {

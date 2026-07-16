@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabaseClient.js"; // Ensure you have this hel
 import { sendWelcomeEmail } from "../Emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 import jwt from 'jsonwebtoken';
-import { canLoginNow, findByEmail, getNextAllowedLoginAt, rememberLogin } from "../lib/local_user_store.js";
+import { clearDeviceSession, findByEmail, rememberLogin } from "../lib/local_user_store.js";
 
 function setAuthCookies(req, res, session) {
     if (!session?.access_token) return;
@@ -45,6 +45,27 @@ function buildUserPayload(supabaseUser) {
         paymentStatus: metadata.paymentStatus || "Unpaid",
         accessAllowed: metadata.paymentStatus === "Paid" || true, // adjust logic here
     };
+}
+
+function getDeviceId(req) {
+    const headerValue = req?.headers?.['x-device-id'] || req?.headers?.['X-Device-Id'] || req?.headers?.deviceid;
+    if (headerValue) return String(headerValue);
+    if (req?.body?.deviceId) return String(req.body.deviceId);
+    if (req?.cookies?.deviceId) return String(req.cookies.deviceId);
+    return null;
+}
+
+function getAuthenticatedUser(req) {
+    const email = req?.body?.email || req?.body?.user?.email || null;
+    if (req?.cookies?.jwt && ENV.JWT_SECRET) {
+        try {
+            const decoded = jwt.verify(req.cookies.jwt, ENV.JWT_SECRET);
+            return { id: decoded.id, email: decoded.email || email };
+        } catch (error) {
+            // Ignore invalid or expired JWTs and fall back to request data.
+        }
+    }
+    return { id: req?.body?.user?.id || null, email };
 }
 
 function sendLocalUserSession(req, res, localUser) {
@@ -107,7 +128,7 @@ export const signup = async (req, res) => {
             fullName,
             email,
             subscription,
-        });
+        }, new Date().toISOString(), getDeviceId(req));
 
         // 2. Send Welcome Email
         sendWelcomeEmail(email, fullName, ENV.CLIENT_URL)
@@ -147,7 +168,7 @@ export const login = async (req, res) => {
                 fullName: "Dev Test User",
                 email,
                 subscription: "Free",
-            });
+            }, new Date().toISOString(), getDeviceId(req));
             return res.status(200).json({
                 user: {
                     _id: "dev-1",
@@ -160,17 +181,12 @@ export const login = async (req, res) => {
             });
         }
 
+        const deviceId = getDeviceId(req);
         const existingUser = findByEmail(email);
-        if (existingUser && !canLoginNow(existingUser)) {
-            const nextAllowedAt = getNextAllowedLoginAt(existingUser);
-            return res.status(429).json({
-                message: `You can log in again after ${new Date(nextAllowedAt).toLocaleString()}. Login is limited to once every 24 hours.`,
-            });
-        }
 
         const localUser = existingUser;
         if (localUser && localUser.password === password) {
-            const updatedUser = rememberLogin(localUser, new Date().toISOString());
+            const updatedUser = rememberLogin(localUser, new Date().toISOString(), deviceId);
             return sendLocalUserSession(req, res, updatedUser);
         }
 
@@ -186,7 +202,8 @@ export const login = async (req, res) => {
         if (error) {
             const fallbackUser = await findByEmail(email);
             if (fallbackUser && fallbackUser.password === password) {
-                return sendLocalUserSession(req, res, fallbackUser);
+                const updatedUser = rememberLogin(fallbackUser, new Date().toISOString(), getDeviceId(req));
+                return sendLocalUserSession(req, res, updatedUser);
             }
             return res.status(400).json({ message: error?.message || "Invalid credentials" });
         }
@@ -204,7 +221,7 @@ export const login = async (req, res) => {
             fullName: profile?.fullName || data.user.email,
             email: data.user.email,
             subscription: profile?.subscription || 'Free',
-        });
+        }, new Date().toISOString(), getDeviceId(req));
 
         return res.status(200).json({
             user: profile,
@@ -218,6 +235,9 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
+        const user = getAuthenticatedUser(req);
+        const deviceId = getDeviceId(req);
+        clearDeviceSession(user, deviceId);
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         return res.status(200).json({ message: "Logged out successfully" });

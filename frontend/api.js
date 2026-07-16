@@ -46,16 +46,63 @@ function resolveApiBaseUrl() {
 const API_BASE_URL = resolveApiBaseUrl();
 
 // Helper function to make API requests with proper error handling
+function getDeviceId() {
+  if (typeof window === 'undefined') return null;
+
+  const existingDeviceId = window.localStorage.getItem('netchill_device_id');
+  if (existingDeviceId) {
+    return existingDeviceId;
+  }
+
+  const generatedDeviceId = `device-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  window.localStorage.setItem('netchill_device_id', generatedDeviceId);
+  return generatedDeviceId;
+}
+
+function withDeviceContext(options = {}) {
+  const deviceId = getDeviceId();
+  if (!deviceId) {
+    return options;
+  }
+
+  const headers = {
+    ...options.headers,
+    'X-Device-Id': deviceId,
+  };
+
+  if (options.body && typeof options.body === 'string') {
+    try {
+      const parsedBody = JSON.parse(options.body);
+      if (!parsedBody.deviceId) {
+        parsedBody.deviceId = deviceId;
+        return {
+          ...options,
+          headers,
+          body: JSON.stringify(parsedBody),
+        };
+      }
+    } catch (error) {
+      // Ignore invalid JSON bodies and fall back to the raw request.
+    }
+  }
+
+  return {
+    ...options,
+    headers,
+  };
+}
+
 async function apiCall(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
+  const requestOptions = withDeviceContext(options);
   const headers = {
     'Content-Type': 'application/json',
-    ...options.headers,
+    ...requestOptions.headers,
   };
 
   try {
     const response = await fetch(url, {
-      ...options,
+      ...requestOptions,
       headers,
       credentials: 'include', // Include cookies for JWT auth
     });

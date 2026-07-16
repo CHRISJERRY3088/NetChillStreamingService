@@ -76,25 +76,48 @@ test('login sets non-secure cookies for local HTTP development', async () => {
   assert.equal(res.cookies.jwt.options.secure, false);
 });
 
-test('login blocks repeated sign-ins within 24 hours for the same user', async () => {
-  const email = 'cooldown-test@example.com';
+test('login allows the same device to sign in again until logout', async () => {
+  const email = 'device-same-test@example.com';
   addUser({
-    id: 'cooldown-test-user',
-    fullName: 'Cooldown Test User',
+    id: 'device-same-test-user',
+    fullName: 'Device Same Test User',
     email,
-    password: 'cooldown-pass',
+    password: 'device-pass',
     subscription: 'Free',
-    lastLoginAt: new Date().toISOString(),
+    activeDeviceId: 'phone-1',
   });
 
   const req = {
-    body: { email, password: 'cooldown-pass' },
-    headers: {},
+    body: { email, password: 'device-pass' },
+    headers: { 'x-device-id': 'phone-1' },
   };
   const res = createRes();
 
   await login(req, res);
 
-  assert.equal(res.statusCode, 429);
-  assert.match(res.body.message, /24 hours/i);
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.body.user.email, email);
+});
+
+test('login allows sign-in from a different device', async () => {
+  const email = 'device-different-test@example.com';
+  addUser({
+    id: 'device-different-test-user',
+    fullName: 'Device Different Test User',
+    email,
+    password: 'device-pass',
+    subscription: 'Free',
+    activeDeviceId: 'phone-1',
+  });
+
+  const req = {
+    body: { email, password: 'device-pass' },
+    headers: { 'x-device-id': 'phone-2' },
+  };
+  const res = createRes();
+
+  await login(req, res);
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.body.user.email, email);
 });

@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": "node-test-user",
+    "_id": "node-test-user",
+    "fullName": "Node Test User",
+    "email": "node-test@example.com",
+    "password": "node-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-16T10:37:36.142Z",
+    "activeDeviceId": null
+  },
+  {
+    "id": "cookie-test-user",
+    "_id": "cookie-test-user",
+    "fullName": "Cookie Test User",
+    "email": "cookie-test@example.com",
+    "password": "cookie-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-16T10:37:36.226Z",
+    "activeDeviceId": null
+  },
+  {
+    "id": "device-same-test-user",
+    "_id": "device-same-test-user",
+    "fullName": "Device Same Test User",
+    "email": "device-same-test@example.com",
+    "password": "device-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-16T10:37:36.461Z",
+    "activeDeviceId": "phone-1"
+  },
+  {
+    "id": "device-different-test-user",
+    "_id": "device-different-test-user",
+    "fullName": "Device Different Test User",
+    "email": "device-different-test@example.com",
+    "password": "device-pass",
+    "subscription": "Free",
+    "lastLoginAt": "2026-07-16T10:37:36.577Z",
+    "activeDeviceId": "phone-2"
+  }
+]

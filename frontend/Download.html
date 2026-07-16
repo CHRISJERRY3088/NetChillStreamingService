@@ -208,7 +208,7 @@
                             <div class="flex items-center justify-between gap-4">
                                 <div>
                                     <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Latest Release</p>
-                                    <h1 class="mt-2 text-3xl font-bold text-white">Avatar: Elemental Dawn</h1>
+                                    <h1 id="selected-movie-title" class="mt-2 text-3xl font-bold text-white">Avatar: Elemental Dawn</h1>
                                 </div>
                                 <span class="inline-flex items-center rounded-full bg-blue-500/15 px-3 py-2 text-sm font-semibold text-blue-300">4K Ready</span>
                             </div>
@@ -218,7 +218,7 @@
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5 shadow-lg">
                             <p class="text-xs uppercase tracking-[0.25em] text-slate-500">Genre</p>
-                            <p class="mt-3 text-xl font-semibold text-white">Action · Fantasy</p>
+                            <p id="selected-movie-genre" class="mt-3 text-xl font-semibold text-white">Action · Fantasy</p>
                         </div>
                         <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5 shadow-lg">
                             <p class="text-xs uppercase tracking-[0.25em] text-slate-500">Seasons</p>
@@ -252,7 +252,7 @@
 
         <section class="mt-10 rounded-[2rem] border border-white/10 bg-slate-900/95 p-8 shadow-2xl backdrop-blur-xl">
             <h3 class="text-3xl font-bold text-white mb-3">Description</h3>
-            <p class="text-slate-300 leading-8 max-w-3xl">A young boy known as the Avatar must master the four elemental powers to restore balance to the world. Stream the latest episodes, download premium-quality releases, and choose subtitles for the ultimate viewing experience.</p>
+            <p id="selected-movie-description" class="text-slate-300 leading-8 max-w-3xl">A young boy known as the Avatar must master the four elemental powers to restore balance to the world. Stream the latest episodes, download premium-quality releases, and choose subtitles for the ultimate viewing experience.</p>
         </section>
     </main>
 
@@ -491,6 +491,77 @@
         });
 
         setPreviewSize('medium');
+
+        const selectedMovieDetails = {
+            'hero-squad': {
+                title: 'Hero Squad',
+                preview: 'Hero Squad',
+                genre: 'Animation · Adventure',
+                description: 'A brave squad of heroes unites to protect the city from a mysterious threat. The action-packed adventure is packed with heart, humor, and high-stakes heroics.'
+            },
+            'sky-riders': {
+                title: 'Sky Riders',
+                preview: 'Sky Riders',
+                genre: 'Fantasy · Adventure',
+                description: 'Follow a daring team of sky riders as they cross stormy skies and uncover an ancient secret hidden above the clouds.'
+            },
+            'ocean-drift': {
+                title: 'Ocean Drift',
+                preview: 'Ocean Drift',
+                genre: 'Family · Drama',
+                description: 'A heartfelt story of friendship and survival as a family embarks on a life-changing journey across the sea.'
+            },
+            'neon-city': {
+                title: 'Neon City',
+                preview: 'Neon City',
+                genre: 'Action · Sci-fi',
+                description: 'In a neon-lit future, a fearless courier discovers the city’s hidden power source before it falls into the wrong hands.'
+            },
+            'moonlight': {
+                title: 'Moonlight',
+                preview: 'Moonlight',
+                genre: 'Drama · Romance',
+                description: 'A quiet love story shaped by memory, longing, and the warm glow of a moonlit night.'
+            },
+            'pixel-quest': {
+                title: 'Pixel Quest',
+                preview: 'Pixel Quest',
+                genre: 'Sci-fi · Adventure',
+                description: 'A pixel-powered hero enters a digital realm to restore balance and save the world from total collapse.'
+            },
+            'the-last-horizon': {
+                title: 'The Last Horizon',
+                preview: 'The Last Horizon',
+                genre: 'Adventure · Mystery',
+                description: 'An explorer follows the last known trail to the edge of the horizon in search of a lost civilization.'
+            },
+            'midnight-run': {
+                title: 'Midnight Run',
+                preview: 'Midnight Run',
+                genre: 'Thriller · Action',
+                description: 'A high-speed chase through a sleeping city turns into a fight for truth when a simple run becomes a dangerous conspiracy.'
+            }
+        };
+
+        function applySelectedMovieFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const movieKey = params.get('movie');
+            const details = movieKey ? selectedMovieDetails[movieKey] : null;
+
+            if (!details) return;
+
+            const titleEl = document.getElementById('selected-movie-title');
+            const previewEl = document.getElementById('preview-placeholder');
+            const genreEl = document.getElementById('selected-movie-genre');
+            const descriptionEl = document.getElementById('selected-movie-description');
+
+            if (titleEl) titleEl.textContent = details.title;
+            if (previewEl) previewEl.textContent = details.preview;
+            if (genreEl) genreEl.textContent = details.genre;
+            if (descriptionEl) descriptionEl.textContent = details.description;
+        }
+
+        applySelectedMovieFromQuery();
 
         // ─────────────────────────────────────────────────────────────
         // CLOUD STORAGE URLs — paste your real links below
