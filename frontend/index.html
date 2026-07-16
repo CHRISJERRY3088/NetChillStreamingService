@@ -163,8 +163,8 @@
                     <button @click="darkMode = !darkMode" class="p-2 bg-white/10 rounded-full text-white">
                         <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
                     </button>
-                    <button id="authButton" onclick="window.NetchillUI.navigateToAuthDestination()" class=" border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</button>
-                    <div class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Download App</div>
+                    <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
+                    <a href="./account.html" id="accountButton" class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
                 </div>
             </nav>
 
@@ -339,7 +339,7 @@
                     <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
                 </div>
             </article>
-            <button id="rt" @click="sideBar = true" class="absolute top-5 right-0 text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition material-symbols-outlined hover:bg-blue-500 hover:rounded-full p-2">arrow_forward</button>
+            <button id="rt" @click="sideBar = true" class="absolute top-3 right-0 text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition material-symbols-outlined bg-white bg-blue-500 hover:rounded-full p-4">arrow_forward</button>
         </div>
     </main>
     <!-- SIDEBAR VIEW ALL Restored -->
