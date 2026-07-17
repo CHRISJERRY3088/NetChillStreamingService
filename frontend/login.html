@@ -6,6 +6,7 @@
     <title>Login/Register - NetChill</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./src/output.css">
+    <link rel="stylesheet" href="./assets/menu.css">
     <style>
         * { scrollbar-width: thin; scrollbar-color: #0ea5e9 transparent; }
         ::-webkit-scrollbar { width: 6px; }
@@ -230,7 +231,18 @@
         }
     </style>
 </head>
-<body>
+<body style="padding-top:5rem;">
+    <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex items-center justify-between px-4 py-4 md:px-10">
+        <a href="./index.html" class="flex items-center gap-3">
+            <img src="./assets/logo.png" alt="NetChill logo" class="w-10 h-10 logo-img">
+            <span class="text-lg font-bold text-white">NetChill</span>
+        </a>
+        <div class="flex items-center gap-3">
+            <a href="./index.html" class="text-sm text-white/90 hover:text-blue-300">Home</a>
+            <a href="./dashboard.html" class="text-sm text-white/90 hover:text-blue-300">Dashboard</a>
+            <a href="./account.html" class="text-sm text-white/90 hover:text-blue-300">Account</a>
+        </div>
+    </nav>
     <div class="relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <!-- Background Grid Effect -->
         <div class="absolute inset-0 opacity-10">
@@ -378,7 +390,8 @@
                 return;
             }
             if (localHosts.includes(host)) {
-                window.__API_BASE_URL__ = `${window.location.origin}/api`;
+                const port = window.location.port;
+                window.__API_BASE_URL__ = port === '10000' ? `${window.location.origin}/api` : 'http://localhost:10000/api';
                 return;
             }
             window.__API_BASE_URL__ = 'https://netchillstreamingservice.onrender.com/api';

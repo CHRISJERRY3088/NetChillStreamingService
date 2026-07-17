@@ -5,8 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - NetChill</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/menu.css">
 </head>
-<body class="bg-[#0f172a] text-white font-sans min-h-screen p-4 md:p-8">
+<body class="bg-[#0f172a] text-white font-sans min-h-screen p-4 md:p-8 pt-24">
+    <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex items-center justify-between px-4 py-4 md:px-10">
+        <a href="./index.html" class="flex items-center gap-3">
+            <img src="./assets/logo.png" alt="NetChill logo" class="w-10 h-10 logo-img">
+            <span class="text-lg font-bold text-white">NetChill</span>
+        </a>
+        <div class="flex items-center gap-3">
+            <a href="./index.html" class="text-sm text-white/90 hover:text-blue-300">Home</a>
+            <a href="./dashboard.html" class="text-sm text-white/90 hover:text-blue-300">Dashboard</a>
+            <a href="./login.html" class="text-sm text-white/90 hover:text-blue-300">Sign In</a>
+        </div>
+    </nav>
     <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
         <div class="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
             <h3 class="text-xl font-bold text-white">Confirm subscription change</h3>
