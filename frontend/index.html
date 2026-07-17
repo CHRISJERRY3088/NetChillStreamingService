@@ -25,7 +25,8 @@
                 return;
             }
             if (localHosts.includes(host)) {
-                window.__API_BASE_URL__ = `${window.location.origin}/api`;
+                const port = window.location.port;
+                window.__API_BASE_URL__ = port === '10000' ? `${window.location.origin}/api` : 'http://localhost:10000/api';
                 return;
             }
             window.__API_BASE_URL__ = 'https://netchillstreamingservice.onrender.com/api';
@@ -173,10 +174,49 @@
         .dark .search-shell {
             box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 24px rgba(255,255,255,0.16);
         }
+
+        /* Site nav styles */
+        :root{
+            --nav-light-bg: rgba(255,255,255,0.32);
+            --nav-light-border: rgba(255,255,255,0.22);
+            --nav-light-glow: rgba(255,255,255,0.16);
+            --nav-dark-bg: rgba(6,18,40,0.40);
+            --nav-dark-border: rgba(255,255,255,0.18);
+            --nav-dark-glow: rgba(255,255,255,0.24);
+        }
+
+        .site-nav{
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: var(--nav-light-bg);
+            border-bottom: 1px solid var(--nav-light-border);
+            box-shadow: 0 10px 44px var(--nav-light-glow), 0 0 42px rgba(59,130,246,0.16);
+            transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+
+        .dark .site-nav{
+            background: linear-gradient(180deg, rgba(10,25,48,0.45), rgba(6,18,40,0.40));
+            border-bottom: 1px solid var(--nav-dark-border);
+            box-shadow: 0 10px 52px var(--nav-dark-glow), 0 0 40px rgba(255,255,255,0.12) inset;
+        }
+
+        .site-nav .search-shell > input{
+            background: transparent;
+            color: inherit;
+        }
+
+        .site-nav button, .site-nav a {
+            transition: color .15s ease, background-color .15s ease, transform .12s ease;
+        }
+
+        .site-nav .logo-img{
+            filter: drop-shadow(0 6px 18px rgba(59,130,246,0.12));
+        }
     </style>
 
     <!-- Skeleton loading styles -->
     <link rel="stylesheet" href="./components/loading/loading.css">
+    <link rel="stylesheet" href="./assets/menu.css">
 </head>
 
 <body class="transition-colors duration-300 bg-black dark:bg-black text-gray-900 dark:text-white">
@@ -187,13 +227,13 @@
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.35),_transparent_45%)]"></div>
 
             <!-- Navbar -->
-            <nav class="fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-4 md:px-10 border border-slate-300/60 bg-white/70 shadow-[0_0_30px_rgba(37,99,235,0.16)] backdrop-blur-xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.28)]">
+            <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-4 md:px-10">
                 
                 <div class="flex items-center space-x-4">
                     <button @click="mobileMenu = true" class="text-white text-3xl cursor-pointer hover:text-blue-400">☰</button>
                     <div class="flex items-center space-x-2" onclick="window.location.href='./index.html'">
                         <div class=" flex items-center justify-center font-bold text-white">
-                            <img src="./assets/logo.png" alt="Logo" class="w-12 h-12 object-contain dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)]">
+                            <img src="./assets/logo.png" alt="Logo" class="w-12 h-12 object-contain logo-img dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)]">
                         </div>
                         <span class="text-2xl font-bold bg-blue-600/20 border border-blue-500/50 text-blue-400 hidden shadow-2xl dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:shadow-2xl sm:block cursor-pointer">NetChill</span>
                     </div>

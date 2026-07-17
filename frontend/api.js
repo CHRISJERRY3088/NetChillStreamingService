@@ -26,9 +26,24 @@ function resolveApiBaseUrl() {
     return queryApi;
   }
 
-  if (typeof window !== 'undefined' && window.location && /^https?:$/i.test(window.location.protocol)) {
-    const { origin } = window.location;
-    return `${origin}/api`;
+  if (typeof window !== 'undefined' && window.location) {
+    const localHosts = ['localhost', '127.0.0.1', '::1'];
+    const { protocol, hostname, port, origin } = window.location;
+
+    if (localHosts.includes(hostname)) {
+      if (port === '10000') {
+        return `${origin}/api`;
+      }
+      return 'http://localhost:10000/api';
+    }
+
+    if (protocol === 'file:') {
+      return 'http://localhost:10000/api';
+    }
+
+    if (/^https?:$/i.test(protocol)) {
+      return `${origin}/api`;
+    }
   }
 
   if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_URL) {
