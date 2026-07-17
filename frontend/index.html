@@ -336,100 +336,102 @@
         <!-- Movie Grid -->
         <div class="relative">
             <div id="animationCarousel" class="animation-carousel">
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+            <button id="rt" @click="sideBar = true" class="absolute right-0 text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition material-symbols-outlined bg-white bg-blue-500 hover:rounded-full p-4">See All</button>
+            <div class="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8 xl:grid-cols-9">
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Hero Squad</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Adventure • 2024</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Hero Squad</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Adventure • 2024</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
+                    </div>
+                </article>
 
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Top</div>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Top</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Sky Riders</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Fantasy • 2023</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Sky Riders</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Fantasy • 2023</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
+                    </div>
+                </article>
 
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                </article>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
-            <article class="animation-card group rounded-2xl p-2.5">
-                <div class="animation-card__thumb mb-3 rounded-xl">
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                        <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                </article>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
                     </div>
-                    <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                </div>
-                <div class="px-1 pb-1">
-                    <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                    <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                    <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
-                </div>
-            </article>
-            <button id="rt" @click="sideBar = true" class="text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition material-symbols-outlined bg-white bg-blue-500 hover:rounded-full p-4">See All</button>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
+                    </div>
+                </article>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
+                    </div>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
+                    </div>
+                </article>
+                <article class="animation-card group rounded-2xl p-2.5">
+                    <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
+                        </div>
+                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
+                    </div>
+                    <div class="px-1 pb-1">
+                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
+                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
+                        <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
+                    </div>
+                </article>
+            </div>    
         </div>
         <button id="scrollRightButton" type="button" class="animation-scroll-button" aria-label="Scroll animations right">
             <span class="material-symbols-outlined text-2xl">chevron_right</span>
@@ -448,7 +450,7 @@
                 <div id="sidebarMovieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
             </div>
             <h2 class="text-3xl font-black text-blue-500 mb-8 uppercase text-shadow-2xs">All Animations</h2>
-            <div id="yu" class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div id="yu" class="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8 xl:grid-cols-9">
                 <article class="animation-card group rounded-2xl p-2.5">
                     <div class="animation-card__thumb mb-3 rounded-xl">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
