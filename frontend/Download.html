@@ -376,19 +376,6 @@
 
     <script src="./api.js"></script>
     <script>
-        async function enforceAccess() {
-            try {
-                const profile = await authAPI.getProfile();
-                if (profile.requiresSubscriptionPayment) {
-                    window.location.href = './account.html';
-                }
-            } catch (error) {
-                window.location.href = './login.html';
-            }
-        }
-
-        enforceAccess();
-
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         if (themeToggleBtn) {
             themeToggleBtn.addEventListener('click', () => {
