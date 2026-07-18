@@ -99,7 +99,7 @@
             
             <div class="flex items-center space-x-2 shrink-0">
                 <img src="./assets/logo.png" alt="Logo" class="w-10 h-10 md:w-16 md:h-12 text-2xl font-bolddark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] text-white hidden shadow-2xl dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:shadow-2xl object-contain logo-img">
-                <button onclick="window.location.href='../frontend/index.html'" class="hidden sm:block text-xl md:text-2xl font-bold text-blue-500">NetChill</button>
+                <button onclick="window.location.href='./index.html'" class="hidden sm:block text-xl md:text-2xl font-bold text-blue-500">NetChill</button>
             </div>
 
             <!-- RESPONSIVE SEARCH BAR -->
@@ -224,9 +224,9 @@
                         <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5 shadow-lg">
                             <label class="flex items-center gap-2 text-sm md:text-base">
                                 <span class="font-bold">Season</span>
-                                <select id="watch-episode-select" class="bg-gray-800 border border-blue-500/50 rounded-lg px-3 py-2 text-white">
-                                    <option value="EP-01">Season 1</option>
-                                    <option value="EP-02">Season 2</option>
+                                <select id="season-select-preview" class="bg-gray-800 border border-blue-500/50 rounded-lg px-3 py-2 text-white">
+                                    <option value="season-1">Season 1</option>
+                                    <option value="season-2">Season 2</option>
                                 </select>
                             </label>
                         </div>
@@ -325,7 +325,7 @@
                     </div>
                     <div class="rounded-[1.75rem] border border-white/10 bg-slate-900/90 p-5 shadow-lg">
                         <div class="text-slate-300 text-sm uppercase tracking-[0.3em]">Season</div>
-                        <select id="color-picker" class="mt-4 w-full rounded-3xl border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500">
+                        <select id="season-select" class="mt-4 w-full rounded-3xl border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500">
                             <option value="season-1">Season 1</option>
                             <option value="season-2">Season 2</option>
                             <option value="season-3">Season 3</option>
@@ -348,10 +348,11 @@
                                 <span id="episode-count" class="text-sm text-slate-400">Season 1: 4 episodes</span>
                             </div>
                         </div>
-                        <div id="quality-container" class="space-y-4">
+                        <div id="quality-container" class="hidden space-y-4">
                             <div id="episode-quality-card" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 shadow-lg">
                                 <p id="selected-episode-label" class="font-semibold text-white">Selected Episode: EP-01</p>
                                 <p class="mt-1 text-sm text-slate-500">Choose your download settings and start the movie download.</p>
+                                <p id="selection-status" class="mt-2 text-sm text-cyan-400">Selection saved automatically as you choose options.</p>
 
                                 <div class="mt-4 grid gap-3">
                                     <label class="text-sm text-slate-400">
@@ -443,7 +444,8 @@
         });
 
         // 2. DOWNLOAD MODAL LOGIC
-        const dlContainer = document.getElementById('download-container');
+        const dlContainer = document.getElementById('download-container-old');
+        const qualitySelectorModal = document.getElementById('qualitySelectModal');
         const openDl = document.getElementById('open-download-btn');
         const closeDl = document.getElementById('close-download-btn');
         const watchOnlineBtn = document.getElementById('watch-online-btn');
@@ -467,22 +469,45 @@
             subtitle: 'Off'
         };
 
-        openDl.addEventListener('click', () => {
+        function openDownloadModal() {
+            if (!dlContainer) return;
             dlContainer.classList.remove('opacity-0', 'pointer-events-none');
-        });
+            document.body.classList.add('overflow-hidden');
+            if (qualitySelectorModal) {
+                qualitySelectorModal.classList.add('hidden');
+                qualitySelectorModal.classList.remove('flex');
+            }
+        }
 
-        closeDl.addEventListener('click', () => {
+        function closeDownloadModal() {
+            if (!dlContainer) return;
             dlContainer.classList.add('opacity-0', 'pointer-events-none');
+            document.body.classList.remove('overflow-hidden');
+            if (qualitySelectorModal) {
+                qualitySelectorModal.classList.add('hidden');
+                qualitySelectorModal.classList.remove('flex');
+            }
+        }
+
+        openDl?.addEventListener('click', openDownloadModal);
+
+        closeDl?.addEventListener('click', closeDownloadModal);
+        dlContainer?.addEventListener('click', (event) => {
+            if (event.target === dlContainer) {
+                closeDownloadModal();
+            }
         });
 
         const episodeSelect = document.getElementById('episode-select');
         const episodeCountLabel = document.getElementById('episode-count');
         const selectedEpisodeLabel = document.getElementById('selected-episode-label');
+        const selectionStatus = document.getElementById('selection-status');
         const downloadActionBtn = document.getElementById('download-action-btn');
         const downloadQualitySelectInline = document.getElementById('download-quality-select-inline');
         const downloadLanguageSelectInline = document.getElementById('download-language-select-inline');
         const downloadSubtitleSelectInline = document.getElementById('download-subtitle-select-inline');
-        const seasonSelect = document.getElementById('color-picker');
+        const seasonSelect = document.getElementById('season-select');
+        const qualityContainer = document.getElementById('quality-container');
 
         const SEASON_EPISODES = {
             'season-1': ['EP-01', 'EP-02', 'EP-03', 'EP-04'],
@@ -508,7 +533,11 @@
             if (!episodeSelect || !selectedEpisodeLabel) return;
             const currentEpisode = episodeSelect.value || 'EP-01';
             selectedEpisodeLabel.textContent = `Selected Episode: ${currentEpisode}`;
-            syncInlineDownloadSelection();
+            if (qualityContainer) {
+                qualityContainer.classList.remove('hidden');
+                qualityContainer.classList.add('block');
+            }
+            persistSelectionState();
         }
 
         function syncInlineDownloadSelection() {
@@ -525,6 +554,26 @@
                 language,
                 subtitle,
             };
+
+            return selectedStream;
+        }
+
+        function persistSelectionState() {
+            const currentSelection = syncInlineDownloadSelection();
+            const payload = {
+                ...currentSelection,
+                season: seasonSelect?.value || 'season-1',
+                savedAt: new Date().toISOString(),
+            };
+
+            try {
+                localStorage.setItem('netchill_last_selection', JSON.stringify(payload));
+                if (selectionStatus) {
+                    selectionStatus.textContent = `Saved: ${payload.episode} • ${payload.quality} • ${payload.language} • ${payload.subtitle}`;
+                }
+            } catch (error) {
+                console.warn('Unable to save selection', error);
+            }
         }
 
         if (seasonSelect) {
@@ -539,15 +588,16 @@
         }
 
         [downloadQualitySelectInline, downloadLanguageSelectInline, downloadSubtitleSelectInline].forEach((selectEl) => {
-            selectEl?.addEventListener('change', syncInlineDownloadSelection);
+            selectEl?.addEventListener('change', persistSelectionState);
         });
 
         if (downloadActionBtn) {
-            downloadActionBtn.addEventListener('click', () => {
-                syncInlineDownloadSelection();
+            downloadActionBtn.addEventListener('click', async () => {
+                persistSelectionState();
                 const { episode, quality, format, language, subtitle } = selectedStream;
                 const size = quality === '480p' ? '95 MB' : quality === '720p' ? '160 MB' : quality === '1080p' ? '240 MB' : '420 MB';
-                startDownload(episode, quality, format, size, language, subtitle);
+                closeDownloadModal();
+                await startDownload(episode, quality, format, size, language, subtitle);
             });
         }
 
@@ -743,18 +793,17 @@
             return DEMO_STREAMS[key] || DEMO_STREAMS['EP-01|720p|MP4'];
         }
 
-        function startDownload(episode, quality, format, size, language = 'English', subtitle = 'Off') {
+        async function startDownload(episode, quality, format, size, language = 'English', subtitle = 'Off') {
             selectedStream = { episode, quality, format, language, subtitle };
             const movieTitle = document.querySelector('#preview-placeholder')?.textContent || document.title || 'NetChill Movie';
             const filename = `NetChill-${episode}-${quality}-${format}.${format.includes('MKV') ? 'mkv' : 'mp4'}`;
             const fileUrl = resolveMediaUrl(episode, quality, format, DOWNLOAD_URLS);
 
-            if (!fileUrl || fileUrl.includes('YOUR_PROJECT_REF')) {
-                alert('Supabase URL not set yet. Replace YOUR_PROJECT_REF in SUPABASE_URL with your project reference.');
+            if (!fileUrl) {
+                showDownloadNotification(episode, quality, format, size, language, subtitle, 'No download source is available yet.');
                 return;
             }
 
-            // Persist this download in local storage so the dashboard can show offline saved movies
             try {
                 downloadStorage.saveDownload({
                     title: movieTitle,
@@ -770,11 +819,9 @@
                 console.warn('Unable to save download metadata', error);
             }
 
-            // Show download notification
+            persistSelectionState();
             showDownloadNotification(episode, quality, format, size, language, subtitle);
-
-            // Trigger browser download from cloud URL
-            triggerDownload(filename, fileUrl);
+            await triggerDownload(filename, fileUrl);
         }
 
         function resolveWatchUrl(episode, quality, format) {
@@ -872,7 +919,7 @@
         });
 
         // Show green notification when download starts
-        function showDownloadNotification(episode, quality, format, size, language, subtitle) {
+        function showDownloadNotification(episode, quality, format, size, language, subtitle, extraMessage = '') {
             const notification = document.createElement('div');
             notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 animate-pulse';
             notification.innerHTML = `
@@ -882,7 +929,7 @@
                 <p class="text-sm">Language: <strong>${language}</strong></p>
                 <p class="text-sm">Subtitle: <strong>${subtitle}</strong></p>
                 <p class="text-sm">Size: <strong>${size}</strong></p>
-                <p class="text-xs mt-2 opacity-80">Check your Downloads folder</p>
+                ${extraMessage ? `<p class="text-xs mt-2 opacity-80">${extraMessage}</p>` : '<p class="text-xs mt-2 opacity-80">Check your Downloads folder</p>'}
             `;
             document.body.appendChild(notification);
             
@@ -891,14 +938,30 @@
         }
 
         // Trigger browser download from a real cloud URL
-        function triggerDownload(filename, fileUrl) {
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = filename;
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        async function triggerDownload(filename, fileUrl) {
+            try {
+                const response = await fetch(fileUrl, { mode: 'cors' });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+            } catch (error) {
+                const link = document.createElement('a');
+                link.href = fileUrl;
+                link.download = filename;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }
         }
     </script>
 </body>
