@@ -128,7 +128,7 @@
         .animation-carousel {
             display: grid;
             grid-auto-flow: column;
-            grid-auto-columns: minmax(0, calc((100vw - 1.5rem) / 3));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 0.75rem;
             align-items: stretch;
             width: max-content;
@@ -140,17 +140,17 @@
         }
         @media (min-width: 640px) {
             .animation-carousel {
-                grid-auto-columns: minmax(0, calc((100vw - 2rem) / 4));
+                grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
         @media (min-width: 1024px) {
             .animation-carousel {
-                grid-auto-columns: minmax(0, calc((100vw - 3rem) / 6));
+                grid-template-columns: repeat(6, minmax(0, 1fr));
             }
         }
         @media (min-width: 1280px) {
             .animation-carousel {
-                grid-auto-columns: minmax(0, calc((100vw - 4rem) / 7));
+                grid-template-columns: repeat(7, minmax(0, 1fr));
             }
         }
         .scrollbar-none {
@@ -456,7 +456,7 @@
             <!-- Movie Grid -->
         <div class="relative">
             <div id="tw" class="animation-carousel-wrapper scrollbar-none w-full -mx-6 sm:-mx-10">
-                <div id="animationCarousel" class="animation-carousel gap-3 mx-auto w-full">
+                <div id="animationCarousel" class="animation-carousel gap-3 mx-auto w-full sm:w-auto">
                 <article class="animation-card group rounded-2xl">
                     <div class="animation-card__thumb mb-2 rounded-xl">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
