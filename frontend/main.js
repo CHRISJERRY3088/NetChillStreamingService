@@ -49,7 +49,7 @@ const trailerModal = document.getElementById('trailerModal');
 const closeTrailerModalButton = document.getElementById('closeTrailerModal');
 const trailerVideo = document.getElementById('trailerVideo');
 const heroAutoTrailer = document.getElementById('heroAutoTrailer');
-const AUTO_PLAY_SECONDS = 5;
+const AUTO_PLAY_SECONDS = 15;
 let trailerAutoPlayTimer = null;
 const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribute('src') || '';
 const localTrailerVideoPath = '../Hexed%20-%20Official%20Teaser%20Trailer.mp4';
@@ -175,11 +175,9 @@ function autoplayTrailerFromHexVideo() {
     startHeroTrailer();
   }
 
-  if (trailerModal && trailerVideo) {
-    openTrailerModal(videoUrl);
-    trailerAutoPlayTimer = setTimeout(() => {
-      closeTrailerModal();
-    }, AUTO_PLAY_SECONDS * 1000);
+  // Only autoplay the hero preview when a hex video is provided.
+  if (heroAutoTrailer) {
+    startHeroTrailer();
   }
 }
 
@@ -210,9 +208,6 @@ function updateSlide(index) {
 // Initialize first slide after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   updateSlide(currentIndex);
-  window.setTimeout(() => {
-    autoplayTrailerFromHexVideo();
-  }, 150);
 
   if (prevButton) {
     prevButton.addEventListener('click', () => {
@@ -231,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (trailerButton) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
-      openTrailerModal();
+      openTrailerModal(resolveTrailerVideoUrl());
     });
   }
 
