@@ -139,17 +139,20 @@
         }
         @media (min-width: 640px) {
             .animation-carousel {
+                /* small/medium screens: 4 columns fit */
                 grid-auto-columns: minmax(240px, calc((100% - 4rem) / 4));
             }
         }
         @media (min-width: 1024px) {
             .animation-carousel {
-                grid-auto-columns: minmax(260px, calc((100% - 5rem) / 5));
+                /* large screens: 6 columns fit */
+                grid-auto-columns: minmax(260px, calc((100% - 6rem) / 6));
             }
         }
         @media (min-width: 1280px) {
             .animation-carousel {
-                grid-auto-columns: minmax(280px, calc((100% - 6rem) / 6));
+                /* xlarge screens: 7 columns fit */
+                grid-auto-columns: minmax(280px, calc((100% - 7rem) / 7));
             }
         }
         .scrollbar-none {
@@ -286,8 +289,8 @@
                     </div>
                 </div>
 
-                <!-- YOUR ORIGINAL SEARCH BAR STYLE -->
-                <div class="hidden sm:flex flex-1 max-w-lg mx-4 sm:mx-8 relative">
+                <!-- Search bar: visible on small screens and up -->
+                <div class="flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-1.5 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white">
                     </div>
@@ -299,7 +302,7 @@
                     <button @click="darkMode = !darkMode" class="p-2 bg-white/10 rounded-full text-white">
                         <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
                     </button>
-                    <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
+                    <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 dark:text-black rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
                     <a href="./account.html" id="accountButton" class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
                 </div>
             </nav>
@@ -452,10 +455,10 @@
             <button id="rt" @click="sideBar = true" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg">See All</button>
         </div>
 
-        <!-- Movie Grid -->
+            <!-- Movie Grid -->
         <div class="relative overflow-hidden">
-            <div class="animation-carousel-wrapper overflow-x-auto scrollbar-none">
-                <div id="animationCarousel" class="animation-carousel mx-auto w-full gap-3">
+            <div id="tw" class="animation-carousel-wrapper scrollbar-none w-screen -mx-6 sm:-mx-10">
+                <div id="animationCarousel" class="animation-carousel gap-3 mx-auto w-full">
                 <article class="animation-card group rounded-2xl">
                     <div class="animation-card__thumb mb-2 rounded-xl">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
