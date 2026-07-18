@@ -140,6 +140,10 @@
             box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
             transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
         }
+        .animation-scroll-button.animation-scroll-button-left {
+            left: 0.75rem;
+            right: auto;
+        }
         .animation-scroll-button:hover {
             background: rgba(59, 130, 246, 1);
             transform: translateY(-50%) scale(1.05);
@@ -337,7 +341,6 @@
         <div class="relative">
             <button id="rt" @click="sideBar = true" class="absolute top-0 right-0 -mt-12 px-4 py-2 text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition bg-blue-500 hover:bg-blue-600 rounded-lg">See All</button>
             <div id="animationCarousel" class="animation-carousel">
-            <div class="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8 xl:grid-cols-9">
                 <article class="animation-card group rounded-2xl p-2.5">
                     <div class="animation-card__thumb mb-3 rounded-xl">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
@@ -431,8 +434,10 @@
                         <button onclick="window.location.href='./Download.html'" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</button>
                     </div>
                 </article>
-            </div>    
         </div>
+        <button id="scrollLeftButton" type="button" class="animation-scroll-button animation-scroll-button-left" aria-label="Scroll animations left">
+            <span class="material-symbols-outlined text-2xl">chevron_left</span>
+        </button>
         <button id="scrollRightButton" type="button" class="animation-scroll-button" aria-label="Scroll animations right">
             <span class="material-symbols-outlined text-2xl">chevron_right</span>
         </button>
@@ -633,10 +638,19 @@
 
             const animationCarousel = document.getElementById('animationCarousel');
             const scrollRightButton = document.getElementById('scrollRightButton');
-            if (animationCarousel && scrollRightButton) {
-                scrollRightButton.addEventListener('click', () => {
-                    animationCarousel.scrollBy({ left: animationCarousel.clientWidth * 0.75, behavior: 'smooth' });
-                });
+            const scrollLeftButton = document.getElementById('scrollLeftButton');
+            if (animationCarousel && scrollRightButton && scrollLeftButton) {
+                const carouselCards = Array.from(animationCarousel.querySelectorAll('.animation-card'));
+                const cardGap = 16;
+
+                const scrollByCard = (direction = 1) => {
+                    if (!carouselCards.length) return;
+                    const cardWidth = Math.round(carouselCards[0].getBoundingClientRect().width + cardGap);
+                    animationCarousel.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+                };
+
+                scrollRightButton.addEventListener('click', () => scrollByCard(1));
+                scrollLeftButton.addEventListener('click', () => scrollByCard(-1));
 
                 animationCarousel.addEventListener('wheel', (event) => {
                     if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
