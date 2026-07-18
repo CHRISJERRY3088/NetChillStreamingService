@@ -253,7 +253,7 @@
                 saveUserSnapshot(data);
             } catch (err) {
                 console.error('Failed to load account:', err);
-                window.location.href = './login.html';
+                setStatus('Unable to load account. Please sign in or try again.', 'error');
             }
         }
 
