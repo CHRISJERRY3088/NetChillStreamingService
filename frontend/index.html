@@ -123,11 +123,12 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scroll-snap-type: x mandatory;
+            width: 100%;
         }
         .animation-carousel {
             display: grid;
             grid-auto-flow: column;
-            grid-auto-columns: minmax(220px, calc((100% - 3rem) / 3));
+            grid-auto-columns: minmax(0, calc((100vw - 1.5rem) / 3));
             gap: 0.75rem;
             align-items: stretch;
             width: max-content;
@@ -139,20 +140,17 @@
         }
         @media (min-width: 640px) {
             .animation-carousel {
-                /* small/medium screens: 4 columns fit */
-                grid-auto-columns: minmax(240px, calc((100% - 4rem) / 4));
+                grid-auto-columns: minmax(0, calc((100vw - 2rem) / 4));
             }
         }
         @media (min-width: 1024px) {
             .animation-carousel {
-                /* large screens: 6 columns fit */
-                grid-auto-columns: minmax(260px, calc((100% - 6rem) / 6));
+                grid-auto-columns: minmax(0, calc((100vw - 3rem) / 6));
             }
         }
         @media (min-width: 1280px) {
             .animation-carousel {
-                /* xlarge screens: 7 columns fit */
-                grid-auto-columns: minmax(280px, calc((100% - 7rem) / 7));
+                grid-auto-columns: minmax(0, calc((100vw - 4rem) / 7));
             }
         }
         .scrollbar-none {
@@ -456,8 +454,8 @@
         </div>
 
             <!-- Movie Grid -->
-        <div class="relative overflow-hidden">
-            <div id="tw" class="animation-carousel-wrapper scrollbar-none w-screen -mx-6 sm:-mx-10">
+        <div class="relative">
+            <div id="tw" class="animation-carousel-wrapper scrollbar-none w-full -mx-6 sm:-mx-10">
                 <div id="animationCarousel" class="animation-carousel gap-3 mx-auto w-full">
                 <article class="animation-card group rounded-2xl">
                     <div class="animation-card__thumb mb-2 rounded-xl">
