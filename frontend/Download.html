@@ -341,27 +341,52 @@
                     <div class="rounded-[1.75rem] border border-white/10 bg-slate-900/90 p-6 shadow-lg">
                         <div class="mb-6">
                             <label class="block mb-3 text-sm font-semibold text-slate-400">Select Episode</label>
-                            <div class="flex flex-wrap gap-3">
-                                <button onclick="toggleQualityBox('ep1-box')" class="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-100 hover:border-blue-500 transition">EP-01</button>
-                                <button onclick="toggleQualityBox('ep2-box')" class="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-100 hover:border-blue-500 transition">EP-02</button>
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                                <select id="episode-select" class="w-full rounded-2xl border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500">
+                                    <option value="EP-01">EP-01</option>
+                                </select>
+                                <span id="episode-count" class="text-sm text-slate-400">Season 1: 4 episodes</span>
                             </div>
                         </div>
                         <div id="quality-container" class="space-y-4">
-                            <div id="ep1-box" class="quality-box hidden">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <button onclick="openQualitySelector('EP-01', 'MP4', '95 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">Download · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">Choose quality</p>
-                                    </button>
+                            <div id="episode-quality-card" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 shadow-lg">
+                                <p id="selected-episode-label" class="font-semibold text-white">Selected Episode: EP-01</p>
+                                <p class="mt-1 text-sm text-slate-500">Choose your download settings and start the movie download.</p>
+
+                                <div class="mt-4 grid gap-3">
+                                    <label class="text-sm text-slate-400">
+                                        <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.3em]">Quality</span>
+                                        <select id="download-quality-select-inline" class="w-full rounded-2xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100 outline-none transition focus:border-blue-500">
+                                            <option value="480p">480p</option>
+                                            <option value="720p" selected>720p</option>
+                                            <option value="1080p">1080p</option>
+                                            <option value="2160p">2160p</option>
+                                        </select>
+                                    </label>
+
+                                    <label class="text-sm text-slate-400">
+                                        <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.3em]">Language</span>
+                                        <select id="download-language-select-inline" class="w-full rounded-2xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100 outline-none transition focus:border-blue-500">
+                                            <option value="English" selected>English</option>
+                                            <option value="Arabic">Arabic</option>
+                                            <option value="Spanish">Spanish</option>
+                                            <option value="French">French</option>
+                                        </select>
+                                    </label>
+
+                                    <label class="text-sm text-slate-400">
+                                        <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.3em]">Subtitle</span>
+                                        <select id="download-subtitle-select-inline" class="w-full rounded-2xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100 outline-none transition focus:border-blue-500">
+                                            <option value="Off" selected>Off</option>
+                                            <option value="English">English</option>
+                                            <option value="Arabic">Arabic</option>
+                                            <option value="Spanish">Spanish</option>
+                                            <option value="French">French</option>
+                                        </select>
+                                    </label>
                                 </div>
-                            </div>
-                            <div id="ep2-box" class="quality-box hidden">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <button onclick="openQualitySelector('EP-02', 'MP4', '98 MB')" class="rounded-3xl border border-slate-700 bg-slate-900/80 p-4 text-left hover:border-blue-500 transition">
-                                        <p class="font-semibold text-white">Download · MP4</p>
-                                        <p class="mt-1 text-sm text-slate-500">Choose quality</p>
-                                    </button>
-                                </div>
+
+                                <button id="download-action-btn" type="button" class="mt-4 w-full rounded-3xl bg-blue-600 py-3 text-sm font-semibold text-white transition hover:bg-blue-500">Download Selected</button>
                             </div>
                         </div>
                     </div>
@@ -450,25 +475,83 @@
             dlContainer.classList.add('opacity-0', 'pointer-events-none');
         });
 
-        // 3. TOGGLE EPISODE BOXES (Fixing your ID selection issue)
-        function toggleQualityBox(boxId) {
-            // Hide all boxes first
-            document.querySelectorAll('.quality-box').forEach(box => box.classList.add('hidden'));
-            // Show the clicked one
-            const target = document.getElementById(boxId);
-            if(target) target.classList.remove('hidden');
+        const episodeSelect = document.getElementById('episode-select');
+        const episodeCountLabel = document.getElementById('episode-count');
+        const selectedEpisodeLabel = document.getElementById('selected-episode-label');
+        const downloadActionBtn = document.getElementById('download-action-btn');
+        const downloadQualitySelectInline = document.getElementById('download-quality-select-inline');
+        const downloadLanguageSelectInline = document.getElementById('download-language-select-inline');
+        const downloadSubtitleSelectInline = document.getElementById('download-subtitle-select-inline');
+        const seasonSelect = document.getElementById('color-picker');
+
+        const SEASON_EPISODES = {
+            'season-1': ['EP-01', 'EP-02', 'EP-03', 'EP-04'],
+            'season-2': ['EP-01', 'EP-02', 'EP-03'],
+            'season-3': ['EP-01', 'EP-02', 'EP-03'],
+            'season-4': ['EP-01', 'EP-02']
+        };
+
+        function renderEpisodeOptions(season) {
+            const episodes = SEASON_EPISODES[season] || ['EP-01'];
+            if (!episodeSelect) return;
+            episodeSelect.innerHTML = episodes.map(ep => `<option value="${ep}">${ep}</option>`).join('');
+            episodeSelect.value = episodes[0];
+            updateSelectedEpisode();
+            syncInlineDownloadSelection();
+            if (episodeCountLabel) {
+                const seasonLabel = season.replace('-', ' ');
+                episodeCountLabel.textContent = `${seasonLabel.charAt(0).toUpperCase() + seasonLabel.slice(1)}: ${episodes.length} episodes`;
+            }
         }
 
-        // Handle season selection change
-        const seasonSelect = document.getElementById('color-picker');
+        function updateSelectedEpisode() {
+            if (!episodeSelect || !selectedEpisodeLabel) return;
+            const currentEpisode = episodeSelect.value || 'EP-01';
+            selectedEpisodeLabel.textContent = `Selected Episode: ${currentEpisode}`;
+            syncInlineDownloadSelection();
+        }
+
+        function syncInlineDownloadSelection() {
+            const episode = episodeSelect?.value || 'EP-01';
+            const quality = downloadQualitySelectInline?.value || '720p';
+            const language = downloadLanguageSelectInline?.value || 'English';
+            const subtitle = downloadSubtitleSelectInline?.value || 'Off';
+            const format = quality === '2160p' ? '4K MP4' : 'MP4';
+
+            selectedStream = {
+                episode,
+                quality,
+                format,
+                language,
+                subtitle,
+            };
+        }
+
         if (seasonSelect) {
             seasonSelect.addEventListener('change', (e) => {
                 const selectedSeason = e.target.value;
-                // Reset to show ep1 when season changes
-                document.querySelectorAll('.quality-box').forEach(box => box.classList.add('hidden'));
-                document.getElementById('ep1-box')?.classList.remove('hidden');
+                renderEpisodeOptions(selectedSeason);
             });
         }
+
+        if (episodeSelect) {
+            episodeSelect.addEventListener('change', updateSelectedEpisode);
+        }
+
+        [downloadQualitySelectInline, downloadLanguageSelectInline, downloadSubtitleSelectInline].forEach((selectEl) => {
+            selectEl?.addEventListener('change', syncInlineDownloadSelection);
+        });
+
+        if (downloadActionBtn) {
+            downloadActionBtn.addEventListener('click', () => {
+                syncInlineDownloadSelection();
+                const { episode, quality, format, language, subtitle } = selectedStream;
+                const size = quality === '480p' ? '95 MB' : quality === '720p' ? '160 MB' : quality === '1080p' ? '240 MB' : '420 MB';
+                startDownload(episode, quality, format, size, language, subtitle);
+            });
+        }
+
+        renderEpisodeOptions(seasonSelect?.value || 'season-1');
 
         function setPreviewSize(size) {
             if (!previewPlayer) return;
@@ -639,11 +722,32 @@
             startDownload(episode, quality, format, size, language, subtitle);
         }
 
+        function resolveMediaUrl(episode, quality, format, sourceMap) {
+            const normalizedFormat = format || 'MP4';
+            const key = `${episode}|${quality}|${normalizedFormat}`;
+            const directUrl = sourceMap?.[key];
+
+            if (directUrl && !directUrl.includes('YOUR_PROJECT_REF')) {
+                return directUrl;
+            }
+
+            const fallbackEpisode = episode === 'EP-03' || episode === 'EP-04' ? 'EP-02' : episode === 'EP-02' ? 'EP-01' : null;
+            if (fallbackEpisode) {
+                const fallbackKey = `${fallbackEpisode}|${quality}|${normalizedFormat}`;
+                const fallbackUrl = sourceMap?.[fallbackKey];
+                if (fallbackUrl && !fallbackUrl.includes('YOUR_PROJECT_REF')) {
+                    return fallbackUrl;
+                }
+            }
+
+            return DEMO_STREAMS[key] || DEMO_STREAMS['EP-01|720p|MP4'];
+        }
+
         function startDownload(episode, quality, format, size, language = 'English', subtitle = 'Off') {
             selectedStream = { episode, quality, format, language, subtitle };
             const movieTitle = document.querySelector('#preview-placeholder')?.textContent || document.title || 'NetChill Movie';
             const filename = `NetChill-${episode}-${quality}-${format}.${format.includes('MKV') ? 'mkv' : 'mp4'}`;
-            const fileUrl = DOWNLOAD_URLS[`${episode}|${quality}|${format}`];
+            const fileUrl = resolveMediaUrl(episode, quality, format, DOWNLOAD_URLS);
 
             if (!fileUrl || fileUrl.includes('YOUR_PROJECT_REF')) {
                 alert('Supabase URL not set yet. Replace YOUR_PROJECT_REF in SUPABASE_URL with your project reference.');
@@ -674,14 +778,7 @@
         }
 
         function resolveWatchUrl(episode, quality, format) {
-            const key = `${episode}|${quality}|${format}`;
-            const cloudUrl = DOWNLOAD_URLS[key];
-
-            if (cloudUrl && !cloudUrl.includes('YOUR_PROJECT_REF')) {
-                return cloudUrl;
-            }
-
-            return DEMO_STREAMS[key] || DEMO_STREAMS['EP-01|720p|MP4'];
+            return resolveMediaUrl(episode, quality, format, DOWNLOAD_URLS);
         }
 
         function startWatchOnline() {
