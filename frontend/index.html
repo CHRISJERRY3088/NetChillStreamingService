@@ -274,7 +274,7 @@
             </button>
 
             <!-- Navbar -->
-            <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-4 md:px-10">
+            <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-2 md:px-10">
                 
                 <div class="flex items-center space-x-4">
                     <button @click="mobileMenu = true" class="text-white text-3xl cursor-pointer hover:text-blue-400">☰</button>
@@ -287,7 +287,7 @@
                 </div>
 
                 <!-- YOUR ORIGINAL SEARCH BAR STYLE -->
-                <div class="hidden md:flex flex-1 max-w-lg mx-8 relative">
+                <div class="hidden sm:flex flex-1 max-w-lg mx-4 sm:mx-8 relative">
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-1.5 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white">
                     </div>
@@ -330,36 +330,108 @@
     </div>
 
     <!-- MOBILE MENU Restored -->
-    <div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[100] top-14 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
+    <div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
         <div class="fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
         <nav class="relative h-full w-full overflow-y-auto p-4 shadow-2xl sm:p-6">
             <button @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-black dark:text-white">&times;</button>
-            <div class="mt-10 flex flex-col space-y-6 text-lg  dark:text-white text-black font-bold">
-                <a href="#" class="text-blue-500">English</a>
+            <div class="mt-6 flex flex-col space-y-4 text-lg dark:text-white text-black font-bold">
+                <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    English
+                </a>
                 <hr>
-                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Upcoming Movie</a>
-                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Series</a>
-                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">Trending Movies</a>
-                <a href="#" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">K-Drama</a>
-                <a href="../frontend/dashboard.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Dashboard</a>
-                <a href="../frontend/index.html#Animation" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Animation</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Account</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Live Show</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Porn</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Sport</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Religion</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Action/Adventure</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Nollywood</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">bollywood</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">spanish</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Southafrica</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Ghana</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Arabic</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Brazil</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Religion</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Ramance</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Comedy</a>
-                <a href="./account.html" class="hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">Horror</a>
+                <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Upcoming Movie
+                </a>
+                <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Trending Series
+                </a>
+                <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Trending Movies
+                </a>
+                <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    K-Drama
+                </a>
+                <a href="../frontend/dashboard.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Dashboard
+                </a>
+                <a href="../frontend/index.html#Animation" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Animation
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Account
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Live Show
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Porn
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Sport
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Religion
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Action/Adventure
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Nollywood
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    bollywood
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    spanish
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Southafrica
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Ghana
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Arabic
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Brazil
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Religion
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Ramance
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Comedy
+                </a>
+                <a href="./account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                    Horror
+                </a>
             </div>
         </nav>
     </div>
@@ -377,12 +449,11 @@
     <main class="max-w-7xl mx-auto px-6 py-10">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-2xl font-black text-blue-500 uppercase tracking-tighter">Animations</h2>
-            
+            <button id="rt" @click="sideBar = true" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg">See All</button>
         </div>
 
         <!-- Movie Grid -->
         <div class="relative overflow-hidden">
-            <button id="rt" @click="sideBar = true" class="absolute top-0 right-0 -mt-12 px-4 py-2 text-xs sm:text-sm font-bold text-gray-400 hover:text-white transition bg-blue-500 hover:bg-blue-600 rounded-lg">See All</button>
             <div class="animation-carousel-wrapper overflow-x-auto scrollbar-none">
                 <div id="animationCarousel" class="animation-carousel mx-auto w-full gap-3">
                 <article class="animation-card group rounded-2xl">
@@ -489,9 +560,16 @@
     </div>
     </main>
     <!-- SIDEBAR VIEW ALL Restored -->
-    <div x-show="sideBar" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md" @click="sideBar = false"></div>
-        <div class="relative h-[85vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 p-8 shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+    <div x-show="sideBar" x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300" @click="sideBar = false"></div>
+        <div class="relative origin-top transform-gpu h-[85vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 p-8 shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
             <button @click="sideBar = false" class="absolute top-4 right-6 text-4xl">&times;</button>
             <div class="mb-2 hidden md:flex flex-1 max-w-lg mx-8 relative">
                 <input id="sidebarMovieSearchInput" type="text" placeholder="Search Movies..." 
@@ -500,7 +578,7 @@
                 <div id="sidebarMovieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
             </div>
             <h2 class="text-3xl font-black text-blue-500 mb-8 uppercase text-shadow-2xs">All Animations</h2>
-            <div id="yu" class="mx-auto w-full grid grid-cols-3 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-7">
+            <div id="yu" class="mx-auto w-full grid grid-cols-3 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
                 <article class="animation-card group rounded-2xl p-2.5">
                     <div class="animation-card__thumb mb-3 rounded-xl">
                         <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
