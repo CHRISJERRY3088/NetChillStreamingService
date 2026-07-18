@@ -40,7 +40,9 @@ let currentIndex = 0;
 const bgElement = document.getElementById('slideshow-bg');
 const captionElement = document.getElementById('slide-caption');
 const badgeElement = document.getElementById('slide-badge');
-const subtitleElement = document.getElementById('slide-subtitle');
+const subtitleElements = Array.from(document.querySelectorAll('#slide-subtitle'));
+const prevButton = document.getElementById('slideshowPrevButton');
+const nextButton = document.getElementById('slideshowNextButton');
 
 function updateSlide(index) {
   if (!bgElement) return;
@@ -55,12 +57,28 @@ function updateSlide(index) {
   }
 
   if (badgeElement) badgeElement.textContent = slide.badge;
-  if (subtitleElement) subtitleElement.textContent = slide.subtitle;
+  subtitleElements.forEach((el) => {
+    el.textContent = slide.subtitle;
+  });
 }
 
 // Initialize first slide after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   updateSlide(currentIndex);
+
+  if (prevButton) {
+    prevButton.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      updateSlide(currentIndex);
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateSlide(currentIndex);
+    });
+  }
 
   setInterval(() => {
     currentIndex = (currentIndex + 1) % slides.length;
