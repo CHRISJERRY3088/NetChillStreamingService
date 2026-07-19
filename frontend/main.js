@@ -126,6 +126,7 @@ async function openTrailerModal(videoUrl = null) {
     trailerVideo.muted = true;
     trailerVideo.autoplay = true;
     trailerVideo.playsInline = true;
+    
     try {
       if (document.fullscreenElement !== trailerModal) {
         await trailerModal.requestFullscreen?.();
@@ -133,7 +134,16 @@ async function openTrailerModal(videoUrl = null) {
     } catch (error) {
       console.warn('Fullscreen request failed', error);
     }
-    trailerVideo.play().catch(() => {});
+    
+    // Wait a tick for the DOM to fully update before attempting play
+    setTimeout(() => {
+      trailerVideo.play().catch((error) => {
+        console.warn('Trailer play failed:', error);
+        setTimeout(() => {
+          trailerVideo.play().catch(() => {});
+        }, 500);
+      });
+    }, 100);
   }
 }
 
@@ -171,15 +181,23 @@ function autoplayTrailerFromHexVideo() {
   heroAutoTrailer.loop = true;
 
   const startHeroTrailer = () => {
-    heroAutoTrailer.play().catch(() => {
-      window.setTimeout(() => {
-        heroAutoTrailer.play().catch(() => {});
-      }, 250);
+    heroAutoTrailer.play().catch((error) => {
+      console.warn('Initial hero trailer play failed:', error);
+      // Retry after a short delay
+      setTimeout(() => {
+        heroAutoTrailer.play().catch((retryError) => {
+          console.warn('Hero trailer play retry failed:', retryError);
+        });
+      }, 500);
     });
   };
 
-  heroAutoTrailer.addEventListener('canplaythrough', startHeroTrailer, { once: true });
-  startHeroTrailer();
+  // Try to play immediately if already loaded
+  if (heroAutoTrailer.readyState >= 2) {
+    startHeroTrailer();
+  } else {
+    heroAutoTrailer.addEventListener('canplay', startHeroTrailer, { once: true });
+  }
 }
 
 function updateSlide(index) {
