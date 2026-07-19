@@ -90,7 +90,7 @@
     </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 transition-colors duration-300" style="padding-top:5rem;">
+<body class="bg-slate-950 text-slate-100 transition-colors duration-300 overflow-x-hidden" style="padding-top:5rem;">
 
     <!-- NAVBAR -->
     <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full h-16 flex items-center justify-between px-4 md:px-6">
@@ -120,78 +120,83 @@
     <div id="menu-backdrop" class="fixed inset-0 z-[55] hidden bg-slate-950/40 backdrop-blur-md transition-opacity duration-300"></div>
 
     <!-- MOBILE MENU -->
-    <div id="mobile-menu" class="rounded-2xl backdrop-blur-xl scroll-auto max-h-[400px] overflow-y-auto transition-all duration-300 ease-in-out fixed inset-y-0 left-0 w-64 bg-white/15 dark:bg-white/10 border border-white/20 dark:border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.35)] z-[60] transform -translate-x-full transition-transform duration-300 flex flex-col p-6">
+    <div id="mobile-menu" class="fixed inset-0 z-[60] top-12 hidden flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)] p-6">
         <button id="close-menu-button" class="text-3xl self-end">&times;</button>
-        <div class="flex flex-col space-y-4 mt-7">
-            <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">
+        <div class="mt-6 flex flex-col space-y-3 text-lg dark:text-white text-black font-bold">
+            <a href="./index.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
+                <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
+                English
+            </a>
+            <hr>
+            <a href="./index.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Upcoming Movie
             </a>
-            <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">
+            <a href="./dashboard.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Trending Series
             </a>
-            <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">
+            <a href="./index.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Trending Movies
             </a>
-            <a href="#" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 K-Drama
             </a>
-            <a href="../frontend/dashboard.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./dashboard.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Dashboard
             </a>
-            <a href="../frontend/index.html#Animation" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./index.html#Animation" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Animation
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Account
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Live Show
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Porn
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Sport
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Religion
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Action/Adventure
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Nollywood
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 bollywood
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 spanish
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Southafrica
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Ghana
             </a>
-            <a href="../frontend/account.html" class="flex items-center gap-3 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 text-lg hover:text-blue-500 hover:scale-105 transition-all duration-300">
+            <a href="./account.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                 <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                 Arabic
             </a>
@@ -476,13 +481,13 @@
         const closeMenu = document.getElementById('close-menu-button');
 
         function openSidebar() {
-            menu.classList.remove('-translate-x-full');
+            menu.classList.remove('hidden');
             menuBackdrop.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
         }
 
         function closeSidebar() {
-            menu.classList.add('-translate-x-full');
+            menu.classList.add('hidden');
             menuBackdrop.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         }
@@ -490,6 +495,14 @@
         openMenu.addEventListener('click', openSidebar);
         closeMenu.addEventListener('click', closeSidebar);
         menuBackdrop.addEventListener('click', closeSidebar);
+
+        const mobileMenuLinks = menu.querySelectorAll('a');
+        mobileMenuLinks.forEach((link) => {
+            link.addEventListener('click', () => {
+                closeSidebar();
+            });
+        });
+
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeSidebar();
