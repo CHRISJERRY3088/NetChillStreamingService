@@ -330,21 +330,21 @@
             </nav>
 
             <div id="st" class="relative z-10 flex h-full items-end">
-                <div class="w-full px-3 pb-4 sm:px-5 sm:pb-6 md:px-8 lg:px-12">
-                    <div class="max-w-sm rounded-xl border border-white/20 bg-slate-950/70 p-2.5 shadow-xl backdrop-blur-md sm:max-w-md sm:rounded-[1.2rem] sm:p-4 lg:max-w-lg lg:rounded-[1.5rem] lg:p-5">
-                        <div id="slide-badge" class="inline-flex items-center rounded-full border border-blue-400/50 bg-blue-500/25 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-blue-100 sm:px-2.5 sm:py-1 sm:text-[10px]">Now Showing</div>
-                        <div id="win" class="mt-2.5 space-y-2.5 sm:mt-3 sm:space-y-3">
-                            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.15em] text-blue-100 backdrop-blur sm:px-3 sm:py-1.5 sm:text-[9px]">
-                                <span class="material-symbols-outlined text-xs sm:text-sm">play_circle</span>
+                <div class="w-full px-2 pb-3 sm:px-5 sm:pb-6 md:px-8 lg:px-12">
+                    <div class="w-full max-w-[11rem] rounded-xl border border-white/10 bg-white/5 p-2 shadow-lg backdrop-blur-md sm:max-w-md sm:rounded-[1.2rem] sm:border-white/20 sm:bg-slate-950/70 sm:p-4 lg:max-w-[22rem] lg:rounded-[1.25rem] lg:border-white/10 lg:bg-white/10 lg:p-4 lg:backdrop-blur-xl">
+                        <div id="slide-badge" class="inline-flex items-center rounded-full border border-blue-400/30 bg-blue-500/15 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-blue-100 sm:border-blue-400/50 sm:bg-blue-500/25 sm:px-2.5 sm:py-1 sm:text-[10px]">Now Showing</div>
+                        <div id="win" class="mt-2 space-y-2 sm:mt-3 sm:space-y-3">
+                            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-2 py-0.75 text-[7px] font-semibold uppercase tracking-[0.15em] text-blue-100 backdrop-blur sm:border-white/15 sm:bg-white/10 sm:px-3 sm:py-1.5 sm:text-[9px]">
+                                <span class="material-symbols-outlined text-[10px] sm:text-sm">play_circle</span>
                                 Trailer ready
                             </div>
-                            <h2 class="max-w-xs text-lg font-black leading-tight text-white sm:max-w-sm sm:text-2xl lg:max-w-md lg:text-3xl">Stream your favorites anytime</h2>
-                            <p class="max-w-xs text-xs leading-relaxed text-gray-300 sm:max-w-sm sm:text-sm lg:max-w-md lg:text-base">A cinematic home for your next binge.</p>
-                                            <div class="mt-2 w-full max-w-[18rem] overflow-hidden rounded-lg border border-white/15 bg-black/50 shadow-lg sm:mt-2.5 sm:max-w-[20rem] sm:rounded-[0.8rem] lg:max-w-[22rem] lg:rounded-[1rem]">
-                                                <video id="heroAutoTrailer" class="aspect-video w-full bg-black object-cover" playsinline muted preload="metadata" poster="./assets/hq720.jpg">
-                                                    <source src="../Hexed%20-%20Official%20Teaser%20Trailer.mp4" type="video/mp4">
-                                                </video>
-                                            </div>
+                            <h2 class="max-w-[9.5rem] text-sm font-black leading-tight text-white sm:max-w-sm sm:text-2xl lg:max-w-md lg:text-3xl">Stream your favorites anytime</h2>
+                            <p class="max-w-[9.5rem] text-[10px] leading-relaxed text-gray-200 sm:max-w-sm sm:text-sm lg:max-w-md lg:text-base">A cinematic home for your next binge.</p>
+                            <div class="mt-2 w-full max-w-[9.5rem] overflow-hidden rounded-lg border border-white/10 bg-black/20 shadow-lg sm:mt-2.5 sm:max-w-[20rem] sm:rounded-[0.8rem] sm:border-white/15 sm:bg-black/50 lg:max-w-[22rem] lg:rounded-[1rem]">
+                                <video id="heroAutoTrailer" class="aspect-video w-full bg-black object-cover" autoplay muted loop playsinline preload="metadata" poster="./assets/hq720.jpg">
+                                    <source src="../Hexed%20-%20Official%20Teaser%20Trailer.mp4" type="video/mp4">
+                                </video>
+                            </div>
                         </div>
                         <div class="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2.5">
                             <a href="./Download.html" class="rounded-full bg-blue-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-lg transition hover:bg-blue-400 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">Watch Now</a>
@@ -369,7 +369,7 @@
             <button type="button" id="closeTrailerModal" class="absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20">
                 <span class="material-symbols-outlined">close</span>
             </button>
-            <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" controls preload="metadata" playsinline poster="./assets/hq720.jpg">
+            <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="metadata" playsinline poster="./assets/hq720.jpg">
                 <source src="../Hexed%20-%20Official%20Teaser%20Trailer.mp4" type="video/mp4">
             </video>
         </div>

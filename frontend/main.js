@@ -123,6 +123,9 @@ async function openTrailerModal(videoUrl = null) {
     const nextVideoUrl = videoUrl || trailerVideoDefaultSrc;
     setTrailerVideoSource(nextVideoUrl);
     trailerVideo.currentTime = 0;
+    trailerVideo.muted = true;
+    trailerVideo.autoplay = true;
+    trailerVideo.playsInline = true;
     try {
       if (document.fullscreenElement !== trailerModal) {
         await trailerModal.requestFullscreen?.();
@@ -152,33 +155,31 @@ function closeTrailerModal() {
 
 function autoplayTrailerFromHexVideo() {
   const videoUrl = resolveTrailerVideoUrl();
-  if (!videoUrl) return;
+  if (!videoUrl || !heroAutoTrailer) return;
+
+  const heroSource = heroAutoTrailer.querySelector('source');
+  if (heroSource) {
+    heroSource.src = videoUrl;
+    heroSource.type = 'video/mp4';
+  }
+
+  heroAutoTrailer.load();
+  heroAutoTrailer.currentTime = 0;
+  heroAutoTrailer.muted = true;
+  heroAutoTrailer.autoplay = true;
+  heroAutoTrailer.playsInline = true;
+  heroAutoTrailer.loop = true;
 
   const startHeroTrailer = () => {
-    if (!heroAutoTrailer) return;
-    const heroSource = heroAutoTrailer.querySelector('source');
-    if (heroSource) {
-      heroSource.src = videoUrl;
-      heroSource.type = 'video/mp4';
-    }
-    heroAutoTrailer.load();
-    heroAutoTrailer.currentTime = 0;
-    heroAutoTrailer.muted = true;
     heroAutoTrailer.play().catch(() => {
-      setTimeout(() => {
+      window.setTimeout(() => {
         heroAutoTrailer.play().catch(() => {});
       }, 250);
     });
   };
 
-  if (heroAutoTrailer) {
-    startHeroTrailer();
-  }
-
-  // Only autoplay the hero preview when a hex video is provided.
-  if (heroAutoTrailer) {
-    startHeroTrailer();
-  }
+  heroAutoTrailer.addEventListener('canplaythrough', startHeroTrailer, { once: true });
+  startHeroTrailer();
 }
 
 function updateSlide(index) {
@@ -208,6 +209,7 @@ function updateSlide(index) {
 // Initialize first slide after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   updateSlide(currentIndex);
+  autoplayTrailerFromHexVideo();
 
   if (prevButton) {
     prevButton.addEventListener('click', () => {
