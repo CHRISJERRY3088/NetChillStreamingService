@@ -84,6 +84,9 @@ app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/billing", billingRoute);
 app.use("/api/sse", sseRoute);
+import moviesRoute from "./route/movies.route.js";
+
+app.use("/api/movies", moviesRoute);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "Server is running", timestamp: new Date() });
