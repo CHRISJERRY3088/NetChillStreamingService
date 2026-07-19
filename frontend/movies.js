@@ -17,13 +17,16 @@ const MOVIES = {
 
   // Generate poster URL for the movie card and preserve full or relative image paths
   getPosterUrl: (posterPath) => {
-    if (!posterPath) return './assets/ad.jpg';
-    if (typeof posterPath !== 'string') return './assets/ad.jpg';
+    if (!posterPath) return '';
+    if (typeof posterPath !== 'string') return '';
     const normalized = posterPath.trim();
-    if (/^(https?:)?\/\//i.test(normalized) || normalized.startsWith('./') || normalized.startsWith('/') || normalized.startsWith('../')) {
-      return normalized;
-    }
-    return './assets/ad.jpg';
+    // Prefer absolute URLs
+    if (/^https?:\/\//i.test(normalized)) return normalized;
+    // Allow protocol-relative URLs
+    if (/^\/\//.test(normalized)) return window.location.protocol + normalized;
+    // If it's a relative path but not the legacy local ad, return as-is
+    if (normalized && !normalized.includes('assets/ad.jpg')) return normalized;
+    return '';
   },
 
   // Format genres
@@ -47,10 +50,15 @@ const MOVIES = {
     return `
       <article class="animation-card group rounded-2xl p-2.5 cursor-pointer" data-movie-id="${id}" onclick='MOVIES.goToDownload(${movieIdForJs}, "movie", ${movieJson})'>
         <div class="animation-card__thumb mb-3 rounded-xl relative overflow-hidden bg-gray-800">
-          <img src="${MOVIES.getPosterUrl(poster_path)}" 
-               alt="${title}" 
-               class="w-full h-full object-cover"
-               onerror="this.src='./assets/ad.jpg'">
+          ${MOVIES.getPosterUrl(poster_path) ? `
+            <img src="${MOVIES.getPosterUrl(poster_path)}" 
+                 alt="${title}" 
+                 class="w-full h-full object-cover" />
+          ` : `
+            <div class="w-full h-48 bg-gradient-to-r from-slate-700 to-slate-800 flex items-center justify-center text-slate-400">
+              <span class="material-symbols-outlined text-4xl">movie</span>
+            </div>
+          `}
           <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
             <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
           </div>
@@ -109,29 +117,75 @@ const MOVIES = {
     { id: 'popularMoviesGrid', title: 'Popular Movies', query: '', type: 'popular', layout: 'grid' },
   ],
 
-  createCategorySection: (containerId, title, layout = 'carousel') => {
+  createCategorySection: (containerId, title, layout = 'carousel', type = '') => {
     const wrapper = document.getElementById('menuContainers');
     if (!wrapper || document.getElementById(containerId)) return;
 
+    const sidebarId = `${containerId}-sidebar`;
     const contentHtml = layout === 'grid'
       ? `<div id="${containerId}" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"></div>`
       : `<div class="animation-carousel-wrapper scrollbar-none w-full -mx-4 sm:-mx-10">
             <div id="${containerId}" class="animation-carousel gap-3 sm:gap-1 mx-auto w-full sm:w-auto"></div>
          </div>`;
 
+    const typeDisplay = type ? String(type).replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Movie';
+
     const sectionHtml = `
       <section id="${containerId}-section" class="max-w-7xl mx-auto px-6 py-10">
         <div class="flex items-center justify-between mb-8">
           <h2 class="text-2xl font-black text-blue-500 uppercase tracking-tighter">${title}</h2>
-          <button type="button" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg">See All</button>
+          <button type="button" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg" data-sidebar-trigger="${sidebarId}">See All</button>
         </div>
         <div class="relative">
           ${contentHtml}
         </div>
       </section>
+
+      <div id="${sidebarId}" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300" onclick="document.getElementById('${sidebarId}').classList.add('hidden')"></div>
+        <div class="relative origin-top transform-gpu w-full max-w-[95%] sm:max-w-6xl mx-auto max-h-[90vh] overflow-y-auto rounded-[1.5rem] border border-white/40 bg-white/45 p-4 shadow-[0_12px_45px_rgba(15,23,42,0.14)] backdrop-blur-2xl dark:border-white/15 dark:bg-slate-900/35 dark:shadow-[0_18px_60px_rgba(2,6,23,0.45)] sm:p-6 lg:p-8">
+          <button onclick="document.getElementById('${sidebarId}').classList.add('hidden')" class="absolute top-4 right-4 text-4xl text-slate-800 transition hover:text-blue-500 dark:text-white sm:right-6">&times;</button>
+          <div class="mb-4 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-4">
+            <div>
+              <h2 class="text-2xl font-black uppercase tracking-[0.25em] text-blue-500 sm:text-3xl">${title}</h2>
+              <p id="${sidebarId}-type" class="text-sm text-slate-300 mt-1">Type: ${typeDisplay}</p>
+            </div>
+            <div class="relative w-full md:max-w-md">
+              <input class="sidebar-search-input w-full rounded-full border border-slate-700/70 bg-slate-950/95 py-3 pl-12 pr-4 text-sm text-white outline-none placeholder-slate-400 transition duration-200 ease-out focus:border-blue-400 focus:bg-slate-900/95 focus:ring-2 focus:ring-blue-500/30 sm:text-base leading-tight" type="text" placeholder="Search Movies..." data-sidebar-search="${sidebarId}">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base leading-none pointer-events-none transition-colors duration-200">search</span>
+              <div class="sidebar-search-dropdown absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-3xl border border-slate-800/80 bg-slate-950/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl" data-sidebar-dropdown="${sidebarId}"></div>
+            </div>
+          </div>
+          <div id="${containerId}-sidebar-grid" class="mx-auto w-full grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"></div>
+        </div>
+      </div>
     `;
 
     wrapper.insertAdjacentHTML('beforeend', sectionHtml);
+
+    // Attach sidebar trigger
+    const button = document.querySelector(`[data-sidebar-trigger="${sidebarId}"]`);
+    if (button) {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById(sidebarId).classList.remove('hidden');
+        MOVIES.loadSidebarContent(sidebarId, containerId);
+      });
+    }
+
+    // Attach search to sidebar
+    const searchInput = document.querySelector(`[data-sidebar-search="${sidebarId}"]`);
+    if (searchInput) {
+      let searchTimeout;
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          if (e.target.value.trim().length > 1) {
+            MOVIES.searchSidebar(e.target.value, sidebarId, containerId);
+          }
+        }, 300);
+      });
+    }
   },
 
   loadCategorySection: async (section) => {
@@ -164,6 +218,58 @@ const MOVIES = {
     } catch (error) {
       console.error(`Error loading section ${section.title}:`, error);
       MOVIES.renderFallbackMovies(id);
+    }
+  },
+
+  // Load sidebar content for a specific container
+  loadSidebarContent: async (sidebarId, containerId) => {
+    const gridId = `${containerId}-sidebar-grid`;
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+
+    grid.innerHTML = MOVIES.createLoadingState(gridId, 8);
+
+    try {
+      const section = MOVIES.categorySections.find((s) => s.id === containerId);
+      if (!section) return;
+
+      let data;
+      if (section.type === 'trending') {
+        data = await window.moviesAPI.getTrending();
+      } else if (section.type === 'popular') {
+        data = await window.moviesAPI.getPopular(1);
+      } else {
+        data = await window.moviesAPI.search(section.query, 1);
+      }
+
+      const results = (data?.results || []).slice(0, 50).map((movie) => MOVIES.normalizeMovie(movie, section.title));
+      if (results.length === 0) {
+        throw new Error(`No movies returned for ${section.title}`);
+      }
+
+      grid.innerHTML = results.map((m, i) => MOVIES.createMovieCard(m, i)).join('');
+    } catch (error) {
+      console.error(`Error loading sidebar ${sidebarId}:`, error);
+      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Failed to load content</div>`;
+    }
+  },
+
+  searchSidebar: async (query, sidebarId, containerId) => {
+    const gridId = `${containerId}-sidebar-grid`;
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+
+    try {
+      const data = await window.moviesAPI.search(query, 1);
+      const results = (data?.results || []).slice(0, 50).map((movie) => MOVIES.normalizeMovie(movie));
+      if (results.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center text-slate-400">No results found</div>`;
+        return;
+      }
+      grid.innerHTML = results.map((m, i) => MOVIES.createMovieCard(m, i)).join('');
+    } catch (error) {
+      console.error(`Error searching sidebar ${sidebarId}:`, error);
+      grid.innerHTML = `<div class="col-span-full text-center text-red-400">Search failed</div>`;
     }
   },
 
@@ -437,7 +543,7 @@ const MOVIES = {
 
     // Create category sections dynamically and load API data into them
     MOVIES.categorySections.forEach((section) => {
-      MOVIES.createCategorySection(section.id, section.title, section.layout);
+      MOVIES.createCategorySection(section.id, section.title, section.layout, section.type);
     });
 
     await Promise.all(MOVIES.categorySections.map((section) => MOVIES.loadCategorySection(section)));
