@@ -1,13 +1,13 @@
 (function (root) {
   const movieCatalog = [
-    { title: 'Hero Squad', category: 'Animation', year: '2024', description: 'A brave squad of heroes protecting the city.', link: './Download.html?movie=hero-squad' },
-    { title: 'Sky Riders', category: 'Fantasy', year: '2023', description: 'High-flying adventure through the clouds.', link: './Download.html?movie=sky-riders' },
-    { title: 'Ocean Drift', category: 'Family', year: '2022', description: 'A heartfelt journey across the open sea.', link: './Download.html?movie=ocean-drift' },
-    { title: 'Neon City', category: 'Action', year: '2023', description: 'A futuristic city filled with danger and style.', link: './Download.html?movie=neon-city' },
-    { title: 'Moonlight', category: 'Drama', year: '2022', description: 'A quiet story of hope and second chances.', link: './Download.html?movie=moonlight' },
-    { title: 'Pixel Quest', category: 'Sci-fi', year: '2024', description: 'A pixel-powered adventure in a digital world.', link: './Download.html?movie=pixel-quest' },
-    { title: 'The Last Horizon', category: 'Adventure', year: '2024', description: 'Explorers chase a legendary sunrise across the world.', link: './Download.html?movie=the-last-horizon' },
-    { title: 'Midnight Run', category: 'Thriller', year: '2021', description: 'A tense chase through the city at night.', link: './Download.html?movie=midnight-run' },
+    { title: 'Hero Squad', category: 'Animation', year: '2024', description: 'A brave squad of heroes protecting the city.', link: './Download.html?id=hero-squad&type=movie' },
+    { title: 'Sky Riders', category: 'Fantasy', year: '2023', description: 'High-flying adventure through the clouds.', link: './Download.html?id=sky-riders&type=movie' },
+    { title: 'Ocean Drift', category: 'Family', year: '2022', description: 'A heartfelt journey across the open sea.', link: './Download.html?id=ocean-drift&type=movie' },
+    { title: 'Neon City', category: 'Action', year: '2023', description: 'A futuristic city filled with danger and style.', link: './Download.html?id=neon-city&type=movie' },
+    { title: 'Moonlight', category: 'Drama', year: '2022', description: 'A quiet story of hope and second chances.', link: './Download.html?id=moonlight&type=movie' },
+    { title: 'Pixel Quest', category: 'Sci-fi', year: '2024', description: 'A pixel-powered adventure in a digital world.', link: './Download.html?id=pixel-quest&type=movie' },
+    { title: 'The Last Horizon', category: 'Adventure', year: '2024', description: 'Explorers chase a legendary sunrise across the world.', link: './Download.html?id=the-last-horizon&type=movie' },
+    { title: 'Midnight Run', category: 'Thriller', year: '2021', description: 'A tense chase through the city at night.', link: './Download.html?id=midnight-run&type=movie' },
   ];
 
   function normalizeText(value) {

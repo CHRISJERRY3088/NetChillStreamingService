@@ -6,8 +6,6 @@
     <title>NetChill - Download</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="./src/output.css" rel="stylesheet">
     <script src="./main.js" defer></script>
     <script src="./user.js" defer></script>
@@ -46,7 +44,6 @@
     </script>
     
     <link rel="stylesheet" href="./components/loading/loading.css">
-    <script src="./api.js" defer></script>
     <link rel="stylesheet" href="./assets/menu.css">
     <style>
         /* Custom scrollbar styles */
@@ -67,6 +64,30 @@
         [x-cloak] { display: none !important; }
         @keyframes moveRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .animate-ad { animation: moveRight 10s linear infinite; }
+        .download-loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 140;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            color: #f8fafc;
+        }
+        .download-loading-overlay.show {
+            display: flex;
+        }
+        .download-loading-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: 5px solid rgba(148, 163, 184, 0.2);
+            border-top-color: rgba(56, 189, 248, 1);
+            border-radius: 9999px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         /* Animation for images inside the button */
         @keyframes slideRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(150%); } }
         .moving-img { animation: slideRight 3s linear infinite; }
@@ -283,6 +304,14 @@
 
 <body class="transition-colors duration-300 bg-black dark:bg-black text-gray-900 dark:text-white">
 
+    <div id="download-loading-overlay" class="download-loading-overlay" aria-live="polite" aria-busy="true">
+        <div class="max-w-xl text-center">
+            <div class="download-loading-spinner mx-auto mb-6"></div>
+            <h2 id="download-loading-title" class="text-3xl font-black">Preparing your download</h2>
+            <p id="download-loading-message" class="mt-3 text-slate-300 text-sm sm:text-base">Fetching movie details and generating your download page. This may take a few seconds.</p>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-2 md:px-10">
         
@@ -488,6 +517,7 @@
                                 <div>
                                     <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Latest Release</p>
                                     <h1 id="selected-movie-title" class="mt-2 text-3xl font-bold text-white">Avatar: Elemental Dawn</h1>
+                                    <p id="selected-movie-meta" class="mt-2 text-sm text-slate-400">2024 · ⭐ 8.5 · Action · Adventure</p>
                                 </div>
                                 <span class="inline-flex items-center rounded-full bg-blue-500/15 px-3 py-2 text-sm font-semibold text-blue-300">4K Ready</span>
                             </div>
@@ -537,6 +567,20 @@
         <section class="mt-10 rounded-[2rem] border border-white/10 bg-slate-900/95 p-8 shadow-2xl backdrop-blur-xl">
             <h3 class="text-3xl font-bold text-white mb-3">Description</h3>
             <p id="selected-movie-description" class="text-slate-300 leading-8 max-w-3xl">A young boy known as the Avatar must master the four elemental powers to restore balance to the world. Stream the latest episodes, download premium-quality releases, and choose subtitles for the ultimate viewing experience.</p>
+            <div class="mt-8 rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+                <div class="flex items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-white">Streaming Availability</h4>
+                        <p class="text-sm text-slate-400">Powered by RapidAPI streaming availability data.</p>
+                    </div>
+                    <span id="streaming-status" class="rounded-full bg-slate-800 px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-300">Idle</span>
+                </div>
+                <div id="streaming-availability" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+            </div>
+            <div class="mt-8 rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+                <h4 class="text-xl font-bold text-white mb-4">Cast</h4>
+                <div id="selected-movie-cast" class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></div>
+            </div>
         </section>
     </main>
 
@@ -966,25 +1010,237 @@
             }
         };
 
-        function applySelectedMovieFromQuery() {
-            const params = new URLSearchParams(window.location.search);
-            const movieKey = params.get('movie');
-            const details = movieKey ? selectedMovieDetails[movieKey] : null;
+        async function fetchMovieDetails(movieId) {
+            if (!movieId || !window.moviesAPI) return null;
+            try {
+                return await window.moviesAPI.getDetails(movieId);
+            } catch (error) {
+                console.error('Failed to fetch movie details:', error);
+                return null;
+            }
+        }
 
-            if (!details) return;
+        function formatMovieMeta(movie) {
+            const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
+            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+            const genres = movie.genres ? movie.genres.map((g) => g.name).join(' • ') : 'Movie';
+            return `${year} · ⭐ ${rating} · ${genres}`;
+        }
 
+        function renderMovieCast(cast) {
+            const container = document.getElementById('selected-movie-cast');
+            if (!container) return;
+            if (!cast || cast.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">Cast information not available.</p>';
+                return;
+            }
+
+            container.innerHTML = cast.slice(0, 8).map(member => `
+                <div class="rounded-3xl border border-white/10 bg-slate-900/80 p-4">
+                    <p class="text-sm font-semibold text-white">${member.name}</p>
+                    <p class="mt-1 text-xs text-slate-400">as ${member.character || 'Unknown'}</p>
+                </div>
+            `).join('');
+        }
+
+        function applyMoviePoster(movie) {
+            const preview = document.getElementById('preview-player');
+            const placeholder = document.getElementById('preview-placeholder');
+            if (!preview) return;
+
+            // Prefer full URLs returned by the API. Do not prepend any external image domain.
+            const posterPath = movie.poster_path || movie.backdrop_path || movie.poster || movie.image;
+            let imageUrl = '';
+            if (posterPath && (posterPath.startsWith('http://') || posterPath.startsWith('https://') || posterPath.startsWith('./') || posterPath.startsWith('../') || posterPath.startsWith('/'))) {
+                imageUrl = posterPath;
+            }
+
+            if (imageUrl) {
+                preview.style.backgroundImage = `url('${imageUrl}')`;
+                preview.style.backgroundSize = 'cover';
+                preview.style.backgroundPosition = 'center';
+                preview.style.backgroundRepeat = 'no-repeat';
+                preview.innerHTML = '';
+            } else if (placeholder) {
+                // Fallback: show placeholder text and clear any background image
+                placeholder.textContent = 'MOVIE PREVIEW';
+                preview.style.backgroundImage = '';
+            }
+        }
+
+        const downloadLoadingOverlay = document.getElementById('download-loading-overlay');
+        const downloadLoadingTitle = document.getElementById('download-loading-title');
+        const downloadLoadingMessage = document.getElementById('download-loading-message');
+        let downloadLoadingDotsInterval = null;
+
+        function getPreviewMovieFromSession() {
+            try {
+                const raw = sessionStorage.getItem('netchill_movie_preview');
+                return raw ? JSON.parse(raw) : null;
+            } catch (error) {
+                console.warn('Invalid preview movie data', error);
+                return null;
+            }
+        }
+
+        function clearPreviewMovieSession() {
+            try {
+                sessionStorage.removeItem('netchill_movie_preview');
+            } catch (error) {
+                console.warn('Unable to clear preview movie data', error);
+            }
+        }
+
+        function startDownloadLoading() {
+            if (!downloadLoadingOverlay) return;
+            downloadLoadingOverlay.classList.add('show');
+            document.body.classList.add('overflow-hidden');
+            let dots = '';
+            if (downloadLoadingMessage) downloadLoadingMessage.textContent = 'Fetching movie details and generating your download page.';
+            clearInterval(downloadLoadingDotsInterval);
+            downloadLoadingDotsInterval = setInterval(() => {
+                dots = dots.length >= 3 ? '' : `${dots}.`;
+                if (downloadLoadingMessage) downloadLoadingMessage.textContent = `Fetching movie details and generating your download page${dots}`;
+            }, 500);
+        }
+
+        function stopDownloadLoading() {
+            if (!downloadLoadingOverlay) return;
+            downloadLoadingOverlay.classList.remove('show');
+            document.body.classList.remove('overflow-hidden');
+            clearInterval(downloadLoadingDotsInterval);
+            downloadLoadingDotsInterval = null;
+        }
+
+        function getMovieTitle(movie, fallback = 'Movie preview') {
+            return movie?.title || movie?.name || movie?.original_title || fallback;
+        }
+
+        function applyPreviewMovie(preview) {
+            if (!preview) return;
             const titleEl = document.getElementById('selected-movie-title');
+            const metaEl = document.getElementById('selected-movie-meta');
             const previewEl = document.getElementById('preview-placeholder');
             const genreEl = document.getElementById('selected-movie-genre');
             const descriptionEl = document.getElementById('selected-movie-description');
+            const title = getMovieTitle(preview, 'Featured movie');
 
-            if (titleEl) titleEl.textContent = details.title;
-            if (previewEl) previewEl.textContent = details.preview;
-            if (genreEl) genreEl.textContent = details.genre;
-            if (descriptionEl) descriptionEl.textContent = details.description;
+            if (titleEl) titleEl.textContent = title;
+            if (metaEl) metaEl.textContent = preview.release_date ? new Date(preview.release_date).getFullYear() : 'Preview';
+            if (previewEl) previewEl.textContent = '';
+            if (genreEl) genreEl.textContent = preview.genre || 'Featured selection';
+            if (descriptionEl) descriptionEl.textContent = preview.overview || 'A premium movie experience is ready to stream.';
+            document.title = `${title} | NetChill`;
+            applyMoviePoster(preview);
         }
 
-        applySelectedMovieFromQuery();
+        async function applySelectedMovieFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const movieId = params.get('id');
+            if (!movieId) return;
+
+            const preview = getPreviewMovieFromSession();
+            if (preview) {
+                applyPreviewMovie(preview);
+            }
+
+            startDownloadLoading();
+            const movie = await fetchMovieDetails(movieId);
+            stopDownloadLoading();
+
+            if (!movie) {
+                if (preview) {
+                    applyPreviewMovie(preview);
+                    clearPreviewMovieSession();
+                    return;
+                }
+
+                const titleEl = document.getElementById('selected-movie-title');
+                const metaEl = document.getElementById('selected-movie-meta');
+                const descriptionEl = document.getElementById('selected-movie-description');
+                if (titleEl) titleEl.textContent = 'Movie not found';
+                if (metaEl) metaEl.textContent = '';
+                if (descriptionEl) descriptionEl.textContent = 'We could not fetch that movie. Please try again later.';
+                return;
+            }
+
+            const titleEl = document.getElementById('selected-movie-title');
+            const metaEl = document.getElementById('selected-movie-meta');
+            const previewEl = document.getElementById('preview-placeholder');
+            const genreEl = document.getElementById('selected-movie-genre');
+            const descriptionEl = document.getElementById('selected-movie-description');
+            const title = getMovieTitle(movie, 'Featured movie');
+
+            if (titleEl) titleEl.textContent = title;
+            if (metaEl) metaEl.textContent = formatMovieMeta(movie);
+            if (previewEl) previewEl.textContent = '';
+            if (genreEl) genreEl.textContent = movie.genres ? movie.genres.map((g) => g.name).join(' • ') : 'Movie';
+            if (descriptionEl) descriptionEl.textContent = movie.overview || 'A premium movie experience is ready to stream.';
+            document.title = `${title} | NetChill`;
+            applyMoviePoster(movie);
+            renderMovieCast(movie.credits?.cast || []);
+            await applyStreamingAvailability(movieId, params.get('type') || 'movie');
+            clearPreviewMovieSession();
+        }
+
+        async function fetchStreamingAvailability(movieId, type = 'movie') {
+            if (!movieId || !window.moviesAPI?.getStreaming) return null;
+            try {
+                return await window.moviesAPI.getStreaming(type, movieId, 'us');
+            } catch (error) {
+                console.error('Failed to fetch streaming availability:', error);
+                return null;
+            }
+        }
+
+        function renderStreamingAvailability(data) {
+            const container = document.getElementById('streaming-availability');
+            if (!container) return;
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-300">No availability data found for this title.</p>';
+                return;
+            }
+
+            const country = 'us';
+            const countryInfo = data[country] || data[Object.keys(data)[0]];
+            if (!countryInfo || Object.keys(countryInfo).length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-300">No providers available for this region.</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(countryInfo)
+                .map(([provider, offers]) => {
+                    if (!Array.isArray(offers) || offers.length === 0) return '';
+                    const offerList = offers.map((offer) => {
+                        const typeLabel = offer.type ? offer.type.replace(/_/g, ' ') : 'Unknown';
+                        const qualityLabel = offer.quality ? ` · ${offer.quality.toUpperCase()}` : '';
+                        const priceLabel = offer.price ? ` · ${offer.price}` : '';
+                        return `<li class="text-sm text-slate-300">${typeLabel}${qualityLabel}${priceLabel}</li>`;
+                    }).join('');
+
+                    return `
+                        <div class="rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-xl">
+                            <h5 class="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-blue-300">${provider}</h5>
+                            <ul class="space-y-1">${offerList}</ul>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        async function applyStreamingAvailability(movieId, type = 'movie') {
+            const statusEl = document.getElementById('streaming-status');
+            if (statusEl) {
+                statusEl.textContent = 'Loading...';
+            }
+            const data = await fetchStreamingAvailability(movieId, type);
+            renderStreamingAvailability(data);
+            if (statusEl) {
+                statusEl.textContent = data ? 'Updated' : 'Unavailable';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', applySelectedMovieFromQuery);
 
         // ─────────────────────────────────────────────────────────────
         // CLOUD STORAGE URLs — paste your real links below
@@ -1249,6 +1505,7 @@
                 link.remove();
             }
         }
+    </script>
     </script>
 </body>
 </html>

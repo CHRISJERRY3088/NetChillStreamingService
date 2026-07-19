@@ -53,6 +53,86 @@ const AUTO_PLAY_SECONDS = 15;
 let trailerAutoPlayTimer = null;
 const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribute('src') || '';
 const localTrailerVideoPath = '../Hexed%20-%20Official%20Teaser%20Trailer.mp4';
+let currentTrailerUrl = trailerVideoDefaultSrc || localTrailerVideoPath;
+
+function normalizeSlideData(slide) {
+  if (!slide || typeof slide !== 'object') return null;
+  return {
+    image: slide.image || "url('./assets/bg.png')",
+    badge: slide.badge || 'Now Showing',
+    eyebrow: slide.eyebrow || 'Watch the latest movies & shows',
+    title: slide.title || 'Stream your favorites anytime',
+    subtitle: slide.subtitle || 'A cinematic home for your next binge.',
+    trailerUrl: slide.trailer_url || slide.trailerUrl || localTrailerVideoPath,
+    trailerButtonText: slide.trailer_button_text || slide.trailerButtonText || 'View Trailer',
+  };
+}
+
+async function loadSlideTrailers() {
+  if (!window.moviesAPI?.getTrailers) return;
+
+  try {
+    const response = await window.moviesAPI.getTrailers();
+    if (response?.results && Array.isArray(response.results) && response.results.length > 0) {
+      const fetchedSlides = response.results
+        .map(normalizeSlideData)
+        .filter(Boolean);
+      if (fetchedSlides.length) {
+        slides.splice(0, slides.length, ...fetchedSlides);
+      }
+    }
+  } catch (error) {
+    console.warn('Unable to fetch trailer slides from API:', error);
+  }
+
+  renderTrailerCards(slides);
+}
+
+function isPlayableVideoUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const normalized = url.trim().toLowerCase();
+  return normalized.endsWith('.mp4') || normalized.endsWith('.webm') || normalized.endsWith('.ogg');
+}
+
+function renderTrailerCards(trailers) {
+  const container = document.getElementById('trailerCards');
+  if (!container) return;
+
+  if (!Array.isArray(trailers) || trailers.length === 0) {
+    container.innerHTML = '<p class="text-sm text-gray-300">No trailer data is available right now.</p>';
+    return;
+  }
+
+  container.innerHTML = trailers.slice(0, 5).map((trailer) => {
+    const title = trailer.title || trailer.eyebrow || 'Trailer';
+    const subtitle = trailer.subtitle || 'Watch the latest trailer preview.';
+    const image = trailer.image || "url('./assets/bg.png')";
+    const trailerUrl = trailer.trailerUrl || trailer.trailer_url || localTrailerVideoPath;
+    const buttonText = trailer.trailerButtonText || trailer.trailer_button_text || 'Watch Trailer';
+    const safeTrailerUrl = String(trailerUrl).replace(/'/g, "\\'");
+    const playable = isPlayableVideoUrl(trailerUrl);
+    const buttonAction = playable
+      ? `onclick="openTrailerModal('${safeTrailerUrl}')"`
+      : `onclick="window.open('${safeTrailerUrl}', '_blank', 'noopener')"`;
+    const buttonLabel = playable ? buttonText : `${buttonText} (Open)`;
+
+    return `
+      <article class="group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/90 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
+        <div class="relative h-52 bg-cover bg-center" style="background-image: ${image};">
+          <div class="absolute inset-0 bg-black/30"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+            <p class="text-xs uppercase tracking-[0.25em] text-blue-200">${trailer.badge || 'Trailer'}</p>
+            <h3 class="mt-2 text-lg font-bold leading-tight">${title}</h3>
+          </div>
+        </div>
+        <div class="p-4">
+          <p class="text-sm text-slate-300 line-clamp-2">${subtitle}</p>
+          <button type="button" ${buttonAction} class="mt-4 w-full rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-400">${buttonLabel}</button>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
 
 function decodeHexVideoName(input) {
   if (!input) return null;
@@ -80,8 +160,10 @@ function decodeHexVideoName(input) {
 
 function resolveTrailerVideoUrl() {
   const encodedName = new URLSearchParams(window.location.search).get('videoHex');
+  if (!encodedName) return null;
+
   const decodedName = decodeHexVideoName(encodedName);
-  if (!decodedName) return localTrailerVideoPath;
+  if (!decodedName) return null;
 
   const normalizedName = decodedName.toLowerCase().trim();
   if (normalizedName === 'tease.mp4' || normalizedName.includes('tease') || normalizedName.includes('hexed')) {
@@ -105,6 +187,17 @@ function setTrailerVideoSource(videoUrl) {
   trailerVideo.load();
 }
 
+function updateHeroTrailerSource(url) {
+  if (!heroAutoTrailer) return;
+  const heroSource = heroAutoTrailer.querySelector('source');
+  if (!heroSource) return;
+
+  heroSource.src = url || localTrailerVideoPath;
+  heroSource.type = 'video/mp4';
+  heroAutoTrailer.load();
+  heroAutoTrailer.currentTime = 0;
+}
+
 function stopTrailerAutoPlayTimer() {
   if (trailerAutoPlayTimer) {
     clearTimeout(trailerAutoPlayTimer);
@@ -120,7 +213,7 @@ async function openTrailerModal(videoUrl = null) {
   document.body.classList.add('overflow-hidden');
 
   if (trailerVideo) {
-    const nextVideoUrl = videoUrl || trailerVideoDefaultSrc;
+    const nextVideoUrl = videoUrl || currentTrailerUrl || trailerVideoDefaultSrc;
     setTrailerVideoSource(nextVideoUrl);
     trailerVideo.currentTime = 0;
     trailerVideo.muted = true;
@@ -165,11 +258,11 @@ function closeTrailerModal() {
 
 function autoplayTrailerFromHexVideo() {
   const videoUrl = resolveTrailerVideoUrl();
-  if (!videoUrl || !heroAutoTrailer) return;
+  if (!heroAutoTrailer) return;
 
   const heroSource = heroAutoTrailer.querySelector('source');
   if (heroSource) {
-    heroSource.src = videoUrl;
+    heroSource.src = videoUrl || currentTrailerUrl || localTrailerVideoPath;
     heroSource.type = 'video/mp4';
   }
 
@@ -219,13 +312,22 @@ function updateSlide(index) {
     if (heroHeading) heroHeading.textContent = slide.title;
     if (heroParagraph) heroParagraph.textContent = slide.subtitle;
   }
+
+  if (trailerButton) {
+    trailerButton.textContent = slide.trailerButtonText || 'View Trailer';
+  }
+
+  currentTrailerUrl = slide.trailerUrl || currentTrailerUrl || localTrailerVideoPath;
+  updateHeroTrailerSource(currentTrailerUrl);
+
   subtitleElements.forEach((el) => {
     el.textContent = slide.subtitle;
   });
 }
 
 // Initialize first slide after DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadSlideTrailers();
   updateSlide(currentIndex);
   autoplayTrailerFromHexVideo();
 
@@ -246,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (trailerButton) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
-      openTrailerModal(resolveTrailerVideoUrl());
+      openTrailerModal(resolveTrailerVideoUrl() || currentTrailerUrl);
     });
   }
 

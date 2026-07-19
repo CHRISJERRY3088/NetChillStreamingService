@@ -1,154 +1,40 @@
-# Streaming API Integration Complete ✅
+# Streaming API Integration Updated
 
-## What Was Implemented (July 19, 2026)
+This project no longer depends on The Movie Database (TMDB) for core streaming lookups.
 
-### Backend Setup
-1. **Environment Variables** (`backend/.env`)
-   - Added `RAPIDAPI_KEY` and `RAPIDAPI_HOST` for streaming availability
-   - Added `TMDB_API_KEY` placeholder for The Movie Database API
+## What Changed
 
-2. **New Movies Route** (`backend/route/movies.route.js`)
-   - `GET /api/movies/trending` - Trending movies from TMDB
-   - `GET /api/movies/popular?page=1` - Popular movies paginated
-   - `GET /api/movies/top-rated?page=1` - Top-rated movies
-   - `GET /api/movies/search?query=` - Search movies
-   - `GET /api/movies/details/:id` - Movie details with trailers & credits
-   - `GET /api/movies/streaming/:type/:id` - Streaming availability from RapidAPI
-   - `GET /api/movies/genre/:genreId` - Movies by genre
+- Backend now uses the RapidAPI Streaming Availability service for where-to-watch data.
+- TMDB-specific routes and TMDB API key requirements were removed from the backend.
+- Frontend no longer prepends the TMDB image domain; it will use full image URLs returned by APIs and fall back to a placeholder when none are available.
 
-3. **Server Integration** (`backend/server.js`)
-   - Imported and registered movies route
-   - All endpoints accessible at `/api/movies/*`
+## Backend
 
-### Frontend Setup
-1. **Movies API Client** (`frontend/api.js`)
-   - Added `moviesAPI` object with methods:
-     - `getTrending()` - Fetch trending movies
-     - `getPopular(page)` - Paginated popular movies
-     - `getTopRated(page)` - Paginated top-rated
-     - `search(query, page)` - Search functionality
-     - `getDetails(movieId)` - Movie details
-     - `getStreaming(type, id)` - Streaming info
-     - `getByGenre(genreId, page)` - Filter by genre
-   - Exposed as `window.moviesAPI` for global access
+- Required env: `RAPIDAPI_KEY` (add to `backend/.env`). Optional: `RAPIDAPI_HOST` (defaults to `streaming-availability.p.rapidapi.com`).
+- Available endpoint: `GET /api/movies/streaming/:type/:id?country=us` — returns streaming availability for `movie` or `series`.
 
-2. **Movies Controller** (`frontend/movies.js`)
-   - Complete movie page logic with:
-     - **Trending carousel**: Auto-loads on page init
-     - **Search functionality**: Real-time search with dropdown
-     - **Movie grid**: All movies view with pagination support
-     - **Movie cards**: Dynamic HTML generation with posters
-     - **Interaction handlers**: Click to view details, watch now
+Example cURL using the RapidAPI host/key:
 
-3. **HTML Integration** (`frontend/index.html`)
-   - Added `<script src="./movies.js" defer></script>`
-   - Movie search bar with live results
-   - Dynamic movie carousel powered by API
-   - All movie grid (see all button)
-
-## How to Get It Working
-
-### Step 1: Get TMDB API Key
-```
-1. Visit: https://www.themoviedb.org/settings/api
-2. Create account if needed
-3. Request API key (free tier available)
-4. Copy your API key
-5. Add to backend/.env: TMDB_API_KEY=your_key_here
-```
-
-### Step 2: Start Backend
 ```bash
-cd backend
-npm install          # Install dependencies if needed
-npm run server       # Start on port 10000
+curl --request GET \
+  --url 'https://streaming-availability.p.rapidapi.com/shows/movie/<<ID>>?country=us' \
+  --header 'Content-Type: application/json' \
+  --header 'x-rapidapi-host: streaming-availability.p.rapidapi.com' \
+  --header 'x-rapidapi-key: <YOUR_RAPIDAPI_KEY>'
 ```
 
-### Step 3: Test the API
-```bash
-# In browser or Postman
-GET http://localhost:10000/api/movies/trending
-GET http://localhost:10000/api/movies/popular
-GET http://localhost:10000/api/movies/search?query=avatar
-GET http://localhost:10000/api/movies/details/550     # Avatar ID
-```
+## Frontend
 
-### Step 4: Open Frontend
-```
-Open browser: http://localhost:10000/
-OR
-Open static: file:///C:/Users/Administrator/NetChill/frontend/index.html?api=http://localhost:10000/api
-```
+- The frontend expects `window.moviesAPI.getStreaming(type, id)` for availability lookups.
+- Poster rendering no longer assumes TMDB paths — it uses full URLs returned by the API or shows a placeholder.
 
-## Features Now Working
+## Removed / Updated Docs
 
-✅ **Live Trending Movies** - Carousel auto-loads top trending films
-✅ **Search** - Type to search, dropdown results appear instantly  
-✅ **Movie Grid** - Click "See All" to view 50+ popular movies
-✅ **Movie Details** - Click any movie to view full info (title, year, rating, synopsis)
-✅ **Dynamic Posters** - Real movie posters from TMDB
-✅ **Responsive Design** - Works on mobile, tablet, desktop
-✅ **Fallback Images** - Placeholder if poster fails to load
-✅ **Streaming Info** - Can fetch where each movie is available (RapidAPI)
+- TMDB key setup steps and TMDB-specific instructions were removed from this guide.
 
-## File Structure
-```
-backend/
-├── route/
-│   └── movies.route.js          [NEW] Movie API endpoints
-├── server.js                     [UPDATED] Route registration
-└── .env                          [UPDATED] API keys
+## Next Steps
 
-frontend/
-├── api.js                        [UPDATED] New moviesAPI methods
-├── movies.js                     [NEW] Movies controller & UI logic
-├── index.html                    [UPDATED] Script reference
-└── assets/
-    └── placeholder.jpg           [Optional] Default poster image
-```
+- Ensure `RAPIDAPI_KEY` is set in `backend/.env`.
+- If you still need TMDB poster images, provide full image URLs from your source or host poster images locally.
 
-## API Key Status
-- ✅ RapidAPI Key: Configured (streaming availability)
-- ⏳ TMDB Key: Add your own from themoviedb.org/settings/api
-- **⚠️ IMPORTANT**: Regenerate the exposed RapidAPI key immediately!
-
-## Next Steps (Optional)
-1. Add TMDB API key for full functionality
-2. Create `/player.html` for video streaming
-3. Integrate payment system with Flutterwave
-4. Add user watchlist/favorites
-5. Implement rating & review system
-6. Add download feature for offline viewing
-
-## Testing Checklist
-- [ ] Backend running without errors
-- [ ] TMDB API key added to .env
-- [ ] Homepage loads with trending movies
-- [ ] Search dropdown works
-- [ ] Movie posters display correctly
-- [ ] "See All" shows full grid
-- [ ] Click movie shows details
-- [ ] Dashboard and account pages still work
-- [ ] Responsive on mobile
-
-## Troubleshooting
-
-**Movies not loading?**
-- Check browser console (F12) for errors
-- Verify backend is running: `npm run server`
-- Ensure TMDB API key is added to `.env`
-- Check CORS settings in server.js
-
-**Search not working?**
-- Wait 300ms after typing (debounce)
-- Type at least 2 characters
-- Check API response in Network tab
-
-**Images not showing?**
-- Verify TMDB API key is valid
-- Check image URL format: `https://image.tmdb.org/t/p/w342{posterPath}`
-- Fallback to placeholder.jpg works if image fails
-
----
-
-**Status**: ✅ FULLY FUNCTIONAL - Ready for TMDB API key configuration
+**Status**: ✅ Updated — TMDB references removed from code and docs

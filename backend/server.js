@@ -19,6 +19,7 @@ import { ENV } from "./lib/env.js";
 
 // ✅ 5. Initialize App (Only Once)
 const app = express();
+app.set('trust proxy', 1);
 const PORT = Number(process.env.PORT || ENV.PORT || 10000);
 
 // ✅ 6. CORRECT CORS SETUP (Render-Ready, with Login/Auth)
@@ -72,14 +73,8 @@ import authRoute from "./auth.route.js";
 import adminRoute from "./route/admin.route.js";
 import billingRoute from "./route/billing.route.js";
 import sseRoute from "./route/sse.route.js";
-import { signup, login, logout, forgotPassword, completeReset } from "./controllers/auth.controllers.js";
 
 // ✅ 9. API Routes
-app.post("/api/auth/signup", signup);
-app.post("/api/auth/login", login);
-app.post("/api/auth/logout", logout);
-app.post("/api/auth/forgot-password", forgotPassword);
-app.post("/api/auth/reset-complete", completeReset);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/billing", billingRoute);
@@ -101,12 +96,6 @@ app.get('/', (req, res) => {
     return res.sendFile(indexPath);
   }
   res.status(200).send('API is active and running');
-});
-
-// ✅ 11. Login Route (Your Logic + Response)
-app.post('/login', (req, res) => {
-  // Your login logic here
-  res.json({ message: "Login successful", user: req.body.email });
 });
 
 // ✅ 12. Frontend Serving (unchanged)

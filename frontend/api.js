@@ -223,6 +223,45 @@ const authAPI = {
   },
 };
 
+const moviesAPI = {
+  getTrending: async () => {
+    return apiCall('/movies/trending', { method: 'GET' });
+  },
+
+  getPopular: async (page = 1) => {
+    const query = new URLSearchParams({ page: String(page) });
+    return apiCall(`/movies/popular?${query.toString()}`, { method: 'GET' });
+  },
+
+  getTopRated: async (page = 1) => {
+    const query = new URLSearchParams({ page: String(page) });
+    return apiCall(`/movies/top-rated?${query.toString()}`, { method: 'GET' });
+  },
+
+  search: async (query, page = 1) => {
+    const params = new URLSearchParams({ query: String(query), page: String(page) });
+    return apiCall(`/movies/search?${params.toString()}`, { method: 'GET' });
+  },
+
+  getDetails: async (movieId) => {
+    return apiCall(`/movies/details/${encodeURIComponent(movieId)}`, { method: 'GET' });
+  },
+
+  getStreaming: async (type, id, country = 'us') => {
+    const params = new URLSearchParams({ country });
+    return apiCall(`/movies/streaming/${encodeURIComponent(type)}/${encodeURIComponent(id)}?${params.toString()}`, { method: 'GET' });
+  },
+
+  getByGenre: async (genreId, page = 1) => {
+    const query = new URLSearchParams({ page: String(page) });
+    return apiCall(`/movies/genre/${encodeURIComponent(genreId)}?${query.toString()}`, { method: 'GET' });
+  },
+
+  getTrailers: async () => {
+    return apiCall('/movies/trailers', { method: 'GET' });
+  },
+};
+
 // Storage helpers
 const authStorage = {
   isLoggedIn: () => {
@@ -282,6 +321,7 @@ const downloadStorage = {
 
 if (typeof window !== 'undefined') {
   window.authAPI = authAPI;
+  window.moviesAPI = moviesAPI;
   window.authStorage = authStorage;
   window.downloadStorage = downloadStorage;
 }
