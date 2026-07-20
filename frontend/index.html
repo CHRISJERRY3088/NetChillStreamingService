@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="./src/output.css" rel="stylesheet">
     <script src="./api.js" defer></script>
+    <script src="./src/moviePoster.js"></script>
     <script src="./main.js" defer></script>
     <script src="./user.js" defer></script>
     <script src="./menu.js" defer></script>
@@ -75,13 +76,13 @@
             border: 1px solid rgba(255,255,255,0.08);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
             transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-            padding: 0.25rem;
+            padding: 0.2rem;
             display: flex;
             flex-direction: column;
             height: 100%;
-            width: clamp(140px, 44vw, 180px);
-            max-width: 180px;
-            flex: 0 0 clamp(140px, 44vw, 180px);
+            width: clamp(104px, 32vw, 160px);
+            max-width: 160px;
+            flex: 0 0 clamp(104px, 32vw, 160px);
             min-width: 0;
             overflow: hidden;
         }
@@ -92,12 +93,12 @@
         }
         .animation-card__thumb {
             aspect-ratio: 2 / 3;
-            min-height: 170px;
+            min-height: 140px;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.75));
             position: relative;
             overflow: hidden;
-            margin-bottom: 0.45rem;
-            border-radius: 0.85rem;
+            margin-bottom: 0.35rem;
+            border-radius: 0.75rem;
         }
         .animation-card__content {
             display: flex;
@@ -186,9 +187,9 @@
         }
         @media (min-width: 640px) {
             .animation-card {
-                width: clamp(150px, 24vw, 190px);
-                max-width: 190px;
-                flex-basis: clamp(150px, 24vw, 190px);
+                width: clamp(128px, 24vw, 176px);
+                max-width: 176px;
+                flex-basis: clamp(128px, 24vw, 176px);
             }
         }
         @media (min-width: 1024px) {
@@ -435,7 +436,7 @@
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
                 </div>
 
@@ -464,7 +465,7 @@
                                     <source src="" type="video/mp4">
                                 </video>
                             </div>
-                        </div>
+                        </div>h
                         <div class="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2.5">
                             <a href="./Download.html" class="rounded-full bg-blue-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-lg transition hover:bg-blue-400 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">Watch Now</a>
                             <button type="button" id="trailerButton" class="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">View Trailer</button>
@@ -780,7 +781,7 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <label class="relative block w-full sm:w-72">
-                                <span class="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base text-slate-400">search</span>
+                                <span class="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base text-white/80">search</span>
                                 <input id="sectionSidebarSearch" type="text" placeholder="Search section titles..." class="w-full rounded-full border border-slate-700/70 bg-slate-950/95 py-3 pl-11 pr-4 text-sm text-white outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30">
                             </label>
                             <button type="button" data-sidebar-close="true" class="rounded-full border border-slate-700/70 bg-slate-950/80 p-3 text-2xl text-slate-300 transition hover:border-blue-400 hover:text-white">&times;</button>
@@ -887,7 +888,7 @@
                 const tagLabel = movieData.genre || item.subtitle || 'Now Streaming';
 
                 return `
-                    <article class="section-sidebar-card animation-card group cursor-pointer rounded-[1.3rem] p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                    <article class="section-sidebar-card animation-card group cursor-pointer rounded-[1.1rem] p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
                         <div class="animation-card__thumb rounded-xl">
                             ${posterSrc ? `<img src="${posterSrc}" alt="${item.title}" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${item.title}</div>`}
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
@@ -895,12 +896,12 @@
                             </div>
                             <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">${tagLabel}</div>
                         </div>
-                        <div class="animation-card__content px-1 pb-1">
+                        <div class="animation-card__content px-1 pb-0.5 sm:pb-1">
                             <div>
-                                <h3 class="animation-card__title text-sm font-semibold text-white">${item.title}</h3>
-                                <p class="animation-card__subtitle mt-1 text-[11px] text-gray-400">${item.subtitle}</p>
+                                <h3 class="animation-card__title text-[11px] font-semibold text-white sm:text-sm">${item.title}</h3>
+                                <p class="animation-card__subtitle mt-1 text-[10px] text-gray-400 sm:text-[11px]">${item.subtitle}</p>
                             </div>
-                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
                         </div>
                     </article>
                 `;
@@ -982,15 +983,21 @@
 
             const fallbackSectionMovies = [];
 
-            function resolveMoviePoster(posterPath) {
-                if (!posterPath || typeof posterPath !== 'string') return '';
+            const resolveMoviePoster = (window.NetChillMovieContent?.resolveMoviePoster || function (posterPath, fallbackTitle = '') {
+                if (!posterPath || typeof posterPath !== 'string') {
+                    return window.NetChillMovieContent?.createPlaceholderPoster?.(fallbackTitle || 'Featured Movie') || '';
+                }
                 const normalized = posterPath.trim();
-                if (!normalized) return '';
-                if (/assets\//i.test(normalized)) return '';
+                if (!normalized) {
+                    return window.NetChillMovieContent?.createPlaceholderPoster?.(fallbackTitle || 'Featured Movie') || '';
+                }
+                if (/assets\//i.test(normalized)) {
+                    return window.NetChillMovieContent?.createPlaceholderPoster?.(fallbackTitle || 'Featured Movie') || '';
+                }
                 if (/^https?:\/\//i.test(normalized) || /^\/\//.test(normalized)) return normalized;
                 if (/^[./]/.test(normalized)) return normalized;
                 return normalized;
-            }
+            });
 
             window.openSectionMoviePreview = function (movie, sectionTitle) {
                 const preview = {
@@ -1055,14 +1062,14 @@
             }
 
             function createMovieCard(movie, sectionTitle) {
-                const posterSrc = resolveMoviePoster(movie.poster_path || movie.poster || movie.image || '');
+                const posterSrc = resolveMoviePoster(movie.poster_path || movie.poster || movie.image || '', movie.title || sectionTitle || 'Featured Movie');
                 const movieJson = JSON.stringify(movie).replace(/</g, '\\u003c').replace(/'/g, "\\'");
                 const sectionJson = JSON.stringify(sectionTitle).replace(/</g, '\\u003c').replace(/'/g, "\\'");
 
                 const tagLabel = movie?.genre || movie?.subtitle || 'Now Streaming';
 
                 return `
-                    <article class="animation-card group cursor-pointer rounded-2xl p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                    <article class="animation-card group cursor-pointer rounded-xl p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
                         <div class="animation-card__thumb rounded-xl">
                             ${posterSrc ? `<img src="${posterSrc}" alt="${movie.title} poster" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${movie.title}</div>`}
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
@@ -1070,12 +1077,12 @@
                             </div>
                             <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">${tagLabel}</div>
                         </div>
-                        <div class="animation-card__content px-1 pb-1">
+                        <div class="animation-card__content px-1 pb-0.5 sm:pb-1">
                             <div>
-                                <h3 class="animation-card__title text-sm font-semibold text-white">${movie.title}</h3>
-                                <p class="animation-card__subtitle mt-1 text-[11px] text-gray-400">${movie.subtitle}</p>
+                                <h3 class="animation-card__title text-[11px] font-semibold text-white sm:text-sm">${movie.title}</h3>
+                                <p class="animation-card__subtitle mt-1 text-[10px] text-gray-400 sm:text-[11px]">${movie.subtitle}</p>
                             </div>
-                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
                         </div>
                     </article>
                 `;
@@ -1124,17 +1131,26 @@
                 const container = document.getElementById('menuContainers');
                 if (!container) return;
 
+                container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index, [])).join('');
+
                 try {
-                    await ensureMoviesApiReady();
-                    const sectionResults = await Promise.all(menuSections.map(async (section) => {
-                        const results = await fetchMoviesForSection(section);
+                    const sectionResults = await Promise.allSettled(menuSections.map(async (section) => {
+                        const results = await Promise.race([
+                            fetchMoviesForSection(section),
+                            new Promise((resolve) => setTimeout(() => resolve([]), 1200)),
+                        ]);
                         return { section, results };
                     }));
 
-                    container.innerHTML = sectionResults.map(({ section, results }, index) => createMenuSection(section, index, results)).join('');
+                    const resolvedSections = sectionResults
+                        .filter((result) => result.status === 'fulfilled' && result.value)
+                        .map((result) => result.value);
+
+                    if (resolvedSections.length) {
+                        container.innerHTML = resolvedSections.map(({ section, results }) => createMenuSection(section, sectionResults.findIndex((entry) => entry.status === 'fulfilled' && entry.value?.section?.id === section.id), results)).join('');
+                    }
                 } catch (error) {
                     console.warn('Unable to load featured movies from RapidAPI', error);
-                    container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index, [])).join('');
                 }
             }
 
@@ -1152,7 +1168,6 @@
             });
 
             document.querySelectorAll('.animation-carousel-wrapper').forEach((wrapper) => {
-                const scrollTarget = wrapper;
                 const root = wrapper.closest('.relative') || wrapper.parentElement;
                 if (!root) return;
 
@@ -1182,19 +1197,15 @@
                     if (!carouselCards.length) return;
                     const cardGap = 16;
                     const cardWidth = Math.round(carouselCards[0].getBoundingClientRect().width + cardGap);
-                    scrollTarget.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+                    wrapper.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
                 };
 
                 rightButton.addEventListener('click', () => scrollByCard(1));
                 leftButton.addEventListener('click', () => scrollByCard(-1));
-
-                scrollTarget.addEventListener('wheel', (event) => {
-                    if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
-                    event.preventDefault();
-                    scrollTarget.scrollBy({ left: event.deltaY, behavior: 'smooth' });
-                }, { passive: false });
             });
 
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
             syncOverlayLock();
 
             const storedUser = localStorage.getItem('netchill_user') || localStorage.getItem('user');
@@ -1212,59 +1223,6 @@
             } catch (err) {
                 console.log("Server wake-up in progress or session expired.");
             }
-
-            // Infinite / continuous horizontal scroll for carousels
-            function initInfiniteLoop(wrapper, carousel, speed = 0.5) {
-                if (!wrapper || !carousel) return;
-                // Ensure there are enough items to scroll through smoothly by cloning
-                const originalItems = Array.from(carousel.children);
-                if (!originalItems.length) return;
-
-                // Duplicate until scrollWidth is at least double the wrapper to allow seamless wrap
-                let safety = 0;
-                while (carousel.scrollWidth < wrapper.clientWidth * 2 && safety < 20) {
-                    originalItems.forEach((n) => carousel.appendChild(n.cloneNode(true)));
-                    safety++;
-                }
-
-                let running = true;
-                let lastTime = performance.now();
-
-                function step(now) {
-                    const elapsed = now - lastTime;
-                    lastTime = now;
-                    if (running) {
-                        // move by pixels per frame based on speed (px per 16ms)
-                        const px = (speed * (elapsed / 16));
-                        wrapper.scrollLeft += px;
-                        // When we've scrolled past half the carousel (original+clones), wrap back
-                        if (wrapper.scrollLeft >= carousel.scrollWidth / 2) {
-                            wrapper.scrollLeft -= carousel.scrollWidth / 2;
-                        }
-                    }
-                    requestAnimationFrame(step);
-                }
-
-                // Pause on hover or pointer/touch interaction
-                wrapper.addEventListener('mouseenter', () => (running = false));
-                wrapper.addEventListener('mouseleave', () => (running = true));
-                wrapper.addEventListener('touchstart', () => (running = false), { passive: true });
-                wrapper.addEventListener('touchend', () => (running = true));
-                wrapper.addEventListener('mousedown', () => (running = false));
-                document.addEventListener('mouseup', () => (running = true));
-
-                // Start animation loop
-                requestAnimationFrame(step);
-            }
-
-            // Initialize infinite loop on all carousel wrappers (animations and popular sections)
-            document.querySelectorAll('.animation-carousel-wrapper').forEach((wrapper) => {
-                const carousel = wrapper.querySelector('.animation-carousel');
-                // speed can be set via data attribute `data-scroll-speed` on the wrapper (px/frame base)
-                const speedAttr = parseFloat(wrapper.getAttribute('data-scroll-speed'));
-                const speed = Number.isFinite(speedAttr) ? speedAttr : 0.6;
-                initInfiniteLoop(wrapper, carousel, speed);
-            });
 
             function scrollToSectionTarget(id, retries = 20) {
                 const el = document.getElementById(id);
