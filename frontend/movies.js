@@ -503,6 +503,16 @@ const MOVIES = {
   // Initialize page
   init: async () => {
     console.log('Initializing movies page...');
+    // Safety: clear any stuck overlay/overflow locks that can prevent scrolling
+    try {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('overflow-hidden');
+      document.documentElement.classList.remove('overflow-hidden');
+      console.info('Cleared any overlay/overflow locks');
+    } catch (e) {
+      // ignore in non-browser environments
+    }
 
     // Set up search input listener
     const searchInput = document.getElementById('movieSearchInput');
