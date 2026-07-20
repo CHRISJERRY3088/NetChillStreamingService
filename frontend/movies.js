@@ -223,7 +223,10 @@ const MOVIES = {
       }
     } catch (error) {
       console.error(`Error loading section ${section.title}:`, error);
-      MOVIES.renderFallbackMovies(id);
+      MOVIES.renderFallbackMovies(id, {
+        message: `No movie data is available for “${section.title}” right now.`,
+        retryHandler: () => MOVIES.loadCategorySection(section),
+      });
     }
   },
 
@@ -281,11 +284,33 @@ const MOVIES = {
     }
   },
 
-  renderFallbackMovies: (containerId) => {
+  renderFallbackMovies: (containerId, options = {}) => {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = '<div class="col-span-full rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center text-sm text-slate-400">No movie data is available from the API right now.</div>';
+    const {
+      message = 'No movie data is available from the API right now.',
+      retryLabel = 'Try Again',
+      retryHandler = null,
+    } = options;
+
+    const retryButtonHtml = retryHandler
+      ? `<button type="button" class="mt-4 inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500" data-retry-btn="${containerId}">${retryLabel}</button>`
+      : '';
+
+    container.innerHTML = `
+      <div class="col-span-full flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-8 text-center text-sm text-slate-400">
+        <p>${message}</p>
+        ${retryButtonHtml}
+      </div>
+    `;
+
+    if (retryHandler) {
+      const retryButton = container.querySelector('[data-retry-btn]');
+      if (retryButton) {
+        retryButton.addEventListener('click', retryHandler);
+      }
+    }
   },
 
   // Load trending movies
@@ -307,7 +332,10 @@ const MOVIES = {
       throw new Error('No trending movies were returned');
     } catch (error) {
       console.error('Error loading trending movies:', error);
-      MOVIES.renderFallbackMovies(containerId);
+      MOVIES.renderFallbackMovies(containerId, {
+        message: 'No trending movie data is available right now.',
+        retryHandler: () => MOVIES.loadTrending(containerId),
+      });
     }
   },
 
@@ -330,7 +358,10 @@ const MOVIES = {
       throw new Error('No popular movies were returned');
     } catch (error) {
       console.error('Error loading popular movies:', error);
-      MOVIES.renderFallbackMovies('yu');
+      MOVIES.renderFallbackMovies('yu', {
+        message: 'No popular movie data is available right now.',
+        retryHandler: () => MOVIES.loadPopular(),
+      });
     }
   },
 
