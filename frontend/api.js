@@ -104,38 +104,65 @@ function withDeviceContext(options = {}) {
 }
 
 async function apiCall(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const endpointPath = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const normalizedBaseUrl = String(API_BASE_URL || '').replace(/\/$/, '');
+  const candidates = [];
+
+  if (normalizedBaseUrl) {
+    candidates.push(`${normalizedBaseUrl}${endpointPath}`);
+  }
+
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    const sameOriginUrl = `${window.location.origin}${endpointPath}`;
+    if (!candidates.includes(sameOriginUrl)) {
+      candidates.push(sameOriginUrl);
+    }
+  }
+
+  if (!candidates.includes(`/api${endpointPath}`)) {
+    candidates.push(`/api${endpointPath}`);
+  }
+
   const requestOptions = withDeviceContext(options);
   const headers = {
     'Content-Type': 'application/json',
     ...requestOptions.headers,
   };
 
-  try {
-    const response = await fetch(url, {
-      ...requestOptions,
-      headers,
-      credentials: 'include', // Include cookies for JWT auth
-    });
+  let lastError = null;
 
-    const contentType = response.headers.get('content-type') || '';
-    const rawBody = await response.text();
-    const data = rawBody
-      ? (contentType.includes('application/json') ? JSON.parse(rawBody) : { message: rawBody })
-      : {};
+  for (const url of candidates) {
+    try {
+      const response = await fetch(url, {
+        ...requestOptions,
+        headers,
+        credentials: 'include', // Include cookies for JWT auth
+      });
 
-    if (!response.ok) {
-      throw new Error(data.message || `HTTP ${response.status}`);
+      const contentType = response.headers.get('content-type') || '';
+      const rawBody = await response.text();
+      const data = rawBody
+        ? (contentType.includes('application/json') ? JSON.parse(rawBody) : { message: rawBody })
+        : {};
+
+      if (!response.ok) {
+        throw new Error(data.message || `HTTP ${response.status}`);
+      }
+
+      return data;
+    } catch (error) {
+      lastError = error;
+      if (error instanceof TypeError) {
+        continue;
+      }
     }
-
-    return data;
-  } catch (error) {
-    console.error(`API Error (${endpoint}):`, error);
-    if (error instanceof TypeError) {
-      throw new Error('Failed to connect to server. Ensure backend is running and CORS is configured.');
-    }
-    throw error;
   }
+
+  console.error(`API Error (${endpoint}):`, lastError);
+  if (lastError instanceof TypeError) {
+    throw new Error('Failed to connect to server. Ensure backend is running and CORS is configured.');
+  }
+  throw lastError || new Error('Failed to complete API request.');
 }
 
 // Auth API endpoints

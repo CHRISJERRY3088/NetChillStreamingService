@@ -1,38 +1,10 @@
 const slides = [
   {
-    image: "url('./assets/bg.png')",
+    image: '',
     badge: 'Now Showing',
     eyebrow: 'Watch the latest movies & shows',
     title: 'Stream your favorites anytime',
     subtitle: 'A cinematic home for your next binge.'
-  },
-  {
-    image: "url('./assets/td.png')",
-    badge: 'New Release',
-    eyebrow: 'Discover new releases',
-    title: 'Fresh stories, ready to stream',
-    subtitle: 'Catch the biggest premieres before they hit the mainstream.'
-  },
-  {
-    image: "url('./assets/yd.png')",
-    badge: 'Top Rated',
-    eyebrow: 'Stream top-rated picks',
-    title: 'Critics love these scenes',
-    subtitle: 'A handpicked lineup of fan favorites and hidden gems.'
-  },
-  {
-    image: "url('./assets/tb.png')",
-    badge: 'Blockbuster',
-    eyebrow: 'Enjoy blockbuster hits',
-    title: 'Big action, bigger energy',
-    subtitle: 'Turn every night into a premium movie night.'
-  },
-  {
-    image: "url('./assets/tf.png')",
-    badge: 'Fan Favorite',
-    eyebrow: 'Find your next favorite',
-    title: 'Your next obsession starts here',
-    subtitle: 'Explore stories crafted for late-night marathons.'
   }
 ];
 
@@ -52,18 +24,18 @@ const heroAutoTrailer = document.getElementById('heroAutoTrailer');
 const AUTO_PLAY_SECONDS = 15;
 let trailerAutoPlayTimer = null;
 const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribute('src') || '';
-const localTrailerVideoPath = '../Hexed%20-%20Official%20Teaser%20Trailer.mp4';
+const localTrailerVideoPath = '';
 let currentTrailerUrl = trailerVideoDefaultSrc || localTrailerVideoPath;
 
 function normalizeSlideData(slide) {
   if (!slide || typeof slide !== 'object') return null;
   return {
-    image: slide.image || "url('./assets/bg.png')",
+    image: slide.image || '',
     badge: slide.badge || 'Now Showing',
     eyebrow: slide.eyebrow || 'Watch the latest movies & shows',
     title: slide.title || 'Stream your favorites anytime',
     subtitle: slide.subtitle || 'A cinematic home for your next binge.',
-    trailerUrl: slide.trailer_url || slide.trailerUrl || localTrailerVideoPath,
+    trailerUrl: resolvePlayableTrailerUrl(slide.trailer_url || slide.trailerUrl || localTrailerVideoPath) || '',
     trailerButtonText: slide.trailer_button_text || slide.trailerButtonText || 'View Trailer',
   };
 }
@@ -94,6 +66,12 @@ function isPlayableVideoUrl(url) {
   return normalized.endsWith('.mp4') || normalized.endsWith('.webm') || normalized.endsWith('.ogg');
 }
 
+function resolvePlayableTrailerUrl(url) {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  return isPlayableVideoUrl(trimmed) ? trimmed : null;
+}
+
 function renderTrailerCards(trailers) {
   const container = document.getElementById('trailerCards');
   if (!container) return;
@@ -106,8 +84,8 @@ function renderTrailerCards(trailers) {
   container.innerHTML = trailers.slice(0, 5).map((trailer) => {
     const title = trailer.title || trailer.eyebrow || 'Trailer';
     const subtitle = trailer.subtitle || 'Watch the latest trailer preview.';
-    const image = trailer.image || "url('./assets/bg.png')";
-    const trailerUrl = trailer.trailerUrl || trailer.trailer_url || localTrailerVideoPath;
+    const image = trailer.image || '';
+    const trailerUrl = trailer.trailerUrl || trailer.trailer_url || '';
     const buttonText = trailer.trailerButtonText || trailer.trailer_button_text || 'Watch Trailer';
     const safeTrailerUrl = String(trailerUrl).replace(/'/g, "\\'");
     const playable = isPlayableVideoUrl(trailerUrl);
@@ -192,10 +170,16 @@ function updateHeroTrailerSource(url) {
   const heroSource = heroAutoTrailer.querySelector('source');
   if (!heroSource) return;
 
-  heroSource.src = url || localTrailerVideoPath;
+  const heroVideoUrl = resolvePlayableTrailerUrl(url) || '';
+  heroSource.src = heroVideoUrl;
   heroSource.type = 'video/mp4';
   heroAutoTrailer.load();
   heroAutoTrailer.currentTime = 0;
+  heroAutoTrailer.muted = true;
+  heroAutoTrailer.autoplay = true;
+  heroAutoTrailer.playsInline = true;
+  heroAutoTrailer.loop = true;
+  heroAutoTrailer.play().catch(() => {});
 }
 
 function stopTrailerAutoPlayTimer() {
@@ -257,12 +241,12 @@ function closeTrailerModal() {
 }
 
 function autoplayTrailerFromHexVideo() {
-  const videoUrl = resolveTrailerVideoUrl();
+  const videoUrl = resolvePlayableTrailerUrl(resolveTrailerVideoUrl()) || currentTrailerUrl || '';
   if (!heroAutoTrailer) return;
 
   const heroSource = heroAutoTrailer.querySelector('source');
   if (heroSource) {
-    heroSource.src = videoUrl || currentTrailerUrl || localTrailerVideoPath;
+    heroSource.src = videoUrl;
     heroSource.type = 'video/mp4';
   }
 
@@ -317,7 +301,7 @@ function updateSlide(index) {
     trailerButton.textContent = slide.trailerButtonText || 'View Trailer';
   }
 
-  currentTrailerUrl = slide.trailerUrl || currentTrailerUrl || localTrailerVideoPath;
+  currentTrailerUrl = resolvePlayableTrailerUrl(slide.trailerUrl) || currentTrailerUrl || '';
   updateHeroTrailerSource(currentTrailerUrl);
 
   subtitleElements.forEach((el) => {

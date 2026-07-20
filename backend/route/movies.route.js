@@ -5,165 +5,8 @@ const router = express.Router();
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST || 'streaming-availability.p.rapidapi.com';
 
-const MOVIE_LIBRARY = [
-  {
-    id: 'hero-squad',
-    title: 'Hero Squad',
-    overview: 'A brave squad of heroes protects the city from a mysterious threat in this high-energy action adventure.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.6,
-    release_date: '2024-04-08',
-    genre_ids: [16, 28],
-    genres: [{ id: 16, name: 'Animation' }, { id: 28, name: 'Action' }],
-    credits: { cast: [{ name: 'Ava Brooks', character: 'Leader' }, { name: 'Noah Reed', character: 'Rogue' }] },
-    type: 'movie',
-  },
-  {
-    id: 'sky-riders',
-    title: 'Sky Riders',
-    overview: 'A daring team of aviators crosses stormy skies while uncovering a secret hidden above the clouds.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.2,
-    release_date: '2023-11-14',
-    genre_ids: [12, 14],
-    genres: [{ id: 12, name: 'Adventure' }, { id: 14, name: 'Fantasy' }],
-    credits: { cast: [{ name: 'Maya Chen', character: 'Captain' }, { name: 'Luis Vega', character: 'Navigator' }] },
-    type: 'movie',
-  },
-  {
-    id: 'ocean-drift',
-    title: 'Ocean Drift',
-    overview: 'A heartfelt story about survival and reconnecting with family during a journey across the open sea.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.0,
-    release_date: '2022-09-20',
-    genre_ids: [18, 10751],
-    genres: [{ id: 18, name: 'Drama' }, { id: 10751, name: 'Family' }],
-    credits: { cast: [{ name: 'Riya Patel', character: 'Mother' }, { name: 'Marco Silva', character: 'Son' }] },
-    type: 'movie',
-  },
-  {
-    id: 'neon-city',
-    title: 'Neon City',
-    overview: 'A courier races through a neon future to protect a dangerous power source from falling into the wrong hands.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.4,
-    release_date: '2024-01-18',
-    genre_ids: [28, 878],
-    genres: [{ id: 28, name: 'Action' }, { id: 878, name: 'Sci-Fi' }],
-    credits: { cast: [{ name: 'Kira Nova', character: 'Courier' }, { name: 'Eli Vale', character: 'Hacker' }] },
-    type: 'movie',
-  },
-  {
-    id: 'moonlight',
-    title: 'Moonlight',
-    overview: 'A tender romance unfolds under the glow of the moon as two strangers find hope and connection.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 7.9,
-    release_date: '2022-06-08',
-    genre_ids: [18, 10749],
-    genres: [{ id: 18, name: 'Drama' }, { id: 10749, name: 'Romance' }],
-    credits: { cast: [{ name: 'Nina Hart', character: 'Lena' }, { name: 'Jules Carter', character: 'Noah' }] },
-    type: 'movie',
-  },
-  {
-    id: 'pixel-quest',
-    title: 'Pixel Quest',
-    overview: 'A gamer is pulled into a digital world and must restore balance before reality collapses.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.1,
-    release_date: '2024-03-04',
-    genre_ids: [878, 12],
-    genres: [{ id: 878, name: 'Sci-Fi' }, { id: 12, name: 'Adventure' }],
-    credits: { cast: [{ name: 'Lena Cross', character: 'Hero' }, { name: 'Aiden Fox', character: 'Guide' }] },
-    type: 'movie',
-  },
-  {
-    id: 'the-last-horizon',
-    title: 'The Last Horizon',
-    overview: 'An explorer follows the last known trail to the edge of the earth in search of a lost civilization.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.3,
-    release_date: '2024-05-03',
-    genre_ids: [12, 9648],
-    genres: [{ id: 12, name: 'Adventure' }, { id: 9648, name: 'Mystery' }],
-    credits: { cast: [{ name: 'Sofia Lane', character: 'Explorer' }, { name: 'Jonas Bly', character: 'Historian' }] },
-    type: 'movie',
-  },
-  {
-    id: 'midnight-run',
-    title: 'Midnight Run',
-    overview: 'A fast-paced thriller that follows a courier racing through the city to clear an innocent name.',
-    poster_path: '',
-    backdrop_path: '',
-    vote_average: 8.0,
-    release_date: '2021-10-27',
-    genre_ids: [28, 53],
-    genres: [{ id: 28, name: 'Action' }, { id: 53, name: 'Thriller' }],
-    credits: { cast: [{ name: 'Mason Cole', character: 'Runner' }, { name: 'Tess Vega', character: 'Detective' }] },
-    type: 'movie',
-  },
-];
-
-const TRAILER_LIBRARY = [
-  {
-    id: 'hero-squad',
-    image: "url('./assets/bg.png')",
-    badge: 'Now Showing',
-    eyebrow: 'Watch the latest movies & shows',
-    title: 'Stream your favorites anytime',
-    subtitle: 'A cinematic home for your next binge.',
-    trailer_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    trailer_button_text: 'Watch Trailer',
-  },
-  {
-    id: 'sky-riders',
-    image: "url('./assets/td.png')",
-    badge: 'New Release',
-    eyebrow: 'Discover new releases',
-    title: 'Fresh stories, ready to stream',
-    subtitle: 'Catch the biggest premieres before they hit the mainstream.',
-    trailer_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    trailer_button_text: 'Watch Sky Riders Trailer',
-  },
-  {
-    id: 'ocean-drift',
-    image: "url('./assets/yd.png')",
-    badge: 'Top Rated',
-    eyebrow: 'Stream top-rated picks',
-    title: 'Critics love these scenes',
-    subtitle: 'A handpicked lineup of fan favorites and hidden gems.',
-    trailer_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-    trailer_button_text: 'Watch Ocean Drift Trailer',
-  },
-  {
-    id: 'neon-city',
-    image: "url('./assets/tb.png')",
-    badge: 'Blockbuster',
-    eyebrow: 'Enjoy blockbuster hits',
-    title: 'Big action, bigger energy',
-    subtitle: 'Turn every night into a premium movie night.',
-    trailer_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    trailer_button_text: 'Watch Neon City Trailer',
-  },
-  {
-    id: 'moonlight',
-    image: "url('./assets/tf.png')",
-    badge: 'Fan Favorite',
-    eyebrow: 'Find your next favorite',
-    title: 'Your next obsession starts here',
-    subtitle: 'Explore stories crafted for late-night marathons.',
-    trailer_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
-    trailer_button_text: 'Watch Moonlight Trailer',
-  },
-];
+const MOVIE_LIBRARY = [];
+const TRAILER_LIBRARY = [];
 
 const typeMap = {
   movie: 'movie',
@@ -307,8 +150,8 @@ const fetchTrailerSlides = async () => {
       eyebrow: config.query,
       title: config.query,
       subtitle: `Watch the ${config.query} trailer now.`,
-      image: "url('./assets/bg.png')",
-      trailer_url: '../Hexed%20-%20Official%20Teaser%20Trailer.mp4',
+      image: '',
+      trailer_url: '',
       trailer_button_text: config.buttonText,
     });
   }
@@ -317,12 +160,7 @@ const fetchTrailerSlides = async () => {
 };
 
 const searchMovies = (query) => {
-  const normalized = String(query || '').toLowerCase().trim();
-  if (!normalized) return [];
-  return MOVIE_LIBRARY.filter((movie) => {
-    const searchable = [movie.title, movie.overview, movie.genres?.map((g) => g.name).join(' '), movie.release_date].join(' ').toLowerCase();
-    return searchable.includes(normalized);
-  });
+  return [];
 };
 
 router.get('/trending', async (req, res) => {
@@ -331,8 +169,7 @@ router.get('/trending', async (req, res) => {
     return res.json({ results: results.slice(0, 8) });
   } catch (error) {
     console.error('Trending fetch failed:', error);
-    const results = MOVIE_LIBRARY.slice(0, 8);
-    return res.json({ results });
+    return res.json({ results: [] });
   }
 });
 
@@ -343,10 +180,7 @@ router.get('/popular', async (req, res) => {
     return res.json({ results, page, total_pages: Math.ceil(results.length / 12), total_results: results.length });
   } catch (error) {
     console.error('Popular fetch failed:', error);
-    const pageSize = 12;
-    const start = (page - 1) * pageSize;
-    const results = MOVIE_LIBRARY.slice(start, start + pageSize);
-    return res.json({ results, page, total_pages: Math.ceil(MOVIE_LIBRARY.length / pageSize), total_results: MOVIE_LIBRARY.length });
+    return res.json({ results: [], page, total_pages: 0, total_results: 0 });
   }
 });
 
@@ -357,11 +191,7 @@ router.get('/top-rated', async (req, res) => {
     return res.json({ results, page, total_pages: Math.ceil(results.length / 12), total_results: results.length });
   } catch (error) {
     console.error('Top-rated fetch failed:', error);
-    const sorted = [...MOVIE_LIBRARY].sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
-    const pageSize = 12;
-    const start = (page - 1) * pageSize;
-    const results = sorted.slice(start, start + pageSize);
-    return res.json({ results, page, total_pages: Math.ceil(sorted.length / pageSize), total_results: sorted.length });
+    return res.json({ results: [], page, total_pages: 0, total_results: 0 });
   }
 });
 
@@ -376,8 +206,7 @@ router.get('/search', async (req, res) => {
     return res.json({ results: results.slice(0, 20) });
   } catch (error) {
     console.error('Search fetch failed:', error);
-    const results = searchMovies(query).slice(0, 20);
-    return res.json({ results });
+    return res.json({ results: [] });
   }
 });
 
@@ -393,22 +222,12 @@ router.get('/details/:id', async (req, res) => {
     return res.json(movie);
   } catch (error) {
     console.error('Details fetch failed:', error);
-    const movie = findMovieById(id);
-    if (!movie) {
-      return res.status(404).json({ error: 'Movie not found' });
-    }
-    return res.json(movie);
+    return res.status(404).json({ error: 'Movie not found' });
   }
 });
 
 router.get('/genre/:id', (req, res) => {
-  const genreId = req.params.id.toLowerCase();
-  const results = MOVIE_LIBRARY.filter((movie) => {
-    const genreMatches = movie.genre_ids?.some((genre) => String(genre).toLowerCase() === genreId);
-    const genreNameMatches = movie.genres?.some((genre) => genre.name.toLowerCase() === genreId);
-    return genreMatches || genreNameMatches;
-  });
-  return res.json({ results });
+  return res.json({ results: [] });
 });
 
 router.get('/trailers', async (req, res) => {
@@ -420,7 +239,7 @@ router.get('/trailers', async (req, res) => {
   } catch (error) {
     console.error('Trailer route failed:', error);
   }
-  return res.json({ results: TRAILER_LIBRARY });
+  return res.json({ results: [] });
 });
 
 router.get('/streaming/:type/:id', async (req, res) => {
