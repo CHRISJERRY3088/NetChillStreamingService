@@ -400,8 +400,8 @@
                             <h2 class="max-w-[9.5rem] text-sm font-black leading-tight text-white sm:max-w-sm sm:text-2xl lg:max-w-md lg:text-3xl">Stream your favorites anytime</h2>
                             <p class="max-w-[9.5rem] text-[10px] leading-relaxed text-gray-200 sm:max-w-sm sm:text-sm lg:max-w-md lg:text-base">A cinematic home for your next binge.</p>
                             <div class="mt-2 w-full max-w-[9.5rem] overflow-hidden rounded-lg border border-white/10 bg-black/20 shadow-lg sm:mt-2.5 sm:max-w-[20rem] sm:rounded-[0.8rem] sm:border-white/15 sm:bg-black/50 lg:max-w-[22rem] lg:rounded-[1rem]">
-                                <video id="heroAutoTrailer" class="aspect-video w-full bg-black object-cover" autoplay muted loop playsinline preload="auto" poster="./assets/hq720.jpg">
-                                    <source src="../Hexed%20-%20Official%20Teaser%20Trailer.mp4" type="video/mp4">
+                                <video id="heroAutoTrailer" class="aspect-video w-full bg-black object-cover" autoplay muted loop playsinline preload="auto" poster="">
+                                    <source src="" type="video/mp4">
                                 </video>
                             </div>
                         </div>
@@ -441,8 +441,8 @@
             <button type="button" id="closeTrailerModal" class="absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20">
                 <span class="material-symbols-outlined">close</span>
             </button>
-            <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="auto" playsinline poster="./assets/hq720.jpg">
-                <source src="../Hexed%20-%20Official%20Teaser%20Trailer.mp4" type="video/mp4">
+            <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="auto" playsinline poster="">
+                <source src="" type="video/mp4">
             </video>
         </div>
     </div>
@@ -573,351 +573,6 @@
     </div>
 
     <div id="menuContainers"></div>
-
-    <!-- Main Content -->
-    <main id="animation" class="max-w-7xl mx-auto px-6 py-10">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-black text-blue-500 uppercase tracking-tighter">Animations</h2>
-            <button id="rt" @click="sideBar = true" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg">See All</button>
-        </div>
-
-            <!-- Movie Grid -->
-        <div class="relative">
-            <div id="tw" class="animation-carousel-wrapper scrollbar-none w-full -mx-4 sm:-mx-10">
-                <div id="animationCarousel" class="animation-carousel gap-3 sm:gap-1 mx-auto w-full sm:w-auto">
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Hero Squad</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Adventure • 2024</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Top</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Sky Riders</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Fantasy • 2023</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                    </div>    
-            </div>
-            <button id="scrollLeftButton" type="button" class="animation-scroll-button animation-scroll-button-left" aria-label="Scroll animations left">
-            <span class="material-symbols-outlined text-2xl">chevron_left</span>
-        </button>
-        <button id="scrollRightButton" type="button" class="animation-scroll-button" aria-label="Scroll animations right">
-            <span class="material-symbols-outlined text-2xl">chevron_right</span>
-        </button>
-    </div>
-    </main>
-    <main class="max-w-7xl mx-auto px-6 py-10">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-2xl font-black text-blue-500 uppercase tracking-tighter">Treading Series</h2>
-            <button id="rt" @click="sideBar = true" class="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-blue-500 hover:bg-blue-600 transition rounded-lg">See All</button>
-        </div>
-
-            <!-- Movie Grid -->
-        <div class="relative">
-            <div id="tw" class="animation-carousel-wrapper scrollbar-none w-full -mx-4 sm:-mx-10">
-                <div id="animationCarousel" class="animation-carousel gap-3 sm:gap-1 mx-auto w-full sm:w-auto">
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Hero Squad</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Adventure • 2024</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Top</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Sky Riders</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Fantasy • 2023</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-4xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">HD</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Ocean Drift</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Family • 2022</p>
-                        <a href="./Download.html" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                    </div>    
-            </div>
-            <button id="scrollLeftButton" type="button" class="animation-scroll-button animation-scroll-button-left" aria-label="Scroll animations left">
-            <span class="material-symbols-outlined text-2xl">chevron_left</span>
-        </button>
-        <button id="scrollRightButton" type="button" class="animation-scroll-button" aria-label="Scroll animations right">
-            <span class="material-symbols-outlined text-2xl">chevron_right</span>
-        </button>
-    </div>
-    <!-- SIDEBAR VIEW ALL Restored -->
-    <div x-show="sideBar" x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300" @click="sideBar = false"></div>
-        <div class="relative origin-top transform-gpu w-full max-w-[95%] sm:max-w-6xl mx-auto max-h-[90vh] overflow-y-auto rounded-[1.5rem] border border-white/40 bg-white/45 p-4 shadow-[0_12px_45px_rgba(15,23,42,0.14)] backdrop-blur-2xl dark:border-white/15 dark:bg-slate-900/35 dark:shadow-[0_18px_60px_rgba(2,6,23,0.45)] sm:p-6 lg:p-8">
-            <button @click="sideBar = false" class="absolute top-4 right-4 text-4xl text-slate-800 transition hover:text-blue-500 dark:text-white sm:right-6">&times;</button>
-            <div class="mb-4 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-4">
-                <h2 class="text-2xl font-black uppercase tracking-[0.25em] text-blue-500 sm:text-3xl">All Animations</h2>
-                <div class="relative w-full md:max-w-md">
-                    <input id="sidebarMovieSearchInput" type="text" placeholder="Search Movies..."
-                        class="sidebar-search-input w-full rounded-full border border-slate-700/70 bg-slate-950/95 py-3 pl-12 pr-4 text-sm text-white outline-none placeholder-slate-400 transition duration-200 ease-out focus:border-blue-400 focus:bg-slate-900/95 focus:ring-2 focus:ring-blue-500/30 sm:text-base leading-tight">
-                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base leading-none pointer-events-none transition-colors duration-200">search</span>
-                    <div id="sidebarMovieSearchDropdown" class="sidebar-search-dropdown absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-3xl border border-slate-800/80 bg-slate-950/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl"></div>
-                </div>
-            </div>
-            <div id="yu" class="mx-auto w-full grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Live</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Pixel Quest</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Sci-fi • 2024</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">Hot</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Neon City</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Action • 2023</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Moonlight</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Drama • 2022</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Moonlight</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Drama • 2022</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Moonlight</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Drama • 2022</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Moonlight</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Drama • 2022</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-                <article class="animation-card group rounded-2xl p-2.5">
-                    <div class="animation-card__thumb mb-3 rounded-xl">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
-                            <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
-                        </div>
-                        <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">New</div>
-                    </div>
-                    <div class="px-1 pb-1">
-                        <h3 class="text-sm font-semibold text-white">Moonlight</h3>
-                        <p class="mt-1 text-[11px] text-gray-400">Drama • 2022</p>
-                        <a href="./Download.html" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500">WATCH NOW</a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Use a persistent variable for auth status
@@ -1221,23 +876,13 @@
                 { id: 'horror', title: 'Horror' },
             ];
 
-            const fallbackSectionMovies = [
-                { title: 'Skybound Dawn', subtitle: 'Action • 2024' },
-                { title: 'Midnight Alley', subtitle: 'Thriller • 2023' },
-                { title: 'Neon Horizon', subtitle: 'Drama • 2024' },
-                { title: 'Frozen Echo', subtitle: 'Fantasy • 2023' },
-                { title: 'Crimson Wave', subtitle: 'Adventure • 2024' },
-                { title: 'Silent Pulse', subtitle: 'Sci-Fi • 2023' },
-                { title: 'Moonlit Secrets', subtitle: 'Romance • 2024' },
-                { title: 'Street Beats', subtitle: 'Music • 2023' },
-                { title: 'Night Watch', subtitle: 'Horror • 2024' },
-                { title: 'Golden Drift', subtitle: 'History • 2023' },
-            ];
+            const fallbackSectionMovies = [];
 
             function resolveMoviePoster(posterPath) {
                 if (!posterPath || typeof posterPath !== 'string') return '';
                 const normalized = posterPath.trim();
                 if (!normalized) return '';
+                if (/assets\//i.test(normalized)) return '';
                 if (/^https?:\/\//i.test(normalized) || /^\/\//.test(normalized)) return normalized;
                 if (/^[./]/.test(normalized)) return normalized;
                 return normalized;
@@ -1265,17 +910,15 @@
             };
 
             function getMovieCardsForSection(sectionIndex, moviePool = []) {
-                const pool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : fallbackSectionMovies;
-                return Array.from({ length: 3 }, (_, cardIndex) => {
-                    const movieIndex = (sectionIndex * 3 + cardIndex) % pool.length;
-                    const sourceMovie = pool[movieIndex];
-                    const fallbackMovie = fallbackSectionMovies[movieIndex] || fallbackSectionMovies[0];
-                    const movieTitle = sourceMovie?.title || fallbackMovie.title;
-                    const movieSubtitle = sourceMovie?.subtitle || sourceMovie?.overview || fallbackMovie.subtitle;
+                const pool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : [];
+                if (!pool.length) return [];
+
+                return Array.from({ length: Math.min(3, pool.length) }, (_, cardIndex) => {
+                    const sourceMovie = pool[(sectionIndex * 3 + cardIndex) % pool.length];
                     return {
                         id: sourceMovie?.id || '',
-                        title: movieTitle,
-                        subtitle: movieSubtitle,
+                        title: sourceMovie?.title || '',
+                        subtitle: sourceMovie?.subtitle || sourceMovie?.overview || '',
                         poster_path: sourceMovie?.poster_path || sourceMovie?.poster || sourceMovie?.image || '',
                         overview: sourceMovie?.overview || '',
                         release_date: sourceMovie?.release_date || '',
@@ -1310,19 +953,41 @@
 
             function createMenuSection(section, index, moviePool = []) {
                 const movies = getMovieCardsForSection(index, moviePool);
+                const cardsMarkup = movies.length
+                    ? movies.map((movie) => createMovieCard(movie, section.title)).join('')
+                    : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available from the API right now.</div>';
+
                 return `
-                    <section id="${section.id}" class="section-shell">
+                    <section id="${section.id}" class="section-shell relative">
                         <div class="section-shell__header">
                             <h2 class="text-2xl font-black uppercase tracking-tighter text-blue-500">${section.title}</h2>
                             <button class="section-shell__button">See All</button>
                         </div>
-                        <div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
-                            <div class="animation-carousel gap-2 sm:gap-3">
-                                ${movies.map((movie) => createMovieCard(movie, section.title)).join('')}
+                        <div class="relative">
+                            <div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
+                                <div class="animation-carousel gap-2 sm:gap-3">
+                                    ${cardsMarkup}
+                                </div>
                             </div>
+                            <button type="button" class="animation-scroll-button animation-scroll-button-left" aria-label="Scroll left">
+                                <span class="material-symbols-outlined text-2xl">chevron_left</span>
+                            </button>
+                            <button type="button" class="animation-scroll-button animation-scroll-button-right" aria-label="Scroll right">
+                                <span class="material-symbols-outlined text-2xl">chevron_right</span>
+                            </button>
                         </div>
                     </section>
                 `;
+            }
+
+            async function ensureMoviesApiReady() {
+                const start = Date.now();
+                while (!window.moviesAPI?.getTrending) {
+                    if (Date.now() - start > 5000) {
+                        throw new Error('Movies API did not become available in time.');
+                    }
+                    await new Promise((resolve) => setTimeout(resolve, 50));
+                }
             }
 
             async function renderMenuContainers() {
@@ -1331,7 +996,8 @@
 
                 let moviePool = [];
                 try {
-                    const response = await window.moviesAPI?.getTrending?.();
+                    await ensureMoviesApiReady();
+                    const response = await window.moviesAPI.getTrending();
                     moviePool = Array.isArray(response?.results) ? response.results : [];
                 } catch (error) {
                     console.warn('Unable to load featured movies from RapidAPI', error);
@@ -1353,30 +1019,49 @@
                 });
             });
 
-            const animationCarousel = document.getElementById('animationCarousel');
-            const animationCarouselWrapper = document.querySelector('.animation-carousel-wrapper');
-            const scrollTarget = animationCarouselWrapper || animationCarousel;
-            const scrollRightButton = document.getElementById('scrollRightButton');
-            const scrollLeftButton = document.getElementById('scrollLeftButton');
-            if (scrollTarget && animationCarousel && scrollRightButton && scrollLeftButton) {
-                const carouselCards = Array.from(animationCarousel.querySelectorAll('.animation-card'));
-                const cardGap = 16;
+            document.querySelectorAll('.animation-carousel-wrapper').forEach((wrapper) => {
+                const scrollTarget = wrapper;
+                const root = wrapper.closest('.relative') || wrapper.parentElement;
+                if (!root) return;
+
+                let leftButton = root.querySelector('.animation-scroll-button.animation-scroll-button-left');
+                let rightButton = root.querySelector('.animation-scroll-button.animation-scroll-button-right');
+
+                if (!leftButton) {
+                    leftButton = document.createElement('button');
+                    leftButton.type = 'button';
+                    leftButton.className = 'animation-scroll-button animation-scroll-button-left';
+                    leftButton.setAttribute('aria-label', 'Scroll left');
+                    leftButton.innerHTML = '<span class="material-symbols-outlined text-2xl">chevron_left</span>';
+                    root.appendChild(leftButton);
+                }
+
+                if (!rightButton) {
+                    rightButton = document.createElement('button');
+                    rightButton.type = 'button';
+                    rightButton.className = 'animation-scroll-button animation-scroll-button-right';
+                    rightButton.setAttribute('aria-label', 'Scroll right');
+                    rightButton.innerHTML = '<span class="material-symbols-outlined text-2xl">chevron_right</span>';
+                    root.appendChild(rightButton);
+                }
 
                 const scrollByCard = (direction = 1) => {
+                    const carouselCards = Array.from(wrapper.querySelectorAll('.animation-card'));
                     if (!carouselCards.length) return;
+                    const cardGap = 16;
                     const cardWidth = Math.round(carouselCards[0].getBoundingClientRect().width + cardGap);
                     scrollTarget.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
                 };
 
-                scrollRightButton.addEventListener('click', () => scrollByCard(1));
-                scrollLeftButton.addEventListener('click', () => scrollByCard(-1));
+                rightButton.addEventListener('click', () => scrollByCard(1));
+                leftButton.addEventListener('click', () => scrollByCard(-1));
 
                 scrollTarget.addEventListener('wheel', (event) => {
                     if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
                     event.preventDefault();
                     scrollTarget.scrollBy({ left: event.deltaY, behavior: 'smooth' });
                 }, { passive: false });
-            }
+            });
 
             syncOverlayLock();
 

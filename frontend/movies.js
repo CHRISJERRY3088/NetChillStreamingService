@@ -1,19 +1,22 @@
 // Movies Page Controller - Loads movies and streaming availability through the backend API
 // This script handles trending, popular, and search functionality
 
+async function ensureMoviesApiReady() {
+  const start = Date.now();
+  while (!window.moviesAPI?.getTrending) {
+    if (Date.now() - start > 5000) {
+      throw new Error('Movies API did not become available in time.');
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
+
 const MOVIES = {
   trending: [],
   popular: [],
   search: [],
   selectedMovie: null,
-  fallbackMovies: [
-    { id: 'fallback-midnight-city', title: 'Midnight City', overview: 'A neon-lit chase through a city that never sleeps.', poster_path: '', vote_average: 8.6, release_date: '2024-01-12' },
-    { id: 'fallback-sunfire', title: 'Sunfire', overview: 'An ambitious heist turns into a battle for survival.', poster_path: '', vote_average: 8.2, release_date: '2023-11-24' },
-    { id: 'fallback-victory-peak', title: 'Victory Peak', overview: 'A determined crew reaches for glory on the world stage.', poster_path: '', vote_average: 8.4, release_date: '2024-04-18' },
-    { id: 'fallback-starlight', title: 'Starlight', overview: 'A heartfelt story about finding home in unexpected places.', poster_path: '', vote_average: 7.9, release_date: '2022-09-03' },
-    { id: 'fallback-echo-ride', title: 'Echo Ride', overview: 'An emotional road trip packed with twists and heart.', poster_path: '', vote_average: 8.1, release_date: '2023-07-01' },
-    { id: 'fallback-shadow-reef', title: 'Shadow Reef', overview: 'A mysterious island hides secrets beyond imagination.', poster_path: '', vote_average: 7.8, release_date: '2024-02-09' }
-  ],
+  fallbackMovies: [],
 
   // Generate poster URL for the movie card and preserve full or relative image paths
   getPosterUrl: (posterPath) => {
@@ -196,6 +199,7 @@ const MOVIES = {
     container.innerHTML = MOVIES.createLoadingState(id, 6);
 
     try {
+      await ensureMoviesApiReady();
       let data;
       if (type === 'trending') {
         data = await window.moviesAPI.getTrending();
@@ -233,6 +237,7 @@ const MOVIES = {
       const section = MOVIES.categorySections.find((s) => s.id === containerId);
       if (!section) return;
 
+      await ensureMoviesApiReady();
       let data;
       if (section.type === 'trending') {
         data = await window.moviesAPI.getTrending();
@@ -260,6 +265,7 @@ const MOVIES = {
     if (!grid) return;
 
     try {
+      await ensureMoviesApiReady();
       const data = await window.moviesAPI.search(query, 1);
       const results = (data?.results || []).slice(0, 50).map((movie) => MOVIES.normalizeMovie(movie));
       if (results.length === 0) {
@@ -277,8 +283,7 @@ const MOVIES = {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const fallbackCards = MOVIES.fallbackMovies.map((movie, index) => MOVIES.createMovieCard(MOVIES.normalizeMovie(movie), index)).join('');
-    container.innerHTML = fallbackCards;
+    container.innerHTML = '<div class="col-span-full rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center text-sm text-slate-400">No movie data is available from the API right now.</div>';
   },
 
   // Load trending movies
@@ -289,6 +294,7 @@ const MOVIES = {
         container.innerHTML = MOVIES.createLoadingState(containerId, 6);
       }
 
+      await ensureMoviesApiReady();
       const data = await window.moviesAPI.getTrending();
       if (data.results && data.results.length) {
         MOVIES.trending = data.results.slice(0, 20).map((movie) => MOVIES.normalizeMovie(movie));
@@ -311,6 +317,7 @@ const MOVIES = {
         container.innerHTML = MOVIES.createLoadingState('yu', 8);
       }
 
+      await ensureMoviesApiReady();
       const data = await window.moviesAPI.getPopular(1);
       if (data.results && data.results.length) {
         MOVIES.popular = data.results.slice(0, 50).map((movie) => MOVIES.normalizeMovie(movie));
@@ -333,6 +340,7 @@ const MOVIES = {
     }
 
     try {
+      await ensureMoviesApiReady();
       const data = await window.moviesAPI.search(query, 1);
       if (data.results) {
         MOVIES.search = data.results.slice(0, 10);

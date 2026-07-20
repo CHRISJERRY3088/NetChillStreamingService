@@ -980,6 +980,20 @@ picomatch@^2.3.1:
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.2.tgz"
   integrity sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA==
 
+playwright-core@1.61.1:
+  version "1.61.1"
+  resolved "https://registry.npmjs.org/playwright-core/-/playwright-core-1.61.1.tgz"
+  integrity sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==
+
+playwright@*:
+  version "1.61.1"
+  resolved "https://registry.npmjs.org/playwright/-/playwright-1.61.1.tgz"
+  integrity sha512-DWnY5o3YbLWK4GovuAVwpqL+1VwGNdUGrRr++8j8PtQQzvAVZUIMjKQ90fY689sEJZJBbZVw1rXaOKSTitkzPQ==
+  dependencies:
+    playwright-core "1.61.1"
+  optionalDependencies:
+    fsevents "2.3.2"
+
 postal-mime@2.7.4:
   version "2.7.4"
   resolved "https://registry.npmjs.org/postal-mime/-/postal-mime-2.7.4.tgz"
