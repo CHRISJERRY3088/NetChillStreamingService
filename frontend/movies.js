@@ -52,13 +52,13 @@ const MOVIES = {
     
     return `
       <article class="animation-card group rounded-2xl p-2.5 cursor-pointer" data-movie-id="${id}" onclick='MOVIES.goToDownload(${movieIdForJs}, "movie", ${movieJson})'>
-        <div class="animation-card__thumb mb-3 rounded-xl relative overflow-hidden bg-gray-800">
+        <div class="animation-card__thumb rounded-xl relative overflow-hidden bg-gray-800">
           ${MOVIES.getPosterUrl(poster_path) ? `
             <img src="${MOVIES.getPosterUrl(poster_path)}" 
                  alt="${title}" 
                  class="w-full h-full object-cover" />
           ` : `
-            <div class="w-full h-48 bg-gradient-to-r from-slate-700 to-slate-800 flex items-center justify-center text-slate-400">
+            <div class="w-full h-full bg-gradient-to-r from-slate-700 to-slate-800 flex items-center justify-center text-slate-400">
               <span class="material-symbols-outlined text-4xl">movie</span>
             </div>
           `}
@@ -67,11 +67,13 @@ const MOVIES = {
           </div>
           <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">${index === 0 ? 'Trending' : 'New'}</div>
         </div>
-        <div class="px-1 pb-1">
-          <h3 class="text-sm font-semibold text-white truncate" title="${title}">${title}</h3>
-          <p class="mt-1 text-[11px] text-gray-400">${year} • ⭐${rating}</p>
-          <p class="mt-2 line-clamp-2 text-[11px] text-slate-400">${overview}</p>
-          <button type="button" class="w-full mt-3 rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); MOVIES.goToDownload(${movieIdForJs}, 'movie', ${movieJson})">WATCH NOW</button>
+        <div class="animation-card__content px-1 pb-1">
+          <div>
+            <h3 class="animation-card__title text-sm font-semibold text-white" title="${title}">${title}</h3>
+            <p class="mt-1 text-[11px] text-gray-400">${year} • ⭐${rating}</p>
+            <p class="animation-card__subtitle mt-2 line-clamp-2 text-[11px] text-slate-400">${overview}</p>
+          </div>
+          <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); MOVIES.goToDownload(${movieIdForJs}, 'movie', ${movieJson})">WATCH NOW</button>
         </div>
       </article>
     `;

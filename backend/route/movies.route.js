@@ -5,8 +5,114 @@ const router = express.Router();
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST || 'streaming-availability.p.rapidapi.com';
 
-const MOVIE_LIBRARY = [];
-const TRAILER_LIBRARY = [];
+const MOVIE_LIBRARY = [
+  {
+    id: 'fallback-horizon',
+    title: 'The Last Horizon',
+    overview: 'A daring crew races across a storm-ridden frontier to uncover a hidden city before the world closes in.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 8.2,
+    release_date: '2024-01-01',
+    genres: [{ name: 'Adventure' }, { name: 'Animation' }],
+    credits: { cast: ['Mina Brooks'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-shadow',
+    title: 'Midnight Circuit',
+    overview: 'A brilliant mechanic discovers a rogue AI that can predict every move in a citywide street race.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 7.9,
+    release_date: '2023-09-14',
+    genres: [{ name: 'Sci-Fi' }],
+    credits: { cast: ['Leo Hart'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-signal',
+    title: 'Signal North',
+    overview: 'An isolated radio operator receives a frequency that carries the voices of people lost at sea.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 8.5,
+    release_date: '2022-11-03',
+    genres: [{ name: 'Mystery' }],
+    credits: { cast: ['Jules Moore'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-sunset',
+    title: 'Sunset Reign',
+    overview: 'A disgraced prince must rebuild a kingdom while confronting the curse that follows his bloodline.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 7.7,
+    release_date: '2021-07-22',
+    genres: [{ name: 'Fantasy' }],
+    credits: { cast: ['Rae Turner'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-echo',
+    title: 'Echo Bay',
+    overview: 'When a quiet town begins to vanish overnight, a young archivist uncovers a buried history.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 8.0,
+    release_date: '2024-03-18',
+    genres: [{ name: 'Thriller' }],
+    credits: { cast: ['Nia Ellis'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-aurora',
+    title: 'Aurora Run',
+    overview: 'Two rival pilots join forces to outrun a government experiment hunting the last free skies.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 7.8,
+    release_date: '2023-02-09',
+    genres: [{ name: 'Action' }],
+    credits: { cast: ['Kian Brooks'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-lantern',
+    title: 'Lantern House',
+    overview: 'A family inherits a mansion that only reveals its secrets at midnight.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 7.4,
+    release_date: '2020-10-15',
+    genres: [{ name: 'Horror' }],
+    credits: { cast: ['Sage Cole'] },
+    type: 'movie',
+  },
+  {
+    id: 'fallback-velvet',
+    title: 'Velvet Rewind',
+    overview: 'A memory archivist gets one last chance to save a lost love trapped in an old film reel.',
+    poster_path: '',
+    backdrop_path: '',
+    vote_average: 8.3,
+    release_date: '2025-01-12',
+    genres: [{ name: 'Romance' }, { name: 'Comedy' }],
+    credits: { cast: ['Ava Stone'] },
+    type: 'movie',
+  },
+];
+const TRAILER_LIBRARY = [
+  {
+    id: 'fallback-trailer-1',
+    title: 'The Last Horizon',
+    overview: 'A thrilling teaser for the frontier adventure that is now streaming.',
+    poster_path: '',
+    backdrop_path: '',
+    trailer_url: '',
+  },
+];
 
 const typeMap = {
   movie: 'movie',
@@ -80,14 +186,67 @@ const normalizeRapidMovieList = (data) => {
     .filter(Boolean);
 };
 
+const normalizeKeyword = (value) => String(value || '').toLowerCase().trim();
+
+const getFallbackMovieResults = (keyword, page = 1) => {
+  const normalizedKeyword = normalizeKeyword(keyword);
+  const baseMovies = [...MOVIE_LIBRARY];
+  const queryTerms = normalizedKeyword.split(/[^a-z0-9]+/).filter(Boolean);
+
+  const movieMatchesQuery = (movie) => {
+    if (!queryTerms.length) return true;
+
+    const haystack = [
+      movie?.title || '',
+      movie?.overview || '',
+      (movie?.genres || []).map((genre) => genre?.name || '').join(' '),
+      (movie?.credits?.cast || []).join(' '),
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    return queryTerms.some((term) => haystack.includes(term));
+  };
+
+  let filtered = baseMovies;
+  if (normalizedKeyword.includes('popular')) {
+    filtered = baseMovies.slice(1, 5);
+  } else if (normalizedKeyword.includes('best') || normalizedKeyword.includes('top')) {
+    filtered = baseMovies.slice(2, 7);
+  } else if (normalizedKeyword.includes('trending')) {
+    filtered = baseMovies.slice(0, 4);
+  } else if (normalizedKeyword.includes('series') || normalizedKeyword.includes('tv')) {
+    filtered = baseMovies.slice(4, 8);
+  } else if (queryTerms.length > 0) {
+    filtered = baseMovies.filter(movieMatchesQuery);
+  }
+
+  if (!filtered.length) {
+    filtered = baseMovies;
+  }
+
+  const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+  const startIndex = (pageNumber - 1) * 8;
+  return filtered.slice(startIndex, startIndex + 8).map((movie) => normalizeRapidMovie(movie));
+};
+
 const searchRapidMovies = async (keyword, page = 1) => {
-  const data = await fetchRapidApi('/search/basic', {
-    country: 'us',
-    keyword: String(keyword || '').trim(),
-    type: 'movie',
-    page: String(page),
-  });
-  return normalizeRapidMovieList(data);
+  if (!RAPIDAPI_KEY) {
+    return getFallbackMovieResults(keyword, page);
+  }
+
+  try {
+    const data = await fetchRapidApi('/search/basic', {
+      country: 'us',
+      keyword: String(keyword || '').trim(),
+      type: 'movie',
+      page: String(page),
+    });
+    return normalizeRapidMovieList(data);
+  } catch (error) {
+    console.warn('RapidAPI search failed, using fallback movie data:', error.message);
+    return getFallbackMovieResults(keyword, page);
+  }
 };
 
 const trailerQueries = [
@@ -283,4 +442,5 @@ router.get('/streaming/:type/:id', async (req, res) => {
   }
 });
 
+export { getFallbackMovieResults };
 export default router;

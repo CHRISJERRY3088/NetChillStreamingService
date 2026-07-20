@@ -79,6 +79,11 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            width: clamp(140px, 44vw, 180px);
+            max-width: 180px;
+            flex: 0 0 clamp(140px, 44vw, 180px);
+            min-width: 0;
+            overflow: hidden;
         }
         .animation-card:hover {
             transform: translateY(-4px);
@@ -86,12 +91,52 @@
             box-shadow: 0 16px 40px rgba(59, 130, 246, 0.18);
         }
         .animation-card__thumb {
-            aspect-ratio: 16 / 10;
-            min-height: 90px;
+            aspect-ratio: 2 / 3;
+            min-height: 170px;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.75));
             position: relative;
             overflow: hidden;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.45rem;
+            border-radius: 0.85rem;
+        }
+        .animation-card__content {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.3rem;
+            min-height: 0;
+        }
+        .animation-card__title {
+            display: -webkit-box;
+            display: box;
+            -webkit-box-orient: vertical;
+            box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            overflow: hidden;
+            min-height: 2.7em;
+        }
+        .animation-card__subtitle {
+            display: -webkit-box;
+            display: box;
+            -webkit-box-orient: vertical;
+            box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            overflow: hidden;
+            min-height: 2.7em;
+        }
+        .section-sidebar-card {
+            width: 100%;
+            max-width: none;
+            flex: 0 0 auto;
+            min-width: 0;
+            height: 100%;
+        }
+        .section-sidebar-card .animation-card__thumb {
+            aspect-ratio: 2 / 3;
+            min-height: 170px;
         }
         @media (min-width: 640px) {
             .animation-card__thumb {
@@ -132,33 +177,25 @@
             }
         }
         .animation-carousel {
-            display: grid;
-            grid-auto-flow: column;
-            grid-template-rows: 1fr;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 0.5rem;
+            display: flex;
             align-items: stretch;
+            gap: 0.5rem;
             width: max-content;
             max-width: 100%;
+            padding-inline: 0.15rem;
         }
         @media (min-width: 640px) {
-            .animation-carousel {
-                grid-template-columns: repeat(3, minmax(150px, 1fr));
-            }
-        }
-        @media (min-width: 768px) {
-            .animation-carousel {
-                grid-template-columns: repeat(4, minmax(150px, 1fr));
+            .animation-card {
+                width: clamp(150px, 24vw, 190px);
+                max-width: 190px;
+                flex-basis: clamp(150px, 24vw, 190px);
             }
         }
         @media (min-width: 1024px) {
-            .animation-carousel {
-                grid-template-columns: repeat(6, minmax(160px, 1fr));
-            }
-        }
-        @media (min-width: 1280px) {
-            .animation-carousel {
-                grid-template-columns: repeat(7, minmax(150px, 1fr));
+            .animation-card {
+                width: clamp(165px, 17vw, 210px);
+                max-width: 210px;
+                flex-basis: clamp(165px, 17vw, 210px);
             }
         }
         .scrollbar-none {
@@ -179,6 +216,8 @@
             justify-content: center;
             width: 3rem;
             height: 3rem;
+            min-width: 2.75rem;
+            min-height: 2.75rem;
             border-radius: 9999px;
             background: rgba(59, 130, 246, 0.95);
             color: white;
@@ -232,6 +271,11 @@
             }
         }
 
+        button {
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
         .section-shell__button {
             display: inline-flex;
             align-items: center;
@@ -239,7 +283,7 @@
             width: fit-content;
             border-radius: 9999px;
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(29, 78, 216, 0.95));
-            padding: 0.6rem 1rem;
+            padding: 0.7rem 1rem;
             font-size: 0.75rem;
             font-weight: 800;
             letter-spacing: 0.18em;
@@ -247,6 +291,22 @@
             color: white;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             box-shadow: 0 10px 25px rgba(59, 130, 246, 0.24);
+        }
+        @media (max-width: 640px) {
+            button {
+                min-height: 46px;
+                padding: 0.7rem 0.95rem;
+            }
+            .animation-card button {
+                min-height: 46px;
+                padding: 0.8rem 0.9rem;
+                border-radius: 0.9rem;
+                font-size: 0.8rem;
+            }
+            .animation-scroll-button {
+                width: 2.85rem;
+                height: 2.85rem;
+            }
         }
         .section-shell__button:hover {
             transform: translateY(-1px);
@@ -483,7 +543,7 @@
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     K-Drama
                 </a>
-                <a href="../frontend/dashboard.html" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
+                <a href="./dashboard.html" @click="mobileMenu = false" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     Dashboard
                 </a>
@@ -726,7 +786,7 @@
                             <button type="button" data-sidebar-close="true" class="rounded-full border border-slate-700/70 bg-slate-950/80 p-3 text-2xl text-slate-300 transition hover:border-blue-400 hover:text-white">&times;</button>
                         </div>
                     </div>
-                    <div id="sectionSidebarGrid" class="mt-4 grid flex-1 gap-4 overflow-y-auto rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+                    <div id="sectionSidebarGrid" class="mt-4 grid flex-1 gap-4 overflow-y-auto rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-4 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7"></div>
                 </div>
             `;
             overlay.addEventListener('click', (event) => {
@@ -739,7 +799,8 @@
             const searchInput = overlay.querySelector('#sectionSidebarSearch');
             if (searchInput) {
                 searchInput.addEventListener('input', (event) => {
-                    renderSectionSidebarItems(sectionSidebarItems, event.target.value);
+                    const title = document.getElementById('sectionSidebarTitle')?.textContent?.trim() || 'Featured Section';
+                    renderSectionSidebarItems(sectionSidebarItems, event.target.value, title);
                 });
             }
 
@@ -754,6 +815,31 @@
         }
 
         function collectSectionSidebarItems(sectionRoot) {
+            const storedMovies = sectionRoot?.dataset?.sectionMovies;
+            if (storedMovies) {
+                try {
+                    const parsedMovies = JSON.parse(storedMovies);
+                    if (Array.isArray(parsedMovies) && parsedMovies.length) {
+                        return parsedMovies
+                            .map((movie) => {
+                                const safeMovie = movie || {};
+                                const title = safeMovie.title || safeMovie.name || safeMovie.original_title || 'Featured movie';
+                                const subtitle = safeMovie.subtitle || safeMovie.overview || safeMovie.description || 'Now streaming on NetChill';
+                                const posterPath = safeMovie.poster_path || safeMovie.poster || safeMovie.image || '';
+                                return {
+                                    title,
+                                    subtitle,
+                                    poster_path: posterPath,
+                                    movieData: safeMovie,
+                                };
+                            })
+                            .filter((item) => item.title && item.title !== 'Featured movie' || item.subtitle);
+                    }
+                } catch (error) {
+                    console.warn('Unable to parse section movies for sidebar', error);
+                }
+            }
+
             const cards = Array.from(sectionRoot?.querySelectorAll('article') || []);
             if (!cards.length) return [];
 
@@ -776,7 +862,7 @@
                 .filter((item) => item.title && item.title !== 'Featured movie' || item.subtitle);
         }
 
-        function renderSectionSidebarItems(items, query = '') {
+        function renderSectionSidebarItems(items, query = '', sectionTitle = 'Featured Section') {
             const grid = document.getElementById('sectionSidebarGrid');
             if (!grid) return;
 
@@ -791,16 +877,34 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map((item) => `
-                <article class="rounded-[1.3rem] border border-white/10 bg-slate-900/80 p-3 shadow-lg">
-                    <div class="mb-3 overflow-hidden rounded-[1rem] bg-slate-800">
-                        ${item.poster_path ? `<img src="${item.poster_path}" alt="${item.title}" class="h-40 w-full object-cover">` : `<div class="flex h-40 items-center justify-center text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">${item.title}</div>`}
-                    </div>
-                    <h3 class="text-sm font-semibold text-white">${item.title}</h3>
-                    <p class="mt-1 text-sm text-slate-400">${item.subtitle}</p>
-                    <a href="./Download.html" class="mt-4 inline-flex w-full items-center justify-center rounded-full bg-blue-500 px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-blue-600">Watch Now</a>
-                </article>
-            `).join('');
+            const safeSectionTitle = sectionTitle || 'Featured Section';
+            const sectionJson = JSON.stringify(safeSectionTitle).replace(/</g, '\\u003c').replace(/'/g, "\\'");
+
+            grid.innerHTML = filtered.map((item) => {
+                const movieData = item.movieData || {};
+                const movieJson = JSON.stringify(movieData).replace(/</g, '\\u003c').replace(/'/g, "\\'");
+                const posterSrc = resolveMoviePoster(item.poster_path || movieData.poster_path || movieData.poster || movieData.image || '');
+                const tagLabel = movieData.genre || item.subtitle || 'Now Streaming';
+
+                return `
+                    <article class="section-sidebar-card animation-card group cursor-pointer rounded-[1.3rem] p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                        <div class="animation-card__thumb rounded-xl">
+                            ${posterSrc ? `<img src="${posterSrc}" alt="${item.title}" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${item.title}</div>`}
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
+                                <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
+                            </div>
+                            <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">${tagLabel}</div>
+                        </div>
+                        <div class="animation-card__content px-1 pb-1">
+                            <div>
+                                <h3 class="animation-card__title text-sm font-semibold text-white">${item.title}</h3>
+                                <p class="animation-card__subtitle mt-1 text-[11px] text-gray-400">${item.subtitle}</p>
+                            </div>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
 
             enhanceMovieCardDownloadLinks();
         }
@@ -811,12 +915,12 @@
             const searchInput = document.getElementById('sectionSidebarSearch');
             if (!overlay || !titleEl || !searchInput) return;
 
-            const title = sectionRoot?.querySelector('h2, h3')?.textContent?.trim() || 'Featured Section';
+            const title = sectionRoot?.dataset?.sectionTitle || sectionRoot?.querySelector('h2, h3')?.textContent?.trim() || 'Featured Section';
             titleEl.textContent = title;
             searchInput.value = '';
             const items = collectSectionSidebarItems(sectionRoot);
             sectionSidebarItems = items;
-            renderSectionSidebarItems(items, '');
+            renderSectionSidebarItems(items, '', title);
             overlay.classList.remove('hidden');
             setOverlayLock(true);
         }
@@ -832,7 +936,7 @@
                 event.preventDefault();
                 event.stopPropagation();
 
-                const sectionRoot = buttonEl.closest('section, main, div') || document.body;
+                const sectionRoot = buttonEl.closest('section') || buttonEl.closest('main') || buttonEl.closest('[data-section-root]') || document.body;
                 openSectionSidebar(sectionRoot);
             }, true);
         }
@@ -909,6 +1013,30 @@
                 window.location.href = `./Download.html?id=${encodeURIComponent(slug)}&type=movie`;
             };
 
+            function getSectionSearchQuery(section) {
+                const rawTitle = section?.title || section?.id || '';
+                if (!rawTitle) return '';
+
+                return String(rawTitle)
+                    .replace(/\s*\/\s*/g, ' ')
+                    .replace(/[^a-z0-9]+/gi, ' ')
+                    .trim();
+            }
+
+            async function fetchMoviesForSection(section) {
+                const query = getSectionSearchQuery(section);
+                if (!query) return [];
+
+                try {
+                    const response = await window.moviesAPI.search(query, 1);
+                    const results = Array.isArray(response?.results) ? response.results : [];
+                    return results.slice(0, 8);
+                } catch (error) {
+                    console.warn(`Unable to load section movies for ${section?.title || section?.id || 'section'}`, error);
+                    return [];
+                }
+            }
+
             function getMovieCardsForSection(sectionIndex, moviePool = []) {
                 const pool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : [];
                 if (!pool.length) return [];
@@ -935,17 +1063,19 @@
 
                 return `
                     <article class="animation-card group cursor-pointer rounded-2xl p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
-                        <div class="animation-card__thumb mb-3 rounded-xl">
+                        <div class="animation-card__thumb rounded-xl">
                             ${posterSrc ? `<img src="${posterSrc}" alt="${movie.title} poster" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${movie.title}</div>`}
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
                                 <span class="material-symbols-outlined text-3xl text-white">play_circle</span>
                             </div>
                             <div class="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-100">${tagLabel}</div>
                         </div>
-                        <div class="px-1 pb-1">
-                            <h3 class="text-sm font-semibold text-white">${movie.title}</h3>
-                            <p class="mt-1 text-[11px] text-gray-400">${movie.subtitle}</p>
-                            <button type="button" class="mt-3 w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                        <div class="animation-card__content px-1 pb-1">
+                            <div>
+                                <h3 class="animation-card__title text-sm font-semibold text-white">${movie.title}</h3>
+                                <p class="animation-card__subtitle mt-1 text-[11px] text-gray-400">${movie.subtitle}</p>
+                            </div>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-2 text-[10px] font-black text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
                         </div>
                     </article>
                 `;
@@ -958,7 +1088,7 @@
                     : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available from the API right now.</div>';
 
                 return `
-                    <section id="${section.id}" class="section-shell relative">
+                    <section id="${section.id}" class="section-shell relative" data-section-title="${section.title}" data-section-movies='${JSON.stringify(movies).replace(/</g, '\\u003c').replace(/'/g, "\\'")}'>
                         <div class="section-shell__header">
                             <h2 class="text-2xl font-black uppercase tracking-tighter text-blue-500">${section.title}</h2>
                             <button class="section-shell__button">See All</button>
@@ -994,16 +1124,18 @@
                 const container = document.getElementById('menuContainers');
                 if (!container) return;
 
-                let moviePool = [];
                 try {
                     await ensureMoviesApiReady();
-                    const response = await window.moviesAPI.getTrending();
-                    moviePool = Array.isArray(response?.results) ? response.results : [];
+                    const sectionResults = await Promise.all(menuSections.map(async (section) => {
+                        const results = await fetchMoviesForSection(section);
+                        return { section, results };
+                    }));
+
+                    container.innerHTML = sectionResults.map(({ section, results }, index) => createMenuSection(section, index, results)).join('');
                 } catch (error) {
                     console.warn('Unable to load featured movies from RapidAPI', error);
+                    container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index, [])).join('');
                 }
-
-                container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index, moviePool)).join('');
             }
 
             await renderMenuContainers();
@@ -1134,13 +1266,30 @@
                 initInfiniteLoop(wrapper, carousel, speed);
             });
 
+            function scrollToSectionTarget(id, retries = 20) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (window.location.hash !== `#${id}`) {
+                        window.history.replaceState(null, '', `#${id}`);
+                    }
+                    return true;
+                }
+
+                if (retries > 0) {
+                    window.setTimeout(() => scrollToSectionTarget(id, retries - 1), 150);
+                    return false;
+                }
+
+                return false;
+            }
+
             // Smooth-scroll menu links that target sections
             document.querySelectorAll('[data-scroll-target]').forEach((btn) => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     const id = btn.getAttribute('data-scroll-target');
-                    const el = document.getElementById(id);
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    scrollToSectionTarget(id);
 
                     // Try to close Alpine mobile menu if present
                     try {
