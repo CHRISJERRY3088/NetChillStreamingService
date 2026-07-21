@@ -176,9 +176,9 @@ function isIframePlayerUrl(url) {
 }
 
 function setTrailerPlayerMode(url) {
-  if (!trailerVideo || !trailerEmbed || !trailerEmbedContainer) return;
+  if (!trailerVideo) return;
 
-  if (isIframePlayerUrl(url)) {
+  if (isIframePlayerUrl(url) && trailerEmbed && trailerEmbedContainer) {
     trailerEmbedContainer.classList.remove('hidden');
     trailerVideo.classList.add('hidden');
     trailerEmbed.setAttribute('src', url);
@@ -186,8 +186,12 @@ function setTrailerPlayerMode(url) {
     return;
   }
 
-  trailerEmbedContainer.classList.add('hidden');
-  trailerEmbed.removeAttribute('src');
+  if (trailerEmbedContainer) {
+    trailerEmbedContainer.classList.add('hidden');
+  }
+  if (trailerEmbed) {
+    trailerEmbed.removeAttribute('src');
+  }
   trailerVideo.classList.remove('hidden');
 }
 
