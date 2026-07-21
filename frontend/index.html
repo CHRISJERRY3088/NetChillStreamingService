@@ -490,123 +490,6 @@
             box-shadow: inset 0 1px 1px rgba(255,255,255,0.04), 0 0 0 4px rgba(59, 130, 246, 0.16);
         }
 
-        .movie-flex-search-row {
-            display: grid;
-            gap: 0.75rem;
-            grid-template-columns: 1fr auto;
-            align-items: center;
-        }
-
-        .movie-flex-search-input {
-            width: 100%;
-            border-radius: 9999px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(15, 23, 42, 0.9);
-            color: #f8fafc;
-            padding: 0.95rem 1rem;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .movie-flex-search-input:focus {
-            border-color: rgba(59, 130, 246, 0.8);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.16);
-        }
-
-        .movie-flex-search-button {
-            border-radius: 9999px;
-            background: #e50914;
-            color: white;
-            border: none;
-            padding: 0.95rem 1.35rem;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-
-        .movie-flex-search-button:hover {
-            background: #ff1c2b;
-            transform: translateY(-1px);
-        }
-
-        .movie-flex-status {
-            margin-top: 1.25rem;
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            text-align: center;
-            min-height: 1.5rem;
-        }
-
-        .movie-flex-loader {
-            border: 4px solid rgba(255, 255, 255, 0.14);
-            border-top: 4px solid #e50914;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .movie-flex-grid {
-            display: flex;
-            gap: 16px;
-            margin-top: 1.75rem;
-            overflow-x: auto;
-            padding: 0.35rem 0.2rem 0.75rem;
-            scroll-snap-type: x proximity;
-            scroll-behavior: smooth;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            animation: movieFlexScroll 58s linear infinite;
-            will-change: transform;
-            position: relative;
-        }
-
-        .movie-flex-grid::before,
-        .movie-flex-grid::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 60px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .movie-flex-grid::before {
-            left: 0;
-            background: linear-gradient(90deg, rgba(2, 6, 23, 0.9), transparent);
-        }
-
-        .movie-flex-grid::after {
-            right: 0;
-            background: linear-gradient(270deg, rgba(2, 6, 23, 0.9), transparent);
-        }
-
-        .movie-flex-grid::-webkit-scrollbar {
-            display: none;
-        }
-
-        @keyframes movieFlexScroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .movie-flex-grid:hover {
-            animation-play-state: paused;
-        }
-
         .sidebar-search-dropdown {
             border-color: rgba(148, 163, 184, 0.12);
             backdrop-filter: blur(18px);
@@ -717,12 +600,17 @@
                             </div>
                             <h2 class="max-w-[9.5rem] text-sm font-black leading-tight text-white sm:max-w-sm sm:text-2xl lg:max-w-md lg:text-3xl">Stream your favorites anytime</h2>
                             <p class="max-w-[9.5rem] text-[10px] leading-relaxed text-gray-200 sm:max-w-sm sm:text-sm lg:max-w-md lg:text-base">A cinematic home for your next binge.</p>
-                            <div class="mt-2 w-full max-w-[9.5rem] overflow-hidden rounded-lg border border-white/10 bg-black/20 shadow-lg sm:mt-2.5 sm:max-w-[20rem] sm:rounded-[0.8rem] sm:border-white/15 sm:bg-black/50 lg:max-w-[22rem] lg:rounded-[1rem]">
+                            <div class="relative mt-2 w-full max-w-[9.5rem] overflow-hidden rounded-lg border border-white/10 bg-black/20 shadow-lg sm:mt-2.5 sm:max-w-[20rem] sm:rounded-[0.8rem] sm:border-white/15 sm:bg-black/50 lg:max-w-[22rem] lg:rounded-[1rem]">
+                                <button type="button" id="heroTrailerPreview" class="absolute inset-0 z-20 flex items-center justify-center bg-black/20 text-white transition hover:bg-black/35" aria-label="Play featured trailer">
+                                    <span class="rounded-full border border-white/30 bg-black/40 p-3 backdrop-blur-sm">
+                                        <span class="material-symbols-outlined text-3xl sm:text-4xl">play_circle</span>
+                                    </span>
+                                </button>
                                 <video id="heroAutoTrailer" class="aspect-video w-full bg-black object-cover" autoplay muted loop playsinline preload="auto" poster="">
                                     <source src="" type="video/mp4">
                                 </video>
                             </div>
-                        </div>h
+                        </div>
                         <div class="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2.5">
                             <a href="./Download.html" class="rounded-full bg-blue-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-lg transition hover:bg-blue-400 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">Watch Now</a>
                             <button type="button" id="trailerButton" class="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">View Trailer</button>
@@ -740,8 +628,6 @@
             <p id="slide-subtitle" class="mt-1 text-[11px] text-gray-300 sm:mt-2 sm:text-xs lg:text-sm">A cinematic home for your next binge.</p>
         </div>
     </div>
-
-    <!-- Movie search (OMDb) section removed per request -->
 
     <section id="trailerGallery" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
@@ -761,9 +647,14 @@
             <button type="button" id="closeTrailerModal" class="absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20">
                 <span class="material-symbols-outlined">close</span>
             </button>
-            <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="auto" playsinline poster="">
-                <source src="" type="video/mp4">
-            </video>
+            <div class="relative h-full w-full max-h-screen max-w-screen bg-black">
+                <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="auto" playsinline poster="">
+                    <source src="" type="video/mp4">
+                </video>
+                <div id="trailerEmbedContainer" class="hidden h-full w-full bg-black">
+                    <iframe id="trailerEmbed" class="h-full w-full" src="" title="Featured trailer player" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -954,20 +845,6 @@
             });
         }
 
-        function setOverlayLock(isLocked) {
-            const body = document.body;
-            const html = document.documentElement;
-            const shouldLock = Boolean(isLocked);
-
-            body.style.overflow = shouldLock ? 'hidden' : 'auto';
-            body.style.overflowY = shouldLock ? 'hidden' : 'auto';
-            html.style.overflow = shouldLock ? 'hidden' : 'auto';
-            html.style.overflowY = shouldLock ? 'hidden' : 'auto';
-            body.classList.toggle('overflow-y-auto', !shouldLock);
-            body.classList.remove('overflow-hidden', 'overflow-y-hidden');
-            html.classList.remove('overflow-hidden', 'overflow-y-hidden');
-        }
-
         function createDownloadSlug(title, fallback = 'featured-movie', index = 0) {
             const base = (title || fallback)
                 .toLowerCase()
@@ -1084,7 +961,6 @@
             const overlay = document.getElementById('sectionSidebarOverlay');
             if (!overlay) return;
             overlay.classList.add('hidden');
-            setOverlayLock(false);
         }
 
         function collectSectionSidebarItems(sectionRoot) {
@@ -1195,7 +1071,6 @@
             sectionSidebarItems = items;
             renderSectionSidebarItems(items, '', title);
             overlay.classList.remove('hidden');
-            setOverlayLock(true);
         }
 
         function attachSectionSidebarTriggers() {
@@ -1214,99 +1089,12 @@
             }, true);
         }
 
-        async function fetchMovieFlexMovies(query) {
-            const loader = document.getElementById('movieFlexLoader');
-            const statusDiv = document.getElementById('movieFlexStatus');
-            const grid = document.getElementById('movieFlexGrid');
-            if (!loader || !statusDiv || !grid) return;
-
-            loader.style.display = 'block';
-            statusDiv.textContent = '';
-            grid.innerHTML = '';
-
-            try {
-                if (!window.moviesAPI?.search) {
-                    throw new Error('Movies API is not available yet.');
-                }
-
-                const response = await window.moviesAPI.search(query, 1);
-                const movies = Array.isArray(response?.results) ? response.results : [];
-
-                if (movies.length > 0) {
-                    renderMovieFlexMovies(movies);
-                } else {
-                    statusDiv.textContent = `No movies found matching "${query}".`;
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                statusDiv.textContent = 'Something went wrong. Please try again later.';
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
-
-        function renderMovieFlexMovies(movies) {
-            const grid = document.getElementById('movieFlexGrid');
-            if (!grid) return;
-
-            const html = movies.map((movie) => {
-                const title = movie.title || movie.name || 'Untitled Movie';
-                const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
-                const poster = movie.poster_path || movie.poster || movie.image || 'https://via.placeholder.com/300x450?text=No+Image';
-
-                return `
-                    <div class="movie-flex-card">
-                        <img src="${poster}" alt="${title}">
-                        <div class="movie-flex-card-body">
-                            <div class="movie-flex-card-title" title="${title}">${title}</div>
-                            <div class="movie-flex-card-year">${year}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            grid.innerHTML = html;
-        }
-
-        function attachMovieFlexSearch() {
-            const searchInput = document.getElementById('movieFlexSearchInput');
-            const searchButton = document.getElementById('movieFlexSearchButton');
-            if (!searchInput || !searchButton) return;
-
-            const runSearch = () => {
-                const query = searchInput.value.trim();
-                if (query) {
-                    fetchMovieFlexMovies(query);
-                }
-            };
-
-            searchButton.addEventListener('click', runSearch);
-            searchInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    runSearch();
-                }
-            });
-        }
-
         window.addEventListener('DOMContentLoaded', async () => {
-            setOverlayLock(false);
-            setTimeout(() => setOverlayLock(false), 150);
             attachMovieSearch('movieSearchInput', 'movieSearchDropdown');
             attachMovieSearch('sidebarMovieSearchInput', 'sidebarMovieSearchDropdown');
-            attachMovieFlexSearch();
-            fetchMovieFlexMovies('Marvel');
 
             createSectionSidebarOverlay();
             attachSectionSidebarTriggers();
-
-            const syncOverlayLock = () => {
-                const mobileMenuOpen = document.querySelector('[x-show="mobileMenu"]')?.offsetParent !== null;
-                const sideBarOpen = document.querySelector('[x-show="sideBar"]')?.offsetParent !== null;
-                setOverlayLock(mobileMenuOpen || sideBarOpen);
-            };
-
-            const observer = new MutationObserver(syncOverlayLock);
-            observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style', 'class'] });
 
             const menuSections = [
                 { id: 'english', title: 'English' },
@@ -1556,7 +1344,6 @@
 
             document.body.style.overflow = '';
             document.documentElement.style.overflow = '';
-            syncOverlayLock();
 
             const storedUser = localStorage.getItem('netchill_user') || localStorage.getItem('user');
             if (storedUser) {

@@ -1,10 +1,10 @@
 // Movies Page Controller - Loads movies and streaming availability through the backend API
 // This script handles trending, popular, and search functionality
 
-async function ensureMoviesApiReady() {
+async function ensureMoviesApiReady(timeoutMs = 100) {
   const start = Date.now();
   while (!window.moviesAPI?.getTrending) {
-    if (Date.now() - start > 5000) {
+    if (Date.now() - start > timeoutMs) {
       throw new Error('Movies API did not become available in time.');
     }
     await new Promise((resolve) => setTimeout(resolve, 50));
