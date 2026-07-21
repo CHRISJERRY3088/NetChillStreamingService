@@ -99,17 +99,17 @@ function renderTrailerCards(trailers) {
     const buttonLabel = playable ? buttonText : `${buttonText} (Open)`;
 
     return `
-      <article class="trailer-card group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/90 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
-        <div class="relative h-52 bg-cover bg-center" style="background-image: ${image};">
+      <article class="trailer-card group overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 shadow-lg transition hover:-translate-y-1 hover:shadow-xl sm:rounded-3xl sm:shadow-xl">
+        <div class="relative h-28 bg-cover bg-center sm:h-40 lg:h-52" style="background-image: ${image};">
           <div class="absolute inset-0 bg-black/30"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-            <p class="text-xs uppercase tracking-[0.25em] text-blue-200">${trailer.badge || 'Trailer'}</p>
-            <h3 class="mt-2 text-lg font-bold leading-tight">${title}</h3>
+          <div class="absolute bottom-0 left-0 right-0 p-2 text-white sm:p-4">
+            <p class="text-[10px] uppercase tracking-[0.25em] text-blue-200 sm:text-xs">${trailer.badge || 'Trailer'}</p>
+            <h3 class="mt-1 text-sm font-bold leading-tight sm:mt-2 sm:text-lg">${title}</h3>
           </div>
         </div>
-        <div class="p-4">
-          <p class="text-sm text-slate-300 line-clamp-2">${subtitle}</p>
-          <button type="button" ${buttonAction} class="mt-4 w-full rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-400">${buttonLabel}</button>
+        <div class="p-2 sm:p-4">
+          <p class="text-xs text-slate-300 line-clamp-2 sm:text-sm">${subtitle}</p>
+          <button type="button" ${buttonAction} class="mt-3 w-full rounded-full bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-400 sm:mt-4 sm:px-4 sm:py-2 sm:text-sm">${buttonLabel}</button>
         </div>
       </article>
     `;
