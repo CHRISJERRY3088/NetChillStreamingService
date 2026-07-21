@@ -593,7 +593,7 @@
     <link rel="stylesheet" href="./assets/menu.css">
 </head>
 
-<body class="transition-colors duration-300 bg-black dark:bg-black text-gray-900 dark:text-white">
+<body class="transition-colors duration-300 bg-black dark:bg-black text-gray-900 dark:text-white overflow-y-auto">
 
     <header class="relative">
         <div id="slideshow-bg" class="relative h-[470px] md:h-[560px] overflow-hidden rounded-b-[2rem] border border-white/10 bg-blue-900 bg-cover bg-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
@@ -625,7 +625,7 @@
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base leading-none">search</span>
+                    <span class="material-symbols-outlined absolute right-3 top-3 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
                 </div>
 
@@ -907,8 +907,15 @@
         }
 
         function setOverlayLock(isLocked) {
-            document.body.style.overflow = isLocked ? 'hidden' : '';
-            document.documentElement.style.overflow = isLocked ? 'hidden' : '';
+            const body = document.body;
+            const html = document.documentElement;
+            const shouldLock = Boolean(isLocked);
+
+            body.style.overflow = shouldLock ? 'hidden' : 'auto';
+            body.style.overflowY = shouldLock ? 'hidden' : 'auto';
+            html.style.overflow = shouldLock ? 'hidden' : 'auto';
+            html.style.overflowY = shouldLock ? 'hidden' : 'auto';
+            body.classList.toggle('overflow-y-auto', !shouldLock);
         }
 
         function createDownloadSlug(title, fallback = 'featured-movie', index = 0) {
@@ -1232,6 +1239,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
+            setOverlayLock(false);
             attachMovieSearch('movieSearchInput', 'movieSearchDropdown');
             attachMovieSearch('sidebarMovieSearchInput', 'sidebarMovieSearchDropdown');
             attachMovieFlexSearch();
