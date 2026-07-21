@@ -394,6 +394,93 @@
                 padding: 1.5rem 1.75rem;
             }
         }
+        @media (max-width: 1024px) {
+            .section-shell {
+                margin-top: 1.25rem;
+                border-radius: 1.35rem;
+                padding: 0.85rem;
+            }
+            .section-shell__header {
+                gap: 0.6rem;
+                margin-bottom: 0.8rem;
+            }
+            .animation-card__content,
+            .section-sidebar-card .animation-card__content {
+                padding: 0.8rem;
+            }
+            .animation-card__title {
+                font-size: 0.9rem;
+            }
+            .animation-card__subtitle {
+                font-size: 0.76rem;
+            }
+            .animation-card__thumb,
+            .section-sidebar-card .animation-card__thumb {
+                height: 180px;
+                min-height: 150px;
+            }
+            .section-shell__button {
+                padding: 0.6rem 0.85rem;
+                font-size: 0.66rem;
+            }
+        }
+        @media (max-width: 640px) {
+            .section-shell {
+                margin-top: 0.85rem;
+                border-radius: 1rem;
+                padding: 0.7rem;
+            }
+            .section-shell__header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                margin-bottom: 0.7rem;
+            }
+            .section-shell__button {
+                width: 100%;
+                justify-content: center;
+                padding: 0.6rem 0.75rem;
+                font-size: 0.62rem;
+                letter-spacing: 0.12em;
+            }
+            .animation-card,
+            .section-sidebar-card {
+                border-radius: 1rem;
+            }
+            .animation-card__thumb,
+            .section-sidebar-card .animation-card__thumb {
+                height: 165px;
+                min-height: 140px;
+            }
+            .animation-card__content,
+            .section-sidebar-card .animation-card__content {
+                padding: 0.7rem;
+            }
+            .animation-card__title {
+                font-size: 0.82rem;
+                min-height: 2.3em;
+            }
+            .animation-card__subtitle {
+                font-size: 0.7rem;
+                min-height: 2.2em;
+            }
+            button {
+                min-height: 44px;
+                padding: 0.7rem 0.95rem;
+            }
+            .animation-card button,
+            .section-sidebar-card button,
+            .animation-card__button {
+                min-height: 40px;
+                padding: 0.6rem 0.7rem;
+                border-radius: 0.8rem;
+                font-size: 0.7rem;
+            }
+            .animation-scroll-button {
+                width: 2.85rem;
+                height: 2.85rem;
+            }
+        }
 
         .section-shell__header {
             display: flex;
@@ -432,22 +519,6 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             box-shadow: 0 10px 25px rgba(59, 130, 246, 0.24);
         }
-        @media (max-width: 640px) {
-            button {
-                min-height: 46px;
-                padding: 0.7rem 0.95rem;
-            }
-            .animation-card button {
-                min-height: 46px;
-                padding: 0.8rem 0.9rem;
-                border-radius: 0.9rem;
-                font-size: 0.8rem;
-            }
-            .animation-scroll-button {
-                width: 2.85rem;
-                height: 2.85rem;
-            }
-        }
         .section-shell__button:hover {
             transform: translateY(-1px);
             box-shadow: 0 14px 30px rgba(59, 130, 246, 0.3);
@@ -477,6 +548,13 @@
 
         .search-shell > input {
             border-radius: inherit;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            line-height: 1;
         }
 
         .sidebar-search-input {
@@ -575,7 +653,7 @@
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
+                    <span class="search-icon material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
                 </div>
 
@@ -930,7 +1008,7 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <label class="relative block w-full sm:w-72">
-                                <span class="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base text-white/80">search</span>
+                                <span class="search-icon material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base text-white/80">search</span>
                                 <input id="sectionSidebarSearch" type="text" placeholder="Search section titles..." class="w-full rounded-full border border-slate-700/70 bg-slate-950/95 py-3 pl-11 pr-4 text-sm text-white outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30">
                             </label>
                             <button type="button" data-sidebar-close="true" class="rounded-full border border-slate-700/70 bg-slate-950/80 p-3 text-2xl text-slate-300 transition hover:border-blue-400 hover:text-white">&times;</button>
