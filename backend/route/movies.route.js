@@ -273,7 +273,6 @@ const normalizeTrailerItem = (item, fallbackQuery) => {
   const trailerUrl = extractTrailerUrlFromItem(item);
 
   return {
-    id: item?.id || title.toLowerCase().replace(/\s+/g, '-'),
     badge: fallbackQuery,
     eyebrow: title,
     title,
@@ -304,7 +303,6 @@ const fetchTrailerSlides = async () => {
     }
 
     slideResults.push({
-      id: config.query.toLowerCase().replace(/\s+/g, '-'),
       badge: config.badge,
       eyebrow: config.query,
       title: config.query,

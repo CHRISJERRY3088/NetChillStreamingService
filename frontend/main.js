@@ -25,7 +25,7 @@ const trailerEmbed = document.getElementById('trailerEmbed');
 const trailerEmbedContainer = document.getElementById('trailerEmbedContainer');
 const heroAutoTrailer = document.getElementById('heroAutoTrailer');
 const AUTO_PLAY_SECONDS = 15;
-const DEFAULT_FEATURED_EMBED_URL = 'https://vidsrc.to/embed/movie/823219';
+const DEFAULT_FEATURED_EMBED_URL = '';
 let trailerAutoPlayTimer = null;
 const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribute('src') || '';
 const localTrailerVideoPath = '';
@@ -95,8 +95,8 @@ function renderTrailerCards(trailers) {
     const playable = isPlayableVideoUrl(trailerUrl);
     const buttonAction = playable
       ? `onclick="openTrailerModal('${safeTrailerUrl}')"`
-      : `onclick="window.open('${safeTrailerUrl}', '_blank', 'noopener')"`;
-    const buttonLabel = playable ? buttonText : `${buttonText} (Open)`;
+      : 'disabled';
+    const buttonLabel = playable ? buttonText : 'Trailer unavailable';
 
     return `
       <article class="trailer-card group overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 shadow-lg transition hover:-translate-y-1 hover:shadow-xl sm:rounded-3xl sm:shadow-xl">
@@ -109,7 +109,7 @@ function renderTrailerCards(trailers) {
         </div>
         <div class="p-2 sm:p-4">
           <p class="text-xs text-slate-300 line-clamp-2 sm:text-sm">${subtitle}</p>
-          <button type="button" ${buttonAction} class="mt-3 w-full rounded-full bg-blue-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-400 sm:mt-4 sm:px-4 sm:py-2 sm:text-sm">${buttonLabel}</button>
+          <button type="button" ${buttonAction} class="mt-3 w-full rounded-full ${playable ? 'bg-blue-500 text-white hover:bg-blue-400' : 'bg-slate-700 text-slate-300 cursor-not-allowed'} px-3 py-1.5 text-xs font-semibold transition sm:mt-4 sm:px-4 sm:py-2 sm:text-sm">${buttonLabel}</button>
         </div>
       </article>
     `;
@@ -170,21 +170,11 @@ function setTrailerVideoSource(videoUrl) {
 }
 
 function isIframePlayerUrl(url) {
-  if (!url || typeof url !== 'string') return false;
-  const normalized = url.trim().toLowerCase();
-  return normalized.includes('/embed/') || normalized.includes('youtube.com/embed') || normalized.includes('player.vimeo.com');
+  return false;
 }
 
 function setTrailerPlayerMode(url) {
   if (!trailerVideo) return;
-
-  if (isIframePlayerUrl(url) && trailerEmbed && trailerEmbedContainer) {
-    trailerEmbedContainer.classList.remove('hidden');
-    trailerVideo.classList.add('hidden');
-    trailerEmbed.setAttribute('src', url);
-    trailerVideo.pause?.();
-    return;
-  }
 
   if (trailerEmbedContainer) {
     trailerEmbedContainer.classList.add('hidden');
@@ -226,11 +216,11 @@ async function openTrailerModal(videoUrl = null) {
   trailerModal.classList.add('flex');
   document.body.classList.add('overflow-hidden');
 
-  const selectedPlayerUrl = videoUrl || currentTrailerUrl || DEFAULT_FEATURED_EMBED_URL;
+  const selectedPlayerUrl = videoUrl || currentTrailerUrl || '';
   setTrailerPlayerMode(selectedPlayerUrl);
 
-  if (trailerVideo && !isIframePlayerUrl(selectedPlayerUrl)) {
-    const nextVideoUrl = selectedPlayerUrl || trailerVideoDefaultSrc;
+  const nextVideoUrl = resolvePlayableTrailerUrl(selectedPlayerUrl) || trailerVideoDefaultSrc || localTrailerVideoPath;
+  if (trailerVideo) {
     setTrailerVideoSource(nextVideoUrl);
     trailerVideo.currentTime = 0;
     trailerVideo.muted = true;
@@ -245,7 +235,6 @@ async function openTrailerModal(videoUrl = null) {
       console.warn('Fullscreen request failed', error);
     }
 
-    // Wait a tick for the DOM to fully update before attempting play
     setTimeout(() => {
       trailerVideo.play().catch((error) => {
         console.warn('Trailer play failed:', error);
@@ -254,15 +243,6 @@ async function openTrailerModal(videoUrl = null) {
         }, 500);
       });
     }, 100);
-    return;
-  }
-
-  try {
-    if (document.fullscreenElement !== trailerModal) {
-      await trailerModal.requestFullscreen?.();
-    }
-  } catch (error) {
-    console.warn('Fullscreen request failed', error);
   }
 }
 
