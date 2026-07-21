@@ -351,6 +351,195 @@
             box-shadow: inset 0 1px 1px rgba(255,255,255,0.04), 0 0 0 4px rgba(59, 130, 246, 0.16);
         }
 
+        .movie-flex-search-row {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+        }
+
+        .movie-flex-search-input {
+            width: 100%;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .movie-flex-search-input:focus {
+            border-color: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.16);
+        }
+
+        .movie-flex-search-button {
+            border-radius: 9999px;
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 0.95rem 1.35rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .movie-flex-search-button:hover {
+            background: #ff1c2b;
+            transform: translateY(-1px);
+        }
+
+        .movie-flex-status {
+            margin-top: 1.25rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            text-align: center;
+            min-height: 1.5rem;
+        }
+
+        .movie-flex-loader {
+            border: 4px solid rgba(255, 255, 255, 0.14);
+            border-top: 4px solid #e50914;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .movie-flex-grid {
+            display: flex;
+            gap: 16px;
+            margin-top: 1.75rem;
+            overflow-x: auto;
+            padding: 0.35rem 0.2rem 0.75rem;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            animation: movieFlexScroll 34s linear infinite;
+            will-change: transform;
+            position: relative;
+        }
+
+        .movie-flex-grid::before,
+        .movie-flex-grid::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .movie-flex-grid::before {
+            left: 0;
+            background: linear-gradient(90deg, rgba(2, 6, 23, 0.9), transparent);
+        }
+
+        .movie-flex-grid::after {
+            right: 0;
+            background: linear-gradient(270deg, rgba(2, 6, 23, 0.9), transparent);
+        }
+
+        .movie-flex-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-flex-card {
+            flex: 0 0 min(220px, 78vw);
+            max-width: 220px;
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.96));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.05rem;
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+            transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+            position: relative;
+        }
+
+        .movie-flex-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.18), 0 24px 50px rgba(37, 99, 235, 0.24), 0 0 40px rgba(59, 130, 246, 0.16);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        @keyframes movieFlexScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .movie-flex-grid:hover {
+            animation-play-state: paused;
+        }
+
+        .movie-flex-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+
+        .movie-flex-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .movie-flex-card::after {
+            content: "▶ Preview";
+            position: absolute;
+            inset: auto 0.7rem 0.7rem auto;
+            padding: 0.4rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.72);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .movie-flex-card:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .movie-flex-card-body {
+            padding: 1rem;
+        }
+
+        .movie-flex-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-flex-card-year {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
         .sidebar-search-dropdown {
             border-color: rgba(148, 163, 184, 0.12);
             backdrop-filter: blur(18px);
@@ -432,11 +621,11 @@
                 </div>
 
                 <!-- Search bar: visible on small screens and up -->
-                <div class="flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
+                <div class="items-center flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base leading-none">search</span>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
                 </div>
 
@@ -444,6 +633,7 @@
                     <button @click="darkMode = !darkMode" class="p-2 bg-white/10 rounded-full text-white">
                         <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
                     </button>
+                    <a href="./admin.html" data-admin-link class="hidden md:flex px-4 py-2 bg-red-600/90 text-white rounded-3xl text-xs font-bold border border-red-400 shadow-xl">Admin</a>
                     <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 dark:text-black rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
                     <a href="./account.html" id="accountButton" class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
                 </div>
@@ -483,6 +673,27 @@
             <p id="slide-subtitle" class="mt-1 text-[11px] text-gray-300 sm:mt-2 sm:text-xs lg:text-sm">A cinematic home for your next binge.</p>
         </div>
     </div>
+
+    <section id="movieSearchSection" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Movie Search</p>
+                    <h2 class="mt-2 text-3xl font-bold text-white">Find titles from OMDb</h2>
+                    <p class="max-w-xl text-sm text-slate-400">Search for a movie, then browse the results below.</p>
+                </div>
+                <div class="w-full max-w-lg">
+                    <div class="movie-flex-search-row">
+                        <input id="movieFlexSearchInput" class="movie-flex-search-input" type="text" value="Marvel" placeholder="Search for a movie (e.g., Batman)...">
+                        <button id="movieFlexSearchButton" class="movie-flex-search-button" type="button">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div id="movieFlexLoader" class="movie-flex-loader" style="display: none;"></div>
+            <div id="movieFlexStatus" class="movie-flex-status"></div>
+            <div id="movieFlexGrid" class="movie-flex-grid"></div>
+        </div>
+    </section>
 
     <section id="trailerGallery" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
@@ -547,6 +758,10 @@
                 <a href="./dashboard.html" @click="mobileMenu = false" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     Dashboard
+                </a>
+                <a href="./admin.html" data-admin-link class="hidden flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-red-300 hover:text-red-600 hover:scale-105 transition-all duration-300">
+                    <span class="material-symbols-outlined text-base text-red-500">shield</span>
+                    Admin
                 </a>
                 <a href="#animation" data-scroll-target="animation" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500 hover:scale-105 transition-all duration-300">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
@@ -942,9 +1157,85 @@
             }, true);
         }
 
+        async function fetchMovieFlexMovies(query) {
+            const loader = document.getElementById('movieFlexLoader');
+            const statusDiv = document.getElementById('movieFlexStatus');
+            const grid = document.getElementById('movieFlexGrid');
+            if (!loader || !statusDiv || !grid) return;
+
+            loader.style.display = 'block';
+            statusDiv.textContent = '';
+            grid.innerHTML = '';
+
+            try {
+                if (!window.moviesAPI?.search) {
+                    throw new Error('Movies API is not available yet.');
+                }
+
+                const response = await window.moviesAPI.search(query, 1);
+                const movies = Array.isArray(response?.results) ? response.results : [];
+
+                if (movies.length > 0) {
+                    renderMovieFlexMovies(movies);
+                } else {
+                    statusDiv.textContent = `No movies found matching "${query}".`;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                statusDiv.textContent = 'Something went wrong. Please try again later.';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function renderMovieFlexMovies(movies) {
+            const grid = document.getElementById('movieFlexGrid');
+            if (!grid) return;
+
+            const html = movies.map((movie) => {
+                const title = movie.title || movie.name || 'Untitled Movie';
+                const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
+                const poster = movie.poster_path || movie.poster || movie.image || 'https://via.placeholder.com/300x450?text=No+Image';
+
+                return `
+                    <div class="movie-flex-card">
+                        <img src="${poster}" alt="${title}">
+                        <div class="movie-flex-card-body">
+                            <div class="movie-flex-card-title" title="${title}">${title}</div>
+                            <div class="movie-flex-card-year">${year}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = html;
+        }
+
+        function attachMovieFlexSearch() {
+            const searchInput = document.getElementById('movieFlexSearchInput');
+            const searchButton = document.getElementById('movieFlexSearchButton');
+            if (!searchInput || !searchButton) return;
+
+            const runSearch = () => {
+                const query = searchInput.value.trim();
+                if (query) {
+                    fetchMovieFlexMovies(query);
+                }
+            };
+
+            searchButton.addEventListener('click', runSearch);
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    runSearch();
+                }
+            });
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             attachMovieSearch('movieSearchInput', 'movieSearchDropdown');
             attachMovieSearch('sidebarMovieSearchInput', 'sidebarMovieSearchDropdown');
+            attachMovieFlexSearch();
+            fetchMovieFlexMovies('Marvel');
 
             createSectionSidebarOverlay();
             attachSectionSidebarTriggers();
@@ -1212,6 +1503,17 @@
             if (storedUser) {
                 user = JSON.parse(storedUser);
             }
+
+            const isAdminUser = (candidate) => {
+                if (!candidate) return false;
+                const email = String(candidate.email || candidate.user?.email || '').trim().toLowerCase();
+                const adminFlag = Boolean(candidate.isAdmin || candidate.user_metadata?.isAdmin || candidate.metadata?.isAdmin);
+                return adminFlag || email === 'chrisjerry308@gmail.com';
+            };
+
+            document.querySelectorAll('[data-admin-link]').forEach((link) => {
+                link.classList.toggle('hidden', !isAdminUser(user));
+            });
 
             // Optional: Background check with server to verify token/subscription
             // We do this in the background so the UI doesn't freeze

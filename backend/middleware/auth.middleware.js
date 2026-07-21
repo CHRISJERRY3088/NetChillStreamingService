@@ -3,6 +3,31 @@ import { ENV } from "../lib/env.js";
 import jwt from 'jsonwebtoken';
 import { findById } from '../lib/local_user_store.js';
 
+const ADMIN_EMAIL = 'chrisjerry308@gmail.com';
+
+function isAdminEmail(email) {
+    return String(email || '').trim().toLowerCase() === ADMIN_EMAIL;
+}
+
+function normalizeUserForAdmin(user) {
+    if (!user) return null;
+
+    const metadata = user?.user_metadata || user?.metadata || {};
+    const email = user?.email || metadata?.email || user?.user?.email || null;
+    const isAdmin = Boolean(user?.isAdmin || metadata?.isAdmin || isAdminEmail(email));
+
+    return {
+        ...user,
+        email,
+        isAdmin,
+        user_metadata: {
+            ...(metadata || {}),
+            isAdmin,
+            email,
+        },
+    };
+}
+
 export const protectRoute = async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(" ")[1] || req.cookies?.jwt;
@@ -16,7 +41,7 @@ export const protectRoute = async (req, res, next) => {
                 const { data: { user }, error } = await supabase.auth.getUser(token);
                 console.debug && console.debug('protectRoute: supabase response', { user: !!user, error: error?.message });
                 if (user && !error) {
-                    req.user = user;
+                    req.user = normalizeUserForAdmin(user);
                     if (!req.user._id && req.user.id) req.user._id = req.user.id;
                     return next();
                 }
@@ -34,17 +59,17 @@ export const protectRoute = async (req, res, next) => {
                 const local = findById(decoded.id);
                 console.debug && console.debug('protectRoute: local lookup', !!local);
                 if (local) {
-                    // Normalize user object similar to Supabase user shape
-                    req.user = {
+                    req.user = normalizeUserForAdmin({
                         id: local.id || local._id,
                         _id: local.id || local._id,
                         email: local.email,
+                        isAdmin: isAdminEmail(local.email),
                         user_metadata: {
                             fullName: local.fullName || local.full_name,
                             subscription: local.subscription || 'Free',
                             paymentStatus: local.paymentStatus || 'Unpaid'
                         }
-                    };
+                    });
                     return next();
                 }
             } catch (e) {
@@ -57,4 +82,14 @@ export const protectRoute = async (req, res, next) => {
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
+};
+
+export const requireAdmin = (req, res, next) => {
+    const isAdmin = Boolean(req.user?.isAdmin || req.user?.user_metadata?.isAdmin || isAdminEmail(req.user?.email));
+
+    if (!isAdmin) {
+        return res.status(403).json({ message: "Forbidden - Admin access required" });
+    }
+
+    next();
 };

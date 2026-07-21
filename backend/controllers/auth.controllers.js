@@ -55,6 +55,26 @@ function getDeviceId(req) {
     return null;
 }
 
+function isAdminEmail(email) {
+    return String(email || '').trim().toLowerCase() === 'chrisjerry308@gmail.com';
+}
+
+function buildAuthUser(user, fallbackEmail = null) {
+    const email = user?.email || fallbackEmail || null;
+    const isAdmin = isAdminEmail(email);
+
+    return {
+        ...user,
+        email,
+        isAdmin,
+        user_metadata: {
+            ...(user?.user_metadata || {}),
+            isAdmin,
+            email,
+        },
+    };
+}
+
 function getAuthenticatedUser(req) {
     const email = req?.body?.email || req?.body?.user?.email || null;
     if (req?.cookies?.jwt && ENV.JWT_SECRET) {
@@ -74,7 +94,7 @@ function sendLocalUserSession(req, res, localUser) {
     let refreshToken = "local_refresh_token";
     try {
         if (ENV.JWT_SECRET) {
-            accessToken = jwt.sign({ id: localUser.id || localUser._id, email: localUser.email }, ENV.JWT_SECRET, { expiresIn: '15m' });
+            accessToken = jwt.sign({ id: localUser.id || localUser._id, email: localUser.email, isAdmin: isAdminEmail(localUser.email) }, ENV.JWT_SECRET, { expiresIn: '15m' });
             refreshToken = jwt.sign({ id: localUser.id || localUser._id }, ENV.JWT_SECRET, { expiresIn: '7d' });
         }
     } catch (err) {
@@ -83,14 +103,16 @@ function sendLocalUserSession(req, res, localUser) {
 
     const fakeSession = { access_token: accessToken, refresh_token: refreshToken };
     setAuthCookies(req, res, fakeSession);
+    const authUser = buildAuthUser({
+        _id: localUser.id || localUser._id || "local-1",
+        id: localUser.id || localUser._id || "local-1",
+        fullName: localUser.fullName || localUser.full_name || "Local User",
+        email: localUser.email,
+        subscription: localUser.subscription || "Free",
+    }, localUser.email);
+
     return res.status(200).json({
-        user: {
-            _id: localUser.id || localUser._id || "local-1",
-            id: localUser.id || localUser._id || "local-1",
-            fullName: localUser.fullName || localUser.full_name || "Local User",
-            email: localUser.email,
-            subscription: localUser.subscription || "Free",
-        },
+        user: authUser,
         session: fakeSession,
     });
 }
@@ -215,16 +237,17 @@ export const login = async (req, res) => {
         setAuthCookies(req, res, data.session);
 
         const profile = buildUserPayload(data.user);
+        const authProfile = buildAuthUser(profile, data.user.email);
         rememberLogin({
             id: data.user.id,
             _id: data.user.id,
-            fullName: profile?.fullName || data.user.email,
+            fullName: authProfile?.fullName || data.user.email,
             email: data.user.email,
-            subscription: profile?.subscription || 'Free',
+            subscription: authProfile?.subscription || 'Free',
         }, new Date().toISOString(), getDeviceId(req));
 
         return res.status(200).json({
-            user: profile,
+            user: authProfile,
             session: data.session,
         });
 
