@@ -614,6 +614,91 @@
         .site-nav .logo-img{
             filter: drop-shadow(0 6px 18px rgba(59,130,246,0.12));
         }
+
+        /* Hero featured movie card styles */
+        #heroFeaturedMovieCard {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            background-color: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(18px);
+            width: 100%;
+            max-width: 100%;
+            margin-top: 1rem;
+        }
+        @media (min-width: 768px) {
+            #heroFeaturedMovieCard {
+                grid-template-columns: 300px 1fr;
+                max-width: 42rem;
+            }
+        }
+        #heroFeaturedMovieCard .poster-side {
+            position: relative;
+        }
+        #heroFeaturedMovieCard .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        #heroFeaturedMovieCard .info-side {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #heroFeaturedMovieCard .movie-title {
+            font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        #heroFeaturedMovieCard .meta-info {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        #heroFeaturedMovieCard .meta-info span {
+            margin-right: 1rem;
+        }
+        #heroFeaturedMovieCard .overview {
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 1.25rem;
+        }
+        #heroFeaturedMovieCard .cast-list {
+            margin-bottom: 1rem;
+        }
+        #heroFeaturedMovieCard .cast-title {
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        #heroFeaturedMovieCard .actors {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        #heroFeaturedMovieCard .hero-feature-action {
+            border: 1px solid rgba(56, 189, 248, 0.24);
+            background: rgba(56, 189, 248, 0.14);
+            color: #ffffff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-align: center;
+            transition: background-color 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+        }
+        #heroFeaturedMovieCard .hero-feature-action:hover {
+            background: rgba(56, 189, 248, 0.24);
+            transform: translateY(-1px);
+        }
     </style>
 
     <!-- Skeleton loading styles -->
@@ -688,6 +773,27 @@
                                     <source src="" type="video/mp4">
                                 </video>
                             </div>
+
+                            <div id="heroFeaturedMovieCard" class="grid">
+                                <a id="heroFeaturedMovieLink" href="./Download.html" class="poster-side" aria-label="Open featured movie details">
+                                    <img id="heroFeaturedMoviePoster" class="movie-poster" src="./assets/logo.png" alt="Featured movie poster">
+                                </a>
+                                <div class="info-side">
+                                    <div>
+                                        <h2 class="movie-title hero-feature-title">Featured Movie</h2>
+                                        <div class="meta-info">
+                                            <span class="hero-feature-genre">Featured</span>
+                                            <span class="hero-feature-year">2026</span>
+                                        </div>
+                                        <p class="overview hero-feature-overview">Click the poster to view the full download page with image, cast, metadata and more details.</p>
+                                        <div class="cast-list">
+                                            <div class="cast-title">Cast</div>
+                                            <div class="actors hero-feature-cast">Ava Brooks, Noah Reed, Mia Chen</div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="hero-feature-action" id="heroFeaturedMovieButton">View full movie details</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2.5">
                             <a href="./Download.html" class="rounded-full bg-blue-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-lg transition hover:bg-blue-400 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">Watch Now</a>
@@ -729,9 +835,6 @@
                 <video id="trailerVideo" class="h-full w-full max-h-screen max-w-screen object-contain bg-black" autoplay muted controls preload="auto" playsinline poster="">
                     <source src="" type="video/mp4">
                 </video>
-                <div id="trailerEmbedContainer" class="hidden h-full w-full bg-black">
-                    <iframe id="trailerEmbed" class="h-full w-full" src="" title="Featured trailer player" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-                </div>
             </div>
         </div>
     </div>
@@ -951,6 +1054,59 @@
                     cast: [{ name: 'Ava Brooks', character: 'Lead' }, { name: 'Noah Reed', character: 'Supporting' }]
                 }
             };
+        }
+
+        function setupHeroFeaturedMovieCard() {
+            const card = document.getElementById('heroFeaturedMovieCard');
+            if (!card) return;
+
+            const preview = {
+                title: 'NetChill Premiere',
+                overview: 'Featured on the slideshow — click the poster to open the full download page with cast, metadata, and movie details.',
+                release_date: new Date().toISOString(),
+                genre: 'Featured',
+                poster_path: './assets/logo.png',
+                backdrop_path: './assets/logo.png',
+                credits: {
+                    cast: [
+                        { name: 'Ava Brooks', character: 'Lead' },
+                        { name: 'Noah Reed', character: 'Supporting' },
+                        { name: 'Mia Chen', character: 'Director' }
+                    ]
+                }
+            };
+
+            const titleEl = card.querySelector('.hero-feature-title');
+            const overviewEl = card.querySelector('.hero-feature-overview');
+            const castEl = card.querySelector('.hero-feature-cast');
+            const yearEl = card.querySelector('.hero-feature-year');
+            const posterEl = card.querySelector('.hero-feature-poster');
+            const buttonEl = card.querySelector('#heroFeaturedMovieButton');
+            const linkEl = card.querySelector('#heroFeaturedMovieLink');
+
+            if (titleEl) titleEl.textContent = preview.title;
+            if (overviewEl) overviewEl.textContent = preview.overview;
+            if (castEl) castEl.textContent = preview.credits.cast.map((item) => `${item.name} as ${item.character}`).join(', ');
+            if (yearEl) yearEl.textContent = new Date(preview.release_date).getFullYear();
+            if (posterEl) {
+                posterEl.src = preview.poster_path;
+                posterEl.alt = preview.title;
+            }
+
+            const navigateToDownload = (event) => {
+                event.preventDefault();
+                try {
+                    sessionStorage.setItem('netchill_movie_preview', JSON.stringify(preview));
+                } catch (error) {
+                    console.warn('Unable to save movie preview', error);
+                }
+                window.location.href = `./Download.html?id=${createDownloadSlug(preview.title, 'featured-movie', 0)}&type=movie`;
+            };
+
+            card.classList.remove('hidden');
+            card.addEventListener('click', navigateToDownload);
+            if (buttonEl) buttonEl.addEventListener('click', navigateToDownload);
+            if (linkEl) linkEl.addEventListener('click', navigateToDownload);
         }
 
         function enhanceMovieCardDownloadLinks() {
@@ -1173,6 +1329,7 @@
 
             createSectionSidebarOverlay();
             attachSectionSidebarTriggers();
+            setupHeroFeaturedMovieCard();
 
             const menuSections = [
                 { id: 'english', title: 'English' },
