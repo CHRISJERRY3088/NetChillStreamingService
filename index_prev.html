@@ -124,92 +124,6 @@
             background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.24), transparent 30%),
                         linear-gradient(145deg, rgba(18, 26, 46, 0.98), rgba(6, 11, 22, 0.99));
         }
-        .netflix-movie-player-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 1.25rem 2rem;
-        }
-        .netflix-player-card {
-            border-radius: 1.75rem;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: linear-gradient(180deg, rgba(7, 11, 21, 0.95) 0%, rgba(5, 7, 12, 0.85) 100%);
-            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.30);
-        }
-        .netflix-player-card img {
-            width: 100%;
-            height: 460px;
-            object-fit: cover;
-            display: block;
-        }
-        .netflix-player-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(8, 9, 15, 0.12) 0%, rgba(5, 5, 10, 0.95) 55%, rgba(0, 0, 0, 0.92) 100%);
-        }
-        .netflix-player-content {
-            position: absolute;
-            left: 1.5rem;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            color: #f8fafc;
-            z-index: 2;
-        }
-        .netflix-player-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9999px;
-            background: rgba(220, 38, 38, 0.95);
-            color: white;
-            padding: 0.45rem 0.85rem;
-            font-size: 0.75rem;
-            font-weight: 900;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-        .netflix-player-title {
-            margin-top: 1rem;
-            font-size: clamp(2rem, 4vw, 4rem);
-            line-height: 0.95;
-            font-weight: 900;
-            letter-spacing: -0.05em;
-        }
-        .netflix-player-year {
-            margin-top: 0.7rem;
-            color: rgba(241, 245, 249, 0.82);
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .netflix-player-actions {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-        .netflix-player-button {
-            border-radius: 999px;
-            padding: 0.95rem 1.45rem;
-            font-size: 0.95rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-        .netflix-player-button:hover {
-            transform: translateY(-1px);
-        }
-        .netflix-player-button--play {
-            background: white;
-            color: #111827;
-        }
-        .netflix-player-button--info {
-            background: rgba(255, 255, 255, 0.16);
-            color: #f8fafc;
-        }
         .animation-card__thumb,
         .movie-flex-card img,
         .section-sidebar-card img,
@@ -700,6 +614,91 @@
         .site-nav .logo-img{
             filter: drop-shadow(0 6px 18px rgba(59,130,246,0.12));
         }
+
+        /* Hero featured movie card styles */
+        #heroFeaturedMovieCard {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            background-color: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(18px);
+            width: 100%;
+            max-width: 100%;
+            margin-top: 1rem;
+        }
+        @media (min-width: 768px) {
+            #heroFeaturedMovieCard {
+                grid-template-columns: 300px 1fr;
+                max-width: 42rem;
+            }
+        }
+        #heroFeaturedMovieCard .poster-side {
+            position: relative;
+        }
+        #heroFeaturedMovieCard .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        #heroFeaturedMovieCard .info-side {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #heroFeaturedMovieCard .movie-title {
+            font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+        #heroFeaturedMovieCard .meta-info {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        #heroFeaturedMovieCard .meta-info span {
+            margin-right: 1rem;
+        }
+        #heroFeaturedMovieCard .overview {
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 1.25rem;
+        }
+        #heroFeaturedMovieCard .cast-list {
+            margin-bottom: 1rem;
+        }
+        #heroFeaturedMovieCard .cast-title {
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        #heroFeaturedMovieCard .actors {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        #heroFeaturedMovieCard .hero-feature-action {
+            border: 1px solid rgba(56, 189, 248, 0.24);
+            background: rgba(56, 189, 248, 0.14);
+            color: #ffffff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-align: center;
+            transition: background-color 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+        }
+        #heroFeaturedMovieCard .hero-feature-action:hover {
+            background: rgba(56, 189, 248, 0.24);
+            transform: translateY(-1px);
+        }
     </style>
 
     <!-- Skeleton loading styles -->
@@ -737,7 +736,7 @@
                 <!-- Search bar: visible on small screens and up -->
                 <div class="items-center flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
                     <div class="search-shell w-full">
-                        <input id="movieSearchInput" type="text" placeholder="Search content..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
+                        <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
                     <span class="search-icon material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
@@ -775,6 +774,26 @@
                                 </video>
                             </div>
 
+                            <div id="heroFeaturedMovieCard" class="grid">
+                                <a id="heroFeaturedMovieLink" href="./Download.html" class="poster-side" aria-label="Open featured movie details">
+                                    <img id="heroFeaturedMoviePoster" class="movie-poster" src="./assets/logo.png" alt="Featured movie poster">
+                                </a>
+                                <div class="info-side">
+                                    <div>
+                                        <h2 class="movie-title hero-feature-title">Featured Movie</h2>
+                                        <div class="meta-info">
+                                            <span class="hero-feature-genre">Featured</span>
+                                            <span class="hero-feature-year">2026</span>
+                                        </div>
+                                        <p class="overview hero-feature-overview">Click the poster to view the full download page with image, cast, metadata and more details.</p>
+                                        <div class="cast-list">
+                                            <div class="cast-title">Cast</div>
+                                            <div class="actors hero-feature-cast">Ava Brooks, Noah Reed, Mia Chen</div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="hero-feature-action" id="heroFeaturedMovieButton">View full movie details</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="mt-2.5 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2.5">
                             <a href="./Download.html" class="rounded-full bg-blue-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-lg transition hover:bg-blue-400 sm:px-4 sm:py-2 sm:text-xs lg:px-5 lg:py-2.5 lg:text-sm">Watch Now</a>
@@ -801,7 +820,7 @@
                     <p class="text-[10px] uppercase tracking-[0.25em] text-blue-300 sm:text-sm">Featured trailers</p>
                     <h2 class="mt-2 text-xl font-bold text-white sm:text-3xl lg:text-4xl">Watch five top trailers now</h2>
                 </div>
-                <p class="max-w-xl text-xs leading-relaxed text-slate-400 sm:text-sm">These curated trailers are presented directly in the gallery for fast preview and playback.</p>
+                <p class="max-w-xl text-xs leading-relaxed text-slate-400 sm:text-sm">These picks are loaded from the movie API and show the cover image with a trailer preview action.</p>
             </div>
             <div id="trailerCards" class="mt-5 grid grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"></div>
         </div>
@@ -949,14 +968,6 @@
         </div>
     </div>
 
-    <div id="player" class="netflix-movie-player-container">
-        <div class="netflix-player-card" aria-label="Trending movie player card">
-            <div class="relative h-[460px] w-full bg-slate-900/80">
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400">Loading trending movie...</div>
-            </div>
-        </div>
-    </div>
-
     <div id="menuContainers"></div>
 
     <script>
@@ -1043,6 +1054,137 @@
                     cast: [{ name: 'Ava Brooks', character: 'Lead' }, { name: 'Noah Reed', character: 'Supporting' }]
                 }
             };
+        }
+
+        function setupHeroFeaturedMovieCard() {
+            const card = document.getElementById('heroFeaturedMovieCard');
+            const slideshow = document.getElementById('slideshow-bg');
+            const badgeEl = document.getElementById('slide-badge');
+            const subtitleEl = document.getElementById('slide-subtitle');
+            const titleEl = card?.querySelector('.hero-feature-title');
+            const overviewEl = card?.querySelector('.hero-feature-overview');
+            const castEl = card?.querySelector('.hero-feature-cast');
+            const yearEl = card?.querySelector('.hero-feature-year');
+            const genreEl = card?.querySelector('.hero-feature-genre');
+            const posterEl = document.getElementById('heroFeaturedMoviePoster');
+            const buttonEl = card?.querySelector('#heroFeaturedMovieButton');
+            const linkEl = card?.querySelector('#heroFeaturedMovieLink');
+            const prevButton = document.getElementById('slideshowPrevButton');
+            const nextButton = document.getElementById('slideshowNextButton');
+
+            if (!card || !slideshow) return;
+
+            const slides = [
+                {
+                    title: 'NetChill Premiere',
+                    overview: 'Featured on the slideshow — click the poster to open the full download page with cast, metadata, and movie details.',
+                    release_date: new Date().toISOString(),
+                    genre: 'Featured',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Ava Brooks', character: 'Lead' },
+                            { name: 'Noah Reed', character: 'Supporting' },
+                            { name: 'Mia Chen', character: 'Director' }
+                        ]
+                    }
+                },
+                {
+                    title: 'Midnight Action',
+                    overview: 'A powered-up action pick with bold energy, rich visuals, and a full download experience waiting behind the poster.',
+                    release_date: '2024-04-12T00:00:00.000Z',
+                    genre: 'Action',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Leo Cruz', character: 'Lead' },
+                            { name: 'Nia Hart', character: 'Co-star' }
+                        ]
+                    }
+                },
+                {
+                    title: 'Galaxy Nights',
+                    overview: 'A cinematic sci-fi highlight that rotates into view with title, metadata, and cast details for the download page.',
+                    release_date: '2025-01-20T00:00:00.000Z',
+                    genre: 'Sci-Fi',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Rina Moss', character: 'Lead' },
+                            { name: 'Drew Bell', character: 'Supporting' }
+                        ]
+                    }
+                }
+            ];
+
+            let currentIndex = 0;
+            let autoplayTimer = null;
+
+            function renderSlide(index) {
+                const preview = slides[index] || slides[0];
+                if (!preview) return;
+
+                if (titleEl) titleEl.textContent = preview.title;
+                if (overviewEl) overviewEl.textContent = preview.overview;
+                if (castEl) castEl.textContent = preview.credits.cast.map((item) => `${item.name} as ${item.character}`).join(', ');
+                if (yearEl) yearEl.textContent = new Date(preview.release_date).getFullYear();
+                if (genreEl) genreEl.textContent = preview.genre;
+                if (posterEl) {
+                    posterEl.src = preview.poster_path;
+                    posterEl.alt = preview.title;
+                }
+                if (badgeEl) badgeEl.textContent = `Now Showing • ${preview.genre}`;
+                if (subtitleEl) subtitleEl.textContent = preview.overview;
+
+                if (slideshow) {
+                    slideshow.style.backgroundImage = `linear-gradient(90deg, rgba(0,0,0,0.8), rgba(2,6,23,0.55)), url('${preview.poster_path}')`;
+                    slideshow.style.backgroundSize = 'cover';
+                    slideshow.style.backgroundPosition = 'center';
+                }
+            }
+
+            function showSlide(index) {
+                currentIndex = (index + slides.length) % slides.length;
+                renderSlide(currentIndex);
+            }
+
+            function startAutoRotation() {
+                clearInterval(autoplayTimer);
+                autoplayTimer = setInterval(() => {
+                    showSlide(currentIndex + 1);
+                }, 6000);
+            }
+
+            const navigateToDownload = (event) => {
+                const preview = slides[currentIndex] || slides[0];
+                if (!preview) return;
+                event.preventDefault();
+                try {
+                    sessionStorage.setItem('netchill_movie_preview', JSON.stringify(preview));
+                } catch (error) {
+                    console.warn('Unable to save movie preview', error);
+                }
+                window.location.href = `./Download.html?id=${createDownloadSlug(preview.title, 'featured-movie', 0)}&type=movie`;
+            };
+
+            prevButton?.addEventListener('click', () => {
+                showSlide(currentIndex - 1);
+                startAutoRotation();
+            });
+            nextButton?.addEventListener('click', () => {
+                showSlide(currentIndex + 1);
+                startAutoRotation();
+            });
+
+            card.addEventListener('click', navigateToDownload);
+            if (buttonEl) buttonEl.addEventListener('click', navigateToDownload);
+            if (linkEl) linkEl.addEventListener('click', navigateToDownload);
+
+            renderSlide(0);
+            startAutoRotation();
         }
 
         function enhanceMovieCardDownloadLinks() {
@@ -1265,6 +1407,7 @@
 
             createSectionSidebarOverlay();
             attachSectionSidebarTriggers();
+            setupHeroFeaturedMovieCard();
 
             const menuSections = [
                 { id: 'english', title: 'English' },
@@ -1352,11 +1495,11 @@
                 }
             }
 
-            function getMovieCardsForSection(sectionIndex, moviePool = [], maxCards = 3) {
+            function getMovieCardsForSection(sectionIndex, moviePool = []) {
                 const pool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : [];
                 if (!pool.length) return [];
 
-                return Array.from({ length: Math.min(maxCards, pool.length) }, (_, cardIndex) => {
+                return Array.from({ length: Math.min(3, pool.length) }, (_, cardIndex) => {
                     const sourceMovie = pool[(sectionIndex * 3 + cardIndex) % pool.length];
                     return {
                         id: sourceMovie?.id || '',
@@ -1364,10 +1507,7 @@
                         subtitle: sourceMovie?.subtitle || sourceMovie?.overview || '',
                         poster_path: sourceMovie?.poster_path || sourceMovie?.poster || sourceMovie?.image || '',
                         overview: sourceMovie?.overview || '',
-                        release_date: sourceMovie?.release_date || sourceMovie?.release_date || '',
-                        vote_average: sourceMovie?.vote_average ?? sourceMovie?.rating ?? null,
-                        genres: sourceMovie?.genres || sourceMovie?.genre || [],
-                        credits: sourceMovie?.credits || { cast: [] },
+                        release_date: sourceMovie?.release_date || '',
                     };
                 });
             }
@@ -1399,130 +1539,19 @@
                 `;
             }
 
-            function createTrendingMovieCard(movie, sectionTitle) {
-                const posterSrc = resolveMoviePoster(movie.poster_path || movie.poster || movie.image || '', movie.title || sectionTitle || 'Featured Movie');
-                const movieJson = JSON.stringify(movie).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                const sectionJson = JSON.stringify(sectionTitle).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                const releaseYear = movie?.release_date ? new Date(movie.release_date).getFullYear() : (movie?.year || 'N/A');
-                const rating = movie?.vote_average ? Number(movie.vote_average).toFixed(1) : 'N/A';
-                const overview = movie?.overview || movie?.subtitle || 'A premium movie experience is ready to stream.';
-
-                return `
-                    <article class="animation-card trending-movie-card">
-                        <div class="trending-poster">
-                            ${posterSrc ? `<img src="${posterSrc}" alt="${movie.title} poster" loading="lazy" />` : `<div class="trending-poster-fallback">${movie.title}</div>`}
-                            <span class="trending-rating-badge">★ ${rating}</span>
-                        </div>
-                        <div class="trending-details">
-                            <div>
-                                <h2 class="trending-title">${movie.title}</h2>
-                                <div class="trending-meta-tags">
-                                    <span>📅 ${releaseYear}</span>
-                                    <span>⭐ ${rating}</span>
-                                </div>
-                                <p class="trending-overview">${overview}</p>
-                            </div>
-                            <button type="button" class="trending-watch-button" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">Watch</button>
-                        </div>
-                    </article>
-                `;
-            }
-
-            function createTrendingMovieSpotlightMarkup() {
-                const spotlightMovie = {
-                    title: 'NetChill Premiere',
-                    subtitle: 'Now streaming with full cast and metadata',
-                    overview: 'A featured movie spotlight that opens the download page with poster, cast, and movie details.',
-                    release_date: new Date().toISOString(),
-                    genre: 'Featured',
-                    poster_path: './assets/logo.png',
-                    poster: './assets/logo.png',
-                    image: './assets/logo.png'
-                };
-                const spotlightJson = JSON.stringify(spotlightMovie).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                const sectionJson = JSON.stringify('Trending Movies').replace(/</g, '\u003c').replace(/'/g, "\\'");
-
-                return `
-                    <div class="mb-4 overflow-hidden rounded-[1.4rem] border border-white/10 bg-slate-900/80 shadow-[0_18px_60px_rgba(0,0,0,0.24)]">
-                        <div class="grid gap-0 md:grid-cols-[220px_1fr]">
-                            <a href="./Download.html" class="block h-full" onclick="event.preventDefault(); window.openSectionMoviePreview(${spotlightJson}, ${sectionJson});">
-                                <img src="./assets/logo.png" alt="NetChill Premiere poster" class="h-full w-full object-cover" loading="lazy">
-                            </a>
-                            <div class="flex flex-col justify-between p-4 sm:p-5">
-                                <div>
-                                    <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-blue-300">Trending Spotlight</p>
-                                    <h3 class="mt-2 text-xl font-black text-white">NetChill Premiere</h3>
-                                    <p class="mt-2 text-sm text-slate-300">A featured movie spotlight that opens the download page with the poster, cast, metadata, and more details.</p>
-                                </div>
-                                <button type="button" class="mt-4 w-fit rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${spotlightJson}, ${sectionJson});">Watch Now</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            function getSectionMoviePoolForContainer(section) {
-                if (section?.id === 'trendingMovies') {
-                    return [
-                        {
-                            id: 'static-trending-premiere',
-                            title: 'NetChill Premiere',
-                            subtitle: 'Featured release',
-                            overview: 'A featured movie spotlight curated for the trending section.',
-                            release_date: '2024-01-01',
-                            vote_average: 8.8,
-                            poster_path: './assets/logo.png',
-                            poster: './assets/logo.png',
-                            image: './assets/logo.png',
-                            genre: 'Featured',
-                        },
-                        {
-                            id: 'static-trending-classics',
-                            title: 'Cinematic Classics',
-                            subtitle: 'Timeless favorites',
-                            overview: 'A curated line-up of crowd-pleasing movies.',
-                            release_date: '2023-01-01',
-                            vote_average: 8.4,
-                            poster_path: './assets/logo.png',
-                            poster: './assets/logo.png',
-                            image: './assets/logo.png',
-                            genre: 'Classic',
-                        },
-                        {
-                            id: 'static-trending-watchlist',
-                            title: 'Weekend Watchlist',
-                            subtitle: 'Fresh arrivals',
-                            overview: 'Newly featured titles for your next binge.',
-                            release_date: '2025-01-01',
-                            vote_average: 8.2,
-                            poster_path: './assets/logo.png',
-                            poster: './assets/logo.png',
-                            image: './assets/logo.png',
-                            genre: 'New',
-                        },
-                    ];
-                }
-
-                return [];
-            }
-
             function createMenuSection(section, index, moviePool = []) {
-                const cardLimit = 3;
-                const resolvedPool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : getSectionMoviePoolForContainer(section);
-                const movies = getMovieCardsForSection(index, resolvedPool, cardLimit);
+                const movies = getMovieCardsForSection(index, moviePool);
                 const cardsMarkup = movies.length
                     ? movies.map((movie) => createMovieCard(movie, section.title)).join('')
-                    : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available for this section right now.</div>';
-                const spotlightMarkup = '';
+                    : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available from the API right now.</div>';
 
                 return `
-                    <section id="${section.id}" class="section-shell relative" data-section-title="${section.title}" data-section-movies='${JSON.stringify(movies).replace(/</g, '\u003c').replace(/'/g, "\\'")}'>
+                    <section id="${section.id}" class="section-shell relative" data-section-title="${section.title}" data-section-movies='${JSON.stringify(movies).replace(/</g, '\\u003c').replace(/'/g, "\\'")}'>
                         <div class="section-shell__header">
                             <h2 class="text-2xl font-black uppercase tracking-tighter text-blue-500">${section.title}</h2>
                             <button class="section-shell__button">See All</button>
                         </div>
                         <div class="relative">
-                            ${spotlightMarkup}
                             <div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
                                 <div class="animation-carousel gap-2 sm:gap-3">
                                     ${cardsMarkup}
@@ -1539,15 +1568,44 @@
                 `;
             }
 
+            async function ensureMoviesApiReady() {
+                const start = Date.now();
+                while (!window.moviesAPI?.getTrending) {
+                    if (Date.now() - start > 5000) {
+                        throw new Error('Movies API did not become available in time.');
+                    }
+                    await new Promise((resolve) => setTimeout(resolve, 50));
+                }
+            }
+
             async function renderMenuContainers() {
                 const container = document.getElementById('menuContainers');
                 if (!container) return;
 
-                container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index)).join('');
+                container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index, [])).join('');
+
+                try {
+                    const sectionResults = await Promise.allSettled(menuSections.map(async (section) => {
+                        const results = await Promise.race([
+                            fetchMoviesForSection(section),
+                            new Promise((resolve) => setTimeout(() => resolve([]), 1200)),
+                        ]);
+                        return { section, results };
+                    }));
+
+                    const resolvedSections = sectionResults
+                        .filter((result) => result.status === 'fulfilled' && result.value)
+                        .map((result) => result.value);
+
+                    if (resolvedSections.length) {
+                        container.innerHTML = resolvedSections.map(({ section, results }) => createMenuSection(section, sectionResults.findIndex((entry) => entry.status === 'fulfilled' && entry.value?.section?.id === section.id), results)).join('');
+                    }
+                } catch (error) {
+                    console.warn('Unable to load featured movies from RapidAPI', error);
+                }
             }
 
             await renderMenuContainers();
-            await renderTrendingPlayerCard();
             enhanceMovieCardDownloadLinks();
             observeMovieCardLinkUpdates();
 
@@ -1559,51 +1617,6 @@
                     }
                 });
             });
-
-            async function renderTrendingPlayerCard() {
-                const playerContainer = document.getElementById('player');
-                if (!playerContainer || typeof window.moviesAPI?.getTrending !== 'function') return;
-
-                try {
-                    await ensureMoviesApiReady();
-                    const response = await window.moviesAPI.getTrending();
-                    const movie = Array.isArray(response?.results) && response.results.length ? response.results[0] : null;
-                    if (!movie) {
-                        playerContainer.innerHTML = `<div class="netflix-player-card rounded-[1.75rem] border border-white/10 bg-slate-900/95 p-6 text-sm text-slate-300">No trending movie data is available right now.</div>`;
-                        return;
-                    }
-
-                    const normalized = normalizeMovie(movie, 'Trending Movie');
-                    const poster = resolveMoviePoster(normalized.poster_path || normalized.poster || normalized.image || '', normalized.title);
-                    const movieDataJson = JSON.stringify(normalized).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                    const releaseYear = normalized.release_date ? new Date(normalized.release_date).getFullYear() : (normalized.year || 'N/A');
-
-                    playerContainer.innerHTML = `
-                        <div class="netflix-player-card relative overflow-hidden rounded-[1.75rem]">
-                            ${poster ? `<img src="${poster}" alt="${normalized.title} poster" class="h-[460px] w-full object-cover" />` : `<div class="h-[460px] w-full bg-slate-800"></div>`}
-                            <div class="netflix-player-overlay"></div>
-                            <div class="netflix-player-content">
-                                <span class="netflix-player-badge">Trending Now</span>
-                                <h1 class="netflix-player-title">${normalized.title}</h1>
-                                <p class="netflix-player-year">${releaseYear}</p>
-                                <div class="netflix-player-actions">
-                                    <button type="button" class="netflix-player-button netflix-player-button--play" onclick='openSectionMoviePreview(${movieDataJson}, "Trending Movies")'>
-                                        <span class="material-symbols-outlined">play_arrow</span>
-                                        Play
-                                    </button>
-                                    <button type="button" class="netflix-player-button netflix-player-button--info" onclick='openSectionMoviePreview(${movieDataJson}, "Trending Movies")'>
-                                        <span class="material-symbols-outlined">info</span>
-                                        Details
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } catch (error) {
-                    console.error('renderTrendingPlayerCard error:', error);
-                    playerContainer.innerHTML = `<div class="netflix-player-card rounded-[1.75rem] border border-white/10 bg-slate-900/95 p-6 text-sm text-slate-300">Unable to load trending movie data.</div>`;
-                }
-            }
 
             document.querySelectorAll('.animation-carousel-wrapper').forEach((wrapper) => {
                 const root = wrapper.closest('.relative') || wrapper.parentElement;
