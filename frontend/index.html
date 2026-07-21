@@ -49,6 +49,18 @@
     <link rel="stylesheet" href="./components/loading/loading.css">
 
     <style>
+        html, body {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+            min-height: 100% !important;
+        }
+
+        body {
+            position: relative;
+            overscroll-behavior-y: auto;
+        }
+
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
             width: 8px;
@@ -454,7 +466,11 @@
             display: none;
         }
 
-        .movie-flex-card {
+        .movie-flex-card,
+        .animation-card,
+        .section-sidebar-card,
+        .trailer-card,
+        .movie-card {
             flex: 0 0 min(220px, 78vw);
             max-width: 220px;
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.96));
@@ -466,7 +482,11 @@
             position: relative;
         }
 
-        .movie-flex-card:hover {
+        .movie-flex-card:hover,
+        .animation-card:hover,
+        .section-sidebar-card:hover,
+        .trailer-card:hover,
+        .movie-card:hover {
             transform: translateY(-6px) scale(1.05);
             box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.18), 0 24px 50px rgba(37, 99, 235, 0.24), 0 0 40px rgba(59, 130, 246, 0.16);
             border-color: rgba(96, 165, 250, 0.5);
@@ -485,7 +505,11 @@
             animation-play-state: paused;
         }
 
-        .movie-flex-card img {
+        .movie-flex-card img,
+        .animation-card img,
+        .section-sidebar-card img,
+        .trailer-card img,
+        .movie-card img {
             width: 100%;
             height: 300px;
             object-fit: cover;
@@ -493,11 +517,19 @@
             transition: transform 0.35s ease;
         }
 
-        .movie-flex-card:hover img {
+        .movie-flex-card:hover img,
+        .animation-card:hover img,
+        .section-sidebar-card:hover img,
+        .trailer-card:hover img,
+        .movie-card:hover img {
             transform: scale(1.04);
         }
 
-        .movie-flex-card::after {
+        .movie-flex-card::after,
+        .animation-card::after,
+        .section-sidebar-card::after,
+        .trailer-card::after,
+        .movie-card::after {
             content: "▶ Preview";
             position: absolute;
             inset: auto 0.7rem 0.7rem auto;
@@ -516,16 +548,28 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
 
-        .movie-flex-card:hover::after {
+        .movie-flex-card:hover::after,
+        .animation-card:hover::after,
+        .section-sidebar-card:hover::after,
+        .trailer-card:hover::after,
+        .movie-card:hover::after {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .movie-flex-card-body {
+        .movie-flex-card-body,
+        .animation-card__content,
+        .section-sidebar-card .animation-card__content,
+        .trailer-card-body,
+        .movie-card-body {
             padding: 1rem;
         }
 
-        .movie-flex-card-title {
+        .movie-flex-card-title,
+        .animation-card__title,
+        .section-sidebar-card .animation-card__title,
+        .trailer-card-title,
+        .movie-card-title {
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 0.35rem;
@@ -535,7 +579,9 @@
             text-overflow: ellipsis;
         }
 
-        .movie-flex-card-year {
+        .movie-flex-card-year,
+        .trailer-card-year,
+        .movie-card-year {
             color: #94a3b8;
             font-size: 0.9rem;
         }
@@ -674,26 +720,7 @@
         </div>
     </div>
 
-    <section id="movieSearchSection" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Movie Search</p>
-                    <h2 class="mt-2 text-3xl font-bold text-white">Find titles from OMDb</h2>
-                    <p class="max-w-xl text-sm text-slate-400">Search for a movie, then browse the results below.</p>
-                </div>
-                <div class="w-full max-w-lg">
-                    <div class="movie-flex-search-row">
-                        <input id="movieFlexSearchInput" class="movie-flex-search-input" type="text" value="Marvel" placeholder="Search for a movie (e.g., Batman)...">
-                        <button id="movieFlexSearchButton" class="movie-flex-search-button" type="button">Search</button>
-                    </div>
-                </div>
-            </div>
-            <div id="movieFlexLoader" class="movie-flex-loader" style="display: none;"></div>
-            <div id="movieFlexStatus" class="movie-flex-status"></div>
-            <div id="movieFlexGrid" class="movie-flex-grid"></div>
-        </div>
-    </section>
+    <!-- Movie search (OMDb) section removed per request -->
 
     <section id="trailerGallery" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
@@ -916,6 +943,8 @@
             html.style.overflow = shouldLock ? 'hidden' : 'auto';
             html.style.overflowY = shouldLock ? 'hidden' : 'auto';
             body.classList.toggle('overflow-y-auto', !shouldLock);
+            body.classList.remove('overflow-hidden', 'overflow-y-hidden');
+            html.classList.remove('overflow-hidden', 'overflow-y-hidden');
         }
 
         function createDownloadSlug(title, fallback = 'featured-movie', index = 0) {
@@ -1240,6 +1269,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             setOverlayLock(false);
+            setTimeout(() => setOverlayLock(false), 150);
             attachMovieSearch('movieSearchInput', 'movieSearchDropdown');
             attachMovieSearch('sidebarMovieSearchInput', 'sidebarMovieSearchDropdown');
             attachMovieFlexSearch();

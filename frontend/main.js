@@ -95,7 +95,7 @@ function renderTrailerCards(trailers) {
     const buttonLabel = playable ? buttonText : `${buttonText} (Open)`;
 
     return `
-      <article class="group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/90 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
+      <article class="trailer-card group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/90 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
         <div class="relative h-52 bg-cover bg-center" style="background-image: ${image};">
           <div class="absolute inset-0 bg-black/30"></div>
           <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
