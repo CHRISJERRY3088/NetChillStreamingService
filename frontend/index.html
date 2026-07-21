@@ -575,7 +575,7 @@
                     <div class="search-shell w-full">
                         <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                     </div>
-                    <span class="material-symbols-outlined absolute right-3 top-1/3 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
                     <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
                 </div>
 
@@ -629,16 +629,16 @@
         </div>
     </div>
 
-    <section id="trailerGallery" class="mx-auto mt-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="rounded-[2rem] border border-white/10 bg-slate-900/95 p-6 shadow-2xl backdrop-blur-xl">
-            <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.3em] text-blue-300">Featured trailers</p>
-                    <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Watch five top trailers now</h2>
+    <section id="trailerGallery" class="mx-auto mt-8 w-full max-w-7xl px-3 sm:mt-10 sm:px-6 lg:px-8">
+        <div class="rounded-[1.5rem] border border-white/10 bg-slate-900/95 p-3 shadow-2xl backdrop-blur-xl sm:rounded-[2rem] sm:p-6">
+            <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                <div class="min-w-0">
+                    <p class="text-[10px] uppercase tracking-[0.25em] text-blue-300 sm:text-sm">Featured trailers</p>
+                    <h2 class="mt-2 text-xl font-bold text-white sm:text-3xl lg:text-4xl">Watch five top trailers now</h2>
                 </div>
-                <p class="max-w-xl text-sm text-slate-400">These picks are loaded from the movie API and show the cover image with a trailer preview action.</p>
+                <p class="max-w-xl text-xs leading-relaxed text-slate-400 sm:text-sm">These picks are loaded from the movie API and show the cover image with a trailer preview action.</p>
             </div>
-            <div id="trailerCards" class="mt-8 grid gap-4 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7"></div>
+            <div id="trailerCards" class="mt-5 grid grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5"></div>
         </div>
     </section>
 
