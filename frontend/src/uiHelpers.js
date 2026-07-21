@@ -32,12 +32,22 @@
     }
   }
 
+  function isAccountLikeUser(user) {
+    if (!user || typeof user !== 'object') return false;
+    return Boolean(user.id || user.email || user.user?.id || user.user?.email || user.user_metadata?.email || user.metadata?.email);
+  }
+
   function hasStoredUser(storage = root.localStorage) {
-    return Boolean(getStoredUser(storage));
+    const user = getStoredUser(storage);
+    return isAccountLikeUser(user);
   }
 
   function getAuthDestination(storage = root.localStorage) {
     return hasStoredUser(storage) ? './dashboard.html' : './login.html';
+  }
+
+  function getLogoutDestination(storage = root.localStorage) {
+    return './login.html';
   }
 
   function navigateToAuthDestination(storage = root.localStorage) {
@@ -67,6 +77,7 @@
     getStoredUser,
     hasStoredUser,
     getAuthDestination,
+    getLogoutDestination,
     navigateToAuthDestination,
     getMovieSuggestions,
   };

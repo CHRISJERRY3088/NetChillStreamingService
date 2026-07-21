@@ -219,8 +219,8 @@
             } catch (error) {
                 console.warn('Profile load failed, using cached profile if available:', error);
                 const cachedUser = authStorage.getUser();
-                if (!cachedUser) {
-                    window.location.href = './login.html';
+                if (!cachedUser || !authStorage.isLoggedIn()) {
+                    window.location.assign('./login.html');
                     return;
                 }
                 displayProfile(cachedUser);
@@ -425,13 +425,11 @@
 
         async function logout() {
             try {
-                await authAPI.logout();
-                authStorage.logout();
-                window.location.href = './login.html';
+                await authAPI.logoutAndRedirect();
             } catch (error) {
                 console.error('Logout error:', error);
-                // Still redirect even if API call fails
-                window.location.href = './login.html';
+                authStorage.logout();
+                window.location.assign('./index.html');
             }
         }
 

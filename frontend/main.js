@@ -17,11 +17,15 @@ const subtitleElements = Array.from(document.querySelectorAll('#slide-subtitle')
 const prevButton = document.getElementById('slideshowPrevButton');
 const nextButton = document.getElementById('slideshowNextButton');
 const trailerButton = document.getElementById('trailerButton');
+const heroTrailerPreviewButton = document.getElementById('heroTrailerPreview');
 const trailerModal = document.getElementById('trailerModal');
 const closeTrailerModalButton = document.getElementById('closeTrailerModal');
 const trailerVideo = document.getElementById('trailerVideo');
+const trailerEmbed = document.getElementById('trailerEmbed');
+const trailerEmbedContainer = document.getElementById('trailerEmbedContainer');
 const heroAutoTrailer = document.getElementById('heroAutoTrailer');
 const AUTO_PLAY_SECONDS = 15;
+const DEFAULT_FEATURED_EMBED_URL = 'https://vidsrc.to/embed/movie/823219';
 let trailerAutoPlayTimer = null;
 const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribute('src') || '';
 const localTrailerVideoPath = '';
@@ -165,6 +169,28 @@ function setTrailerVideoSource(videoUrl) {
   trailerVideo.load();
 }
 
+function isIframePlayerUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const normalized = url.trim().toLowerCase();
+  return normalized.includes('/embed/') || normalized.includes('youtube.com/embed') || normalized.includes('player.vimeo.com');
+}
+
+function setTrailerPlayerMode(url) {
+  if (!trailerVideo || !trailerEmbed || !trailerEmbedContainer) return;
+
+  if (isIframePlayerUrl(url)) {
+    trailerEmbedContainer.classList.remove('hidden');
+    trailerVideo.classList.add('hidden');
+    trailerEmbed.setAttribute('src', url);
+    trailerVideo.pause?.();
+    return;
+  }
+
+  trailerEmbedContainer.classList.add('hidden');
+  trailerEmbed.removeAttribute('src');
+  trailerVideo.classList.remove('hidden');
+}
+
 function updateHeroTrailerSource(url) {
   if (!heroAutoTrailer) return;
   const heroSource = heroAutoTrailer.querySelector('source');
@@ -196,14 +222,17 @@ async function openTrailerModal(videoUrl = null) {
   trailerModal.classList.add('flex');
   document.body.classList.add('overflow-hidden');
 
-  if (trailerVideo) {
-    const nextVideoUrl = videoUrl || currentTrailerUrl || trailerVideoDefaultSrc;
+  const selectedPlayerUrl = videoUrl || currentTrailerUrl || DEFAULT_FEATURED_EMBED_URL;
+  setTrailerPlayerMode(selectedPlayerUrl);
+
+  if (trailerVideo && !isIframePlayerUrl(selectedPlayerUrl)) {
+    const nextVideoUrl = selectedPlayerUrl || trailerVideoDefaultSrc;
     setTrailerVideoSource(nextVideoUrl);
     trailerVideo.currentTime = 0;
     trailerVideo.muted = true;
     trailerVideo.autoplay = true;
     trailerVideo.playsInline = true;
-    
+
     try {
       if (document.fullscreenElement !== trailerModal) {
         await trailerModal.requestFullscreen?.();
@@ -211,7 +240,7 @@ async function openTrailerModal(videoUrl = null) {
     } catch (error) {
       console.warn('Fullscreen request failed', error);
     }
-    
+
     // Wait a tick for the DOM to fully update before attempting play
     setTimeout(() => {
       trailerVideo.play().catch((error) => {
@@ -221,6 +250,15 @@ async function openTrailerModal(videoUrl = null) {
         }, 500);
       });
     }, 100);
+    return;
+  }
+
+  try {
+    if (document.fullscreenElement !== trailerModal) {
+      await trailerModal.requestFullscreen?.();
+    }
+  } catch (error) {
+    console.warn('Fullscreen request failed', error);
   }
 }
 
@@ -237,6 +275,15 @@ function closeTrailerModal() {
     trailerVideo.pause();
     trailerVideo.currentTime = 0;
     setTrailerVideoSource(trailerVideoDefaultSrc);
+  }
+  if (trailerEmbed) {
+    trailerEmbed.removeAttribute('src');
+  }
+  if (trailerEmbedContainer) {
+    trailerEmbedContainer.classList.add('hidden');
+  }
+  if (trailerVideo) {
+    trailerVideo.classList.remove('hidden');
   }
 }
 
@@ -280,7 +327,7 @@ function autoplayTrailerFromHexVideo() {
 function updateSlide(index) {
   if (!bgElement) return;
   const slide = slides[index];
-  bgElement.style.backgroundImage = slide.image;
+  bgElement.style.backgroundImage = 'none';
 
   if (captionElement) {
     const eyebrow = captionElement.querySelector('p');
@@ -332,7 +379,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (trailerButton) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
-      openTrailerModal(resolveTrailerVideoUrl() || currentTrailerUrl);
+      openTrailerModal(resolveTrailerVideoUrl() || currentTrailerUrl || DEFAULT_FEATURED_EMBED_URL);
+    });
+  }
+
+  if (heroTrailerPreviewButton) {
+    heroTrailerPreviewButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      openTrailerModal(DEFAULT_FEATURED_EMBED_URL);
+    });
+  }
+
+  if (heroAutoTrailer) {
+    heroAutoTrailer.addEventListener('click', (event) => {
+      event.preventDefault();
+      openTrailerModal(DEFAULT_FEATURED_EMBED_URL);
     });
   }
 
