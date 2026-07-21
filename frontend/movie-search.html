@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: #000000;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .search-box {
+            padding: 10px;
+            width: 60%;
+            max-width: 400px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            padding: 10px 20px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background-color: #1f1f1f;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-year {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .status-message {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 50px;
+            color: #aaa;
+            width: 100%;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e50914;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>MovieFlex</h1>
+        <div style="margin-top: 15px;">
+            <input type="text" id="search-input" class="search-box" placeholder="Search for a movie (e.g., Batman)..." value="Marvel">
+            <button id="search-button" class="search-btn">Search</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="loader" class="loader" style="display: none;"></div>
+        <div id="status" class="status-message"></div>
+        <main id="movies-grid" class="movies-grid"></main>
+    </div>
+
+    <script>
+        const API_KEY = 'c9f58fa4';
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const moviesGrid = document.getElementById('movies-grid');
+        const loader = document.getElementById('loader');
+        const statusDiv = document.getElementById('status');
+
+        async function fetchMovies(query) {
+            loader.style.display = 'block';
+            moviesGrid.innerHTML = '';
+            statusDiv.textContent = '';
+
+            try {
+                const response = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                if (data?.Response === 'True' && Array.isArray(data.Search) && data.Search.length > 0) {
+                    renderMovies(data.Search);
+                } else {
+                    statusDiv.textContent = `No movies found matching "${query}".`;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                statusDiv.textContent = 'Something went wrong. Please check your internet connection.';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function renderMovies(movies) {
+            const html = movies.map(movie => {
+                const poster = movie.Poster && movie.Poster !== 'N/A'
+                    ? movie.Poster
+                    : 'https://via.placeholder.com/300x450?text=No+Image';
+
+                return `
+                    <div class="movie-card">
+                        <img src="${poster}" alt="${movie.Title}">
+                        <div class="movie-info">
+                            <div class="movie-title" title="${movie.Title}">${movie.Title}</div>
+                            <div class="movie-year">${movie.Year}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            moviesGrid.innerHTML = html;
+        }
+
+        function runSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                fetchMovies(query);
+            }
+        }
+
+        searchButton.addEventListener('click', runSearch);
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                runSearch();
+            }
+        });
+
+        fetchMovies('Marvel');
+    </script>
+</body>
+</html>
