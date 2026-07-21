@@ -157,7 +157,7 @@ const MOVIES = {
             </div>
             <div class="relative w-full md:max-w-md">
               <input class="sidebar-search-input w-full rounded-full border border-slate-700/70 bg-slate-950/95 py-3 pl-12 pr-4 text-sm text-white outline-none placeholder-slate-400 transition duration-200 ease-out focus:border-blue-400 focus:bg-slate-900/95 focus:ring-2 focus:ring-blue-500/30 sm:text-base leading-tight" type="text" placeholder="Search Movies..." data-sidebar-search="${sidebarId}">
-              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base leading-none pointer-events-none transition-colors duration-200">search</span>
+              <span class="search-icon material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base leading-none pointer-events-none transition-colors duration-200">search</span>
               <div class="sidebar-search-dropdown absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-3xl border border-slate-800/80 bg-slate-950/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl" data-sidebar-dropdown="${sidebarId}"></div>
             </div>
           </div>

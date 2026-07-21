@@ -126,6 +126,7 @@ async function apiCall(endpoint, options = {}) {
   const requestOptions = withDeviceContext(options);
   const headers = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
     ...requestOptions.headers,
   };
 
@@ -137,6 +138,7 @@ async function apiCall(endpoint, options = {}) {
         ...requestOptions,
         headers,
         credentials: 'include', // Include cookies for JWT auth
+        cache: 'no-store',
       });
 
       const contentType = response.headers.get('content-type') || '';
