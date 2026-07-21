@@ -194,6 +194,24 @@ const authAPI = {
     });
   },
 
+  logoutAndRedirect: async (destination = null) => {
+    const target = destination || './login.html';
+
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.warn('Logout request failed; continuing with local sign-out.', error);
+    }
+
+    authStorage.logout();
+
+    if (typeof window !== 'undefined') {
+      window.location.assign(target);
+    }
+
+    return target;
+  },
+
   getProfile: async () => {
     return apiCall('/auth/me', {
       method: 'GET',
@@ -289,10 +307,31 @@ const moviesAPI = {
   },
 };
 
+function isAccountLikeUserPayload(payload) {
+  if (!payload || typeof payload !== 'object') return false;
+  return Boolean(payload.id || payload.email || payload.user?.id || payload.user?.email || payload.user_metadata?.email || payload.metadata?.email);
+}
+
+function readStoredUserPayload(storage = window.localStorage) {
+  if (!storage || typeof storage.getItem !== 'function') {
+    return null;
+  }
+
+  const raw = storage.getItem('netchill_user') || storage.getItem('user');
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Storage helpers
 const authStorage = {
   isLoggedIn: () => {
-    return !!(localStorage.getItem('netchill_user') || localStorage.getItem('user'));
+    const payload = readStoredUserPayload(typeof window !== 'undefined' ? window.localStorage : null);
+    return isAccountLikeUserPayload(payload);
   },
 
   logout: () => {
