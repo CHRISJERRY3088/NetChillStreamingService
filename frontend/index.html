@@ -732,7 +732,7 @@
                         <span class="text-2xl font-bold bg-blue-600/20 border border-blue-500/50 text-blue-400 hidden shadow-2xl dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:shadow-2xl sm:block cursor-pointer">NetChill</span>
                     </div>
                 </div>
-
+                *.txt
                 <!-- Search bar: visible on small screens and up -->
                 <div class="items-center flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
                     <div class="search-shell w-full">
@@ -1058,42 +1058,109 @@
 
         function setupHeroFeaturedMovieCard() {
             const card = document.getElementById('heroFeaturedMovieCard');
-            if (!card) return;
+            const slideshow = document.getElementById('slideshow-bg');
+            const badgeEl = document.getElementById('slide-badge');
+            const subtitleEl = document.getElementById('slide-subtitle');
+            const titleEl = card?.querySelector('.hero-feature-title');
+            const overviewEl = card?.querySelector('.hero-feature-overview');
+            const castEl = card?.querySelector('.hero-feature-cast');
+            const yearEl = card?.querySelector('.hero-feature-year');
+            const genreEl = card?.querySelector('.hero-feature-genre');
+            const posterEl = document.getElementById('heroFeaturedMoviePoster');
+            const buttonEl = card?.querySelector('#heroFeaturedMovieButton');
+            const linkEl = card?.querySelector('#heroFeaturedMovieLink');
+            const prevButton = document.getElementById('slideshowPrevButton');
+            const nextButton = document.getElementById('slideshowNextButton');
 
-            const preview = {
-                title: 'NetChill Premiere',
-                overview: 'Featured on the slideshow — click the poster to open the full download page with cast, metadata, and movie details.',
-                release_date: new Date().toISOString(),
-                genre: 'Featured',
-                poster_path: './assets/logo.png',
-                backdrop_path: './assets/logo.png',
-                credits: {
-                    cast: [
-                        { name: 'Ava Brooks', character: 'Lead' },
-                        { name: 'Noah Reed', character: 'Supporting' },
-                        { name: 'Mia Chen', character: 'Director' }
-                    ]
+            if (!card || !slideshow) return;
+
+            const slides = [
+                {
+                    title: 'NetChill Premiere',
+                    overview: 'Featured on the slideshow — click the poster to open the full download page with cast, metadata, and movie details.',
+                    release_date: new Date().toISOString(),
+                    genre: 'Featured',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Ava Brooks', character: 'Lead' },
+                            { name: 'Noah Reed', character: 'Supporting' },
+                            { name: 'Mia Chen', character: 'Director' }
+                        ]
+                    }
+                },
+                {
+                    title: 'Midnight Action',
+                    overview: 'A powered-up action pick with bold energy, rich visuals, and a full download experience waiting behind the poster.',
+                    release_date: '2024-04-12T00:00:00.000Z',
+                    genre: 'Action',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Leo Cruz', character: 'Lead' },
+                            { name: 'Nia Hart', character: 'Co-star' }
+                        ]
+                    }
+                },
+                {
+                    title: 'Galaxy Nights',
+                    overview: 'A cinematic sci-fi highlight that rotates into view with title, metadata, and cast details for the download page.',
+                    release_date: '2025-01-20T00:00:00.000Z',
+                    genre: 'Sci-Fi',
+                    poster_path: './assets/logo.png',
+                    backdrop_path: './assets/logo.png',
+                    credits: {
+                        cast: [
+                            { name: 'Rina Moss', character: 'Lead' },
+                            { name: 'Drew Bell', character: 'Supporting' }
+                        ]
+                    }
                 }
-            };
+            ];
 
-            const titleEl = card.querySelector('.hero-feature-title');
-            const overviewEl = card.querySelector('.hero-feature-overview');
-            const castEl = card.querySelector('.hero-feature-cast');
-            const yearEl = card.querySelector('.hero-feature-year');
-            const posterEl = card.querySelector('.hero-feature-poster');
-            const buttonEl = card.querySelector('#heroFeaturedMovieButton');
-            const linkEl = card.querySelector('#heroFeaturedMovieLink');
+            let currentIndex = 0;
+            let autoplayTimer = null;
 
-            if (titleEl) titleEl.textContent = preview.title;
-            if (overviewEl) overviewEl.textContent = preview.overview;
-            if (castEl) castEl.textContent = preview.credits.cast.map((item) => `${item.name} as ${item.character}`).join(', ');
-            if (yearEl) yearEl.textContent = new Date(preview.release_date).getFullYear();
-            if (posterEl) {
-                posterEl.src = preview.poster_path;
-                posterEl.alt = preview.title;
+            function renderSlide(index) {
+                const preview = slides[index] || slides[0];
+                if (!preview) return;
+
+                if (titleEl) titleEl.textContent = preview.title;
+                if (overviewEl) overviewEl.textContent = preview.overview;
+                if (castEl) castEl.textContent = preview.credits.cast.map((item) => `${item.name} as ${item.character}`).join(', ');
+                if (yearEl) yearEl.textContent = new Date(preview.release_date).getFullYear();
+                if (genreEl) genreEl.textContent = preview.genre;
+                if (posterEl) {
+                    posterEl.src = preview.poster_path;
+                    posterEl.alt = preview.title;
+                }
+                if (badgeEl) badgeEl.textContent = `Now Showing • ${preview.genre}`;
+                if (subtitleEl) subtitleEl.textContent = preview.overview;
+
+                if (slideshow) {
+                    slideshow.style.backgroundImage = `linear-gradient(90deg, rgba(0,0,0,0.8), rgba(2,6,23,0.55)), url('${preview.poster_path}')`;
+                    slideshow.style.backgroundSize = 'cover';
+                    slideshow.style.backgroundPosition = 'center';
+                }
+            }
+
+            function showSlide(index) {
+                currentIndex = (index + slides.length) % slides.length;
+                renderSlide(currentIndex);
+            }
+
+            function startAutoRotation() {
+                clearInterval(autoplayTimer);
+                autoplayTimer = setInterval(() => {
+                    showSlide(currentIndex + 1);
+                }, 6000);
             }
 
             const navigateToDownload = (event) => {
+                const preview = slides[currentIndex] || slides[0];
+                if (!preview) return;
                 event.preventDefault();
                 try {
                     sessionStorage.setItem('netchill_movie_preview', JSON.stringify(preview));
@@ -1103,10 +1170,21 @@
                 window.location.href = `./Download.html?id=${createDownloadSlug(preview.title, 'featured-movie', 0)}&type=movie`;
             };
 
-            card.classList.remove('hidden');
+            prevButton?.addEventListener('click', () => {
+                showSlide(currentIndex - 1);
+                startAutoRotation();
+            });
+            nextButton?.addEventListener('click', () => {
+                showSlide(currentIndex + 1);
+                startAutoRotation();
+            });
+
             card.addEventListener('click', navigateToDownload);
             if (buttonEl) buttonEl.addEventListener('click', navigateToDownload);
             if (linkEl) linkEl.addEventListener('click', navigateToDownload);
+
+            renderSlide(0);
+            startAutoRotation();
         }
 
         function enhanceMovieCardDownloadLinks() {
