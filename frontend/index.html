@@ -985,23 +985,33 @@
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     Horror
                 </a>
-            </div>
+            </div>// Replace with your actual TMDB API key
+const apiKey = 'YOUR_API_KEY'; 
+const tmdbId = '324857'; // Spider-Man: Into the Spider-Verse
+
+const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}`;
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    const name = data.title;
+    const year = data.release_date.split('-')[0];
+    const pictureUrl = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+
+    console.log("Name:", name);
+    console.log("Year:", year);
+    console.log("Picture URL:", pictureUrl);
+  })
+  .catch(err => console.error(err));
         </nav>
     </div>
 
+    
     <!-- Ad Section -->
     <div class="mt-8 overflow-hidden max-w-2xl mx-auto rounded-lg">
         <div class="animate-ad flex justify-center">
             <div id="ad" class="dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] bg-shadow-2xl bg-white/20 border border-blue-white/50 text-white px-10 py-2 rounded font-bold whitespace-nowrap">
                 SPECIAL OFFER: UPGRADE TO PREMIUM FOR 4K STREAMING
-            </div>
-        </div>
-    </div>
-
-    <div id="player" class="netflix-movie-player-container">
-        <div class="netflix-player-card" aria-label="Trending movie player card">
-            <div class="relative h-[460px] w-full bg-slate-900/80">
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400">Loading trending movie...</div>
             </div>
         </div>
     </div>
@@ -1664,7 +1674,6 @@
             }
 
             await renderMenuContainers();
-            await renderTrendingPlayerCard();
             enhanceMovieCardDownloadLinks();
             observeMovieCardLinkUpdates();
 
@@ -1676,28 +1685,6 @@
                     }
                 });
             });
-
-            async function renderTrendingPlayerCard() {
-                const playerContainer = document.getElementById('player');
-                if (!playerContainer || typeof window.moviesAPI?.getTrending !== 'function') return;
-
-                try {
-                    await ensureMoviesApiReady();
-                    const response = await window.moviesAPI.getTrending();
-                    const movie = Array.isArray(response?.results) && response.results.length ? response.results[0] : null;
-                    if (!movie) {
-                        playerContainer.innerHTML = `<div class="netflix-player-card rounded-[1.75rem] border border-white/10 bg-slate-900/95 p-6 text-sm text-slate-300">No trending movie data is available right now.</div>`;
-                        return;
-                    }
-
-                    const normalized = normalizeMovieForCard(movie, 'Trending Movie');
-
-                    playerContainer.innerHTML = createTrendingHeroCard(normalized, 'Trending Movies', 'player');
-                } catch (error) {
-                    console.error('renderTrendingPlayerCard error:', error);
-                    playerContainer.innerHTML = `<div class="netflix-player-card rounded-[1.75rem] border border-white/10 bg-slate-900/95 p-6 text-sm text-slate-300">Unable to load trending movie data.</div>`;
-                }
-            }
 
             document.querySelectorAll('.animation-carousel-wrapper').forEach((wrapper) => {
                 const root = wrapper.closest('.relative') || wrapper.parentElement;
