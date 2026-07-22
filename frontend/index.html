@@ -210,6 +210,63 @@
             background: rgba(255, 255, 255, 0.16);
             color: #f8fafc;
         }
+        .trending-hero-card {
+            position: relative;
+            min-height: 320px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.8));
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+        }
+        .trending-hero-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .trending-hero-card__overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(2, 6, 23, 0.92) 0%, rgba(2, 6, 23, 0.6) 40%, rgba(2, 6, 23, 0.16) 100%);
+        }
+        .trending-hero-card__content {
+            position: absolute;
+            left: 1.2rem;
+            right: 1.2rem;
+            bottom: 1.2rem;
+            z-index: 2;
+            max-width: 32rem;
+        }
+        .trending-hero-card__title {
+            margin-top: 0.8rem;
+            font-size: clamp(1.45rem, 3vw, 2.3rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            color: #f8fafc;
+        }
+        .trending-hero-card__meta {
+            margin-top: 0.45rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(248, 250, 252, 0.82);
+        }
+        .trending-hero-card__summary {
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(248, 250, 252, 0.85);
+            display: -webkit-box;
+            display: box;
+            -webkit-box-orient: vertical;
+            box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            overflow: hidden;
+        }
         .animation-card__thumb,
         .movie-flex-card img,
         .section-sidebar-card img,
@@ -1399,30 +1456,43 @@
                 `;
             }
 
-            function createTrendingMovieCard(movie, sectionTitle) {
+            function createTrendingHeroCard(movie, sectionTitle, variant = 'section') {
                 const posterSrc = resolveMoviePoster(movie.poster_path || movie.poster || movie.image || '', movie.title || sectionTitle || 'Featured Movie');
                 const movieJson = JSON.stringify(movie).replace(/</g, '\u003c').replace(/'/g, "\\'");
                 const sectionJson = JSON.stringify(sectionTitle).replace(/</g, '\u003c').replace(/'/g, "\\'");
                 const releaseYear = movie?.release_date ? new Date(movie.release_date).getFullYear() : (movie?.year || 'N/A');
                 const rating = movie?.vote_average ? Number(movie.vote_average).toFixed(1) : 'N/A';
                 const overview = movie?.overview || movie?.subtitle || 'A premium movie experience is ready to stream.';
+                const isPlayerVariant = variant === 'player';
+                const containerClass = isPlayerVariant ? 'netflix-player-card relative overflow-hidden rounded-[1.75rem]' : 'trending-hero-card';
+                const imageClass = isPlayerVariant ? 'h-[460px] w-full object-cover' : 'h-full w-full object-cover';
+                const overlayClass = isPlayerVariant ? 'netflix-player-overlay' : 'trending-hero-card__overlay';
+                const contentClass = isPlayerVariant ? 'netflix-player-content' : 'trending-hero-card__content';
+                const titleClass = isPlayerVariant ? 'netflix-player-title' : 'trending-hero-card__title';
+                const metaClass = isPlayerVariant ? 'netflix-player-year' : 'trending-hero-card__meta';
+                const descriptionMarkup = isPlayerVariant ? '' : `<p class="trending-hero-card__summary">${overview}</p>`;
+                const actionClass = isPlayerVariant ? 'netflix-player-actions' : 'netflix-player-actions mt-4';
+                const titleTag = isPlayerVariant ? 'h1' : 'h3';
 
                 return `
-                    <article class="animation-card trending-movie-card">
-                        <div class="trending-poster">
-                            ${posterSrc ? `<img src="${posterSrc}" alt="${movie.title} poster" loading="lazy" />` : `<div class="trending-poster-fallback">${movie.title}</div>`}
-                            <span class="trending-rating-badge">★ ${rating}</span>
-                        </div>
-                        <div class="trending-details">
-                            <div>
-                                <h2 class="trending-title">${movie.title}</h2>
-                                <div class="trending-meta-tags">
-                                    <span>📅 ${releaseYear}</span>
-                                    <span>⭐ ${rating}</span>
-                                </div>
-                                <p class="trending-overview">${overview}</p>
+                    <article class="${containerClass}">
+                        ${posterSrc ? `<img src="${posterSrc}" alt="${movie.title} poster" loading="lazy" class="${imageClass}" />` : `<div class="${isPlayerVariant ? 'h-[460px] w-full bg-slate-800' : 'h-full w-full bg-slate-800'}"></div>`}
+                        <div class="${overlayClass}"></div>
+                        <div class="${contentClass}">
+                            <span class="netflix-player-badge">Trending Now</span>
+                            <${titleTag} class="${titleClass}">${movie.title}</${titleTag}>
+                            <p class="${metaClass}">${releaseYear} • ⭐ ${rating}</p>
+                            ${descriptionMarkup}
+                            <div class="${actionClass}">
+                                <button type="button" class="netflix-player-button netflix-player-button--play" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                                    <span class="material-symbols-outlined">play_arrow</span>
+                                    Play
+                                </button>
+                                <button type="button" class="netflix-player-button netflix-player-button--info" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                                    <span class="material-symbols-outlined">info</span>
+                                    Details
+                                </button>
                             </div>
-                            <button type="button" class="trending-watch-button" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">Watch</button>
                         </div>
                     </article>
                 `;
@@ -1507,12 +1577,15 @@
             }
 
             function createMenuSection(section, index, moviePool = []) {
-                const cardLimit = 3;
+                const isTrendingSection = section?.id === 'trendingMovies';
+                const cardLimit = isTrendingSection ? 1 : 3;
                 const resolvedPool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : getSectionMoviePoolForContainer(section);
                 const movies = getMovieCardsForSection(index, resolvedPool, cardLimit);
-                const cardsMarkup = movies.length
-                    ? movies.map((movie) => createMovieCard(movie, section.title)).join('')
-                    : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available for this section right now.</div>';
+                const cardsMarkup = isTrendingSection && movies.length
+                    ? createTrendingHeroCard(movies[0], section.title, 'section')
+                    : movies.length
+                        ? movies.map((movie) => createMovieCard(movie, section.title)).join('')
+                        : '<div class="w-full rounded-[1.2rem] border border-white/10 bg-slate-900/70 p-4 text-sm text-slate-400">No movie data is available for this section right now.</div>';
                 const spotlightMarkup = '';
 
                 return `
@@ -1523,7 +1596,7 @@
                         </div>
                         <div class="relative">
                             ${spotlightMarkup}
-                            <div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
+                            ${isTrendingSection ? `<div class="w-full">${cardsMarkup}</div>` : `<div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
                                 <div class="animation-carousel gap-2 sm:gap-3">
                                     ${cardsMarkup}
                                 </div>
@@ -1533,17 +1606,49 @@
                             </button>
                             <button type="button" class="animation-scroll-button animation-scroll-button-right" aria-label="Scroll right">
                                 <span class="material-symbols-outlined text-2xl">chevron_right</span>
-                            </button>
+                            </button>`}
                         </div>
                     </section>
                 `;
+            }
+
+            async function getTrendingSectionMoviePool(limit = 1) {
+                const fallbackPool = getSectionMoviePoolForContainer({ id: 'trendingMovies' });
+                if (typeof window.moviesAPI?.getTrending !== 'function') return fallbackPool.slice(0, limit);
+
+                try {
+                    await ensureMoviesApiReady();
+                    const response = await window.moviesAPI.getTrending();
+                    const results = Array.isArray(response?.results) ? response.results : [];
+
+                    return results.slice(0, limit).map((movie) => ({
+                        id: movie?.id || '',
+                        title: movie?.title || movie?.name || '',
+                        subtitle: movie?.subtitle || movie?.overview || '',
+                        poster_path: movie?.poster_path || movie?.poster || movie?.image || '',
+                        overview: movie?.overview || '',
+                        release_date: movie?.release_date || '',
+                        vote_average: movie?.vote_average ?? movie?.rating ?? null,
+                        genres: movie?.genres || movie?.genre || [],
+                        credits: movie?.credits || { cast: [] },
+                    }));
+                } catch (error) {
+                    console.warn('Unable to load trending section movie data.', error);
+                    return fallbackPool.slice(0, limit);
+                }
             }
 
             async function renderMenuContainers() {
                 const container = document.getElementById('menuContainers');
                 if (!container) return;
 
-                container.innerHTML = menuSections.map((section, index) => createMenuSection(section, index)).join('');
+                const sectionMarkup = [];
+                for (const [index, section] of menuSections.entries()) {
+                    const moviePool = section.id === 'trendingMovies' ? await getTrendingSectionMoviePool(1) : getSectionMoviePoolForContainer(section);
+                    sectionMarkup.push(createMenuSection(section, index, moviePool));
+                }
+
+                container.innerHTML = sectionMarkup.join('');
             }
 
             await renderMenuContainers();
@@ -1574,31 +1679,8 @@
                     }
 
                     const normalized = normalizeMovie(movie, 'Trending Movie');
-                    const poster = resolveMoviePoster(normalized.poster_path || normalized.poster || normalized.image || '', normalized.title);
-                    const movieDataJson = JSON.stringify(normalized).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                    const releaseYear = normalized.release_date ? new Date(normalized.release_date).getFullYear() : (normalized.year || 'N/A');
 
-                    playerContainer.innerHTML = `
-                        <div class="netflix-player-card relative overflow-hidden rounded-[1.75rem]">
-                            ${poster ? `<img src="${poster}" alt="${normalized.title} poster" class="h-[460px] w-full object-cover" />` : `<div class="h-[460px] w-full bg-slate-800"></div>`}
-                            <div class="netflix-player-overlay"></div>
-                            <div class="netflix-player-content">
-                                <span class="netflix-player-badge">Trending Now</span>
-                                <h1 class="netflix-player-title">${normalized.title}</h1>
-                                <p class="netflix-player-year">${releaseYear}</p>
-                                <div class="netflix-player-actions">
-                                    <button type="button" class="netflix-player-button netflix-player-button--play" onclick='openSectionMoviePreview(${movieDataJson}, "Trending Movies")'>
-                                        <span class="material-symbols-outlined">play_arrow</span>
-                                        Play
-                                    </button>
-                                    <button type="button" class="netflix-player-button netflix-player-button--info" onclick='openSectionMoviePreview(${movieDataJson}, "Trending Movies")'>
-                                        <span class="material-symbols-outlined">info</span>
-                                        Details
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    playerContainer.innerHTML = createTrendingHeroCard(normalized, 'Trending Movies', 'player');
                 } catch (error) {
                     console.error('renderTrendingPlayerCard error:', error);
                     playerContainer.innerHTML = `<div class="netflix-player-card rounded-[1.75rem] border border-white/10 bg-slate-900/95 p-6 text-sm text-slate-300">Unable to load trending movie data.</div>`;
