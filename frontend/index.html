@@ -897,10 +897,6 @@
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     Trending Series
                 </a>
-                <a href="#trendingMovies" data-scroll-target="trendingMovies" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
-                    <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
-                    Trending Movies
-                </a>
                 <a href="#kdrama" data-scroll-target="kdrama" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     K-Drama
@@ -985,24 +981,7 @@
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     Horror
                 </a>
-            </div>// Replace with your actual TMDB API key
-const apiKey = 'YOUR_API_KEY'; 
-const tmdbId = '324857'; // Spider-Man: Into the Spider-Verse
-
-const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}`;
-
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    const name = data.title;
-    const year = data.release_date.split('-')[0];
-    const pictureUrl = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
-
-    console.log("Name:", name);
-    console.log("Year:", year);
-    console.log("Picture URL:", pictureUrl);
-  })
-  .catch(err => console.error(err));
+            </div>
         </nav>
     </div>
 
@@ -1329,7 +1308,6 @@ fetch(url)
                 { id: 'english', title: 'English' },
                 { id: 'upcomingMovie', title: 'Upcoming Movie' },
                 { id: 'trendingSeries', title: 'Trending Series' },
-                { id: 'trendingMovies', title: 'Trending Movies' },
                 { id: 'kdrama', title: 'K-Drama' },
                 { id: 'liveShow', title: 'Live Show' },
                 { id: 'porn', title: 'Porn' },
@@ -1628,7 +1606,7 @@ fetch(url)
                         </div>
                         <div class="relative">
                             ${spotlightMarkup}
-                            ${isTrendingSection ? `<div class="w-full">${cardsMarkup}</div>` : `<div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
+                            ${isTrendingSection ? `` : `<div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
                                 <div class="animation-carousel gap-2 sm:gap-3">
                                     ${cardsMarkup}
                                 </div>
