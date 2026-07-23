@@ -31,6 +31,7 @@
         })();
     </script>
     <script src="./api.js" defer></script>
+    <script src="./src/movieDownloadLinks.js"></script>
     <script src="./src/uiHelpers.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=download" />
@@ -338,7 +339,7 @@
                 <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
             </div>
             <span class="search-icon material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
-            <div id="movieSearchDropdown" class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-64 overflow-y-auto rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
+            <div id="movieSearchDropdown" class="absolute left-1/2 transform -translate-x-1/2 top-full z-50 mt-2 hidden search-dropdown-size w-[700px] h-[600px] rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
         </div>
 
         <div class="flex items-center space-x-3">
@@ -751,28 +752,57 @@
         const openMenu = document.getElementById('hamburger-button');
         const closeMenu = document.getElementById('close-menu-button');
 
+        // Fallback DOM toggles (kept for non-Alpine pages) but prefer Alpine state when available.
         function openSidebar() {
-            menu.classList.remove('hidden');
-            menuBackdrop.classList.remove('hidden');
+            try {
+                const alpineRoot = document.querySelector('[x-data]');
+                if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
+                    alpineRoot.__x.$data.mobileMenu = true;
+                    return;
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            if (menu) menu.classList.remove('hidden');
+            if (menuBackdrop) menuBackdrop.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
         }
 
         function closeSidebar() {
-            menu.classList.add('hidden');
-            menuBackdrop.classList.add('hidden');
+            try {
+                const alpineRoot = document.querySelector('[x-data]');
+                if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
+                    alpineRoot.__x.$data.mobileMenu = false;
+                    return;
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            if (menu) menu.classList.add('hidden');
+            if (menuBackdrop) menuBackdrop.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         }
 
-        openMenu.addEventListener('click', openSidebar);
-        closeMenu.addEventListener('click', closeSidebar);
-        menuBackdrop.addEventListener('click', closeSidebar);
+        if (openMenu) {
+            openMenu.addEventListener('click', openSidebar);
+        }
+        if (closeMenu) {
+            closeMenu.addEventListener('click', closeSidebar);
+        }
+        if (menuBackdrop) {
+            menuBackdrop.addEventListener('click', closeSidebar);
+        }
 
-        const mobileMenuLinks = menu.querySelectorAll('a');
-        mobileMenuLinks.forEach((link) => {
-            link.addEventListener('click', () => {
-                closeSidebar();
+        if (menu) {
+            const mobileMenuLinks = menu.querySelectorAll('a');
+            mobileMenuLinks.forEach((link) => {
+                link.addEventListener('click', () => {
+                    closeSidebar();
+                });
             });
-        });
+        }
 
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
@@ -1081,6 +1111,17 @@
         let downloadLoadingDotsInterval = null;
 
         function getPreviewMovieFromSession() {
+            const params = new URLSearchParams(window.location.search);
+            const movieId = params.get('id');
+
+            if (window.getStoredMoviePreview) {
+                try {
+                    return window.getStoredMoviePreview(movieId || undefined);
+                } catch (error) {
+                    console.warn('Invalid preview movie data', error);
+                }
+            }
+
             try {
                 const raw = sessionStorage.getItem('netchill_movie_preview');
                 return raw ? JSON.parse(raw) : null;
@@ -1091,6 +1132,18 @@
         }
 
         function clearPreviewMovieSession() {
+            const params = new URLSearchParams(window.location.search);
+            const movieId = params.get('id');
+
+            if (window.clearStoredMoviePreview) {
+                try {
+                    window.clearStoredMoviePreview(movieId || undefined);
+                    return;
+                } catch (error) {
+                    console.warn('Unable to clear preview movie data', error);
+                }
+            }
+
             try {
                 sessionStorage.removeItem('netchill_movie_preview');
             } catch (error) {
@@ -1139,6 +1192,7 @@
             if (descriptionEl) descriptionEl.textContent = preview.overview || 'A premium movie experience is ready to stream.';
             document.title = `${title} | NetChill`;
             applyMoviePoster(preview);
++            renderMovieCast(preview.credits?.cast || []);
         }
 
         async function applySelectedMovieFromQuery() {

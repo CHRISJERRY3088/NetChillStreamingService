@@ -448,14 +448,23 @@ const MOVIES = {
   },
 
   goToDownload: (movieId, type = 'movie', movieMeta = null) => {
-    if (movieMeta && typeof movieMeta === 'object') {
+    const previewMovie = movieMeta && typeof movieMeta === 'object' ? movieMeta : null;
+
+    if (previewMovie) {
       try {
-        sessionStorage.setItem('netchill_movie_preview', JSON.stringify(movieMeta));
+        if (window.storeMoviePreview) {
+          window.storeMoviePreview(previewMovie, movieId || previewMovie.id || previewMovie.slug || previewMovie.title || 'featured-movie');
+        } else {
+          sessionStorage.setItem('netchill_movie_preview', JSON.stringify(previewMovie));
+        }
       } catch (error) {
         console.warn('Unable to save preview movie data', error);
       }
     }
-    const link = `./Download.html?id=${encodeURIComponent(movieId)}&type=${encodeURIComponent(type)}`;
+
+    const link = window.buildMovieDownloadUrl
+      ? window.buildMovieDownloadUrl(movieMeta || movieId, type)
+      : `./Download.html?id=${encodeURIComponent(movieId)}&type=${encodeURIComponent(type)}`;
     window.location.href = link;
   },
 

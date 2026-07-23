@@ -71,3 +71,25 @@ nav.menu-bar .logo-img,
     padding: 0.75rem 0.9rem;
   }
 }
+
+/* Shared class for search dropdown sizing */
+.search-dropdown-size {
+  box-sizing: border-box;
+  width: 700px;
+  height: 600px;
+  max-height: none;
+  overflow: auto;
+}
+
+/* Responsive: full-width on small screens */
+@media (max-width: 640px) {
+  .search-dropdown-size {
+    width: calc(100% - 2rem) !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+    margin-left: 0 !important;
+    border-radius: 0.75rem;
+    max-height: 60vh;
+  }
+}

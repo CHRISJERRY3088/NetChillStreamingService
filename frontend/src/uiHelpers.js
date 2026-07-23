@@ -87,4 +87,15 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = api;
   }
+
+  // Inject global styles for movie search dropdowns (applies to elements with ids ending in "SearchDropdown").
+  try {
+    if (typeof document !== 'undefined') {
+      const style = document.createElement('style');
+      style.innerHTML = '[id$="SearchDropdown"]{ width:700px !important; height:600px !important; max-height:none !important; overflow:auto !important; }\n@media (max-width:640px){ [id$="SearchDropdown"]{ width:calc(100% - 2rem) !important; left:0 !important; transform:none !important; max-height:60vh !important; } }';
+      document.head.appendChild(style);
+    }
+  } catch (e) {
+    // ignore in non-browser environments
+  }
 })(typeof window !== 'undefined' ? window : globalThis);
