@@ -121,6 +121,16 @@
             box-shadow: 0 0 12px rgba(34, 211, 238, 0.95), 0 0 26px rgba(14, 165, 233, 0.9), 0 0 42px rgba(59, 130, 246, 0.65);
         }
 
+        #ad {
+            border: 1px solid rgba(59, 130, 246, 0.85);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .dark #ad {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(15, 23, 42, 0.62);
+        }
+
         [x-cloak] { display: none !important; }
         @keyframes moveRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .animate-ad { animation: moveRight 10s linear infinite; }
@@ -790,14 +800,38 @@
             box-shadow: inset 0 1px 1px rgba(255,255,255,0.04), 0 0 0 4px rgba(59, 130, 246, 0.16), 0 0 26px rgba(59, 130, 246, 0.32);
         }
 
-        .sidebar-search-dropdown {
-            width: min(70%, calc(100vw - 2rem));
-            max-width: min(70%, calc(100vw - 2rem));
+        .sidebar-search-dropdown,
+        .search-dropdown-size,
+        #sectionSidebarSearchDropdown {
+            width: min(80%, calc(100vw - 2rem));
+            max-width: min(80%, calc(100vw - 2rem));
             left: 50%;
             transform: translateX(-50%);
             border-color: rgba(59, 130, 246, 0.55);
             box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 0 40px rgba(59, 130, 246, 0.45), 0 0 82px rgba(59, 130, 246, 0.22);
             backdrop-filter: blur(18px);
+            max-height: 28rem;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar-search-dropdown,
+            .search-dropdown-size,
+            #sectionSidebarSearchDropdown {
+                width: min(100%, calc(100vw - 2rem));
+                max-width: min(100%, calc(100vw - 2rem));
+                max-height: 18rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar-search-dropdown,
+            .search-dropdown-size,
+            #sectionSidebarSearchDropdown {
+                width: min(100%, calc(100vw - 1rem));
+                max-width: min(100%, calc(100vw - 1rem));
+                max-height: 14rem;
+            }
         }
 
         .sidebar-panel {
@@ -1009,7 +1043,7 @@
         </div>
     </header>
 
-    <div id="slide-caption" class="mx-auto mt-4 w-full max-w-2xl rounded-xl border border-blue-300/40 bg-white/15 px-4 py-4 shadow-[0_0_40px_rgba(59,130,246,0.35),0_0_80px_rgba(255,255,255,0.12)] backdrop-blur-xl sm:mt-6 sm:rounded-[1.2rem] sm:px-6 sm:py-5 lg:mt-8 lg:max-w-3xl lg:rounded-[1.5rem] lg:px-8 lg:py-6">
+    <div id="slide-caption" class="mx-auto mt-4 w-full max-w-2xl rounded-xl border border-blue-500/55 bg-blue-950/10 px-4 py-4 shadow-[0_0_55px_rgba(59,130,246,0.55),0_0_95px_rgba(59,130,246,0.24)] backdrop-blur-xl sm:mt-6 sm:rounded-[1.2rem] sm:px-6 sm:py-5 lg:mt-8 lg:max-w-3xl lg:rounded-[1.5rem] lg:px-8 lg:py-6">
         <div class="mt-2 sm:mt-3">
             <p class="text-[9px] uppercase tracking-[0.2em] text-gray-400 sm:text-xs lg:text-sm">Watch the latest movies & shows</p>
             <h1 class="mt-1.5 text-base font-black leading-tight text-white sm:mt-2 sm:text-2xl md:text-3xl lg:text-4xl">Stream your favorites anytime</h1>
@@ -1163,7 +1197,7 @@
     <!-- Ad Section -->
     <div class="mt-8 overflow-hidden max-w-2xl mx-auto rounded-lg">
         <div class="animate-ad flex justify-center">
-            <div id="ad" class="dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] bg-shadow-2xl bg-white/20 border border-blue-white/50 text-white px-10 py-2 rounded font-bold whitespace-nowrap">
+            <div id="ad" class="dark:bg-blue-600/20 dark:text-blue-400 dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] bg-shadow-2xl bg-white/20 border text-white px-10 py-2 rounded font-bold whitespace-nowrap">
                 SPECIAL OFFER: UPGRADE TO PREMIUM FOR 4K STREAMING
             </div>
         </div>
@@ -1320,6 +1354,7 @@
                                     <span class="search-icon material-symbols-outlined pointer-events-none text-base text-white/80">search</span>
                                     <input id="sectionSidebarSearch" type="text" placeholder="Search section titles..." class="sidebar-search-input w-full rounded-full py-3 pl-11 pr-4 text-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30">
                                 </div>
+                                <div id="sectionSidebarSearchDropdown" class="absolute left-1/2 top-full z-[140] mt-2 hidden max-h-72 w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 overflow-y-auto rounded-2xl border border-blue-400/70 bg-slate-950/95 p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_35px_rgba(59,130,246,0.25)] backdrop-blur-xl"></div>
                             </label>
                             <button type="button" data-sidebar-close="true" class="rounded-full border border-slate-700/70 bg-slate-950/80 p-3 text-2xl text-slate-300 transition hover:border-blue-400 hover:text-white">&times;</button>
                         </div>
@@ -1335,11 +1370,16 @@
             });
 
             const searchInput = overlay.querySelector('#sectionSidebarSearch');
+            const searchDropdown = overlay.querySelector('#sectionSidebarSearchDropdown');
             if (searchInput) {
                 searchInput.addEventListener('input', (event) => {
                     const title = document.getElementById('sectionSidebarTitle')?.textContent?.trim() || 'Featured Section';
                     renderSectionSidebarItems(sectionSidebarItems, event.target.value, title);
                 });
+
+                if (searchDropdown && window.NetchillUI?.attachMovieSearch) {
+                    window.NetchillUI.attachMovieSearch(searchInput, searchDropdown);
+                }
             }
 
             document.body.appendChild(overlay);

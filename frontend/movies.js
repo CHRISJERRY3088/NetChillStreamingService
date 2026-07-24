@@ -182,6 +182,7 @@ const MOVIES = {
 
     // Attach search to sidebar
     const searchInput = document.querySelector(`[data-sidebar-search="${sidebarId}"]`);
+    const dropdownEl = document.querySelector(`[data-sidebar-dropdown="${sidebarId}"]`);
     if (searchInput) {
       let searchTimeout;
       searchInput.addEventListener('input', (e) => {
@@ -192,6 +193,10 @@ const MOVIES = {
           }
         }, 300);
       });
+
+      if (dropdownEl && window.NetchillUI?.attachMovieSearch) {
+        window.NetchillUI.attachMovieSearch(searchInput, dropdownEl);
+      }
     }
   },
 
