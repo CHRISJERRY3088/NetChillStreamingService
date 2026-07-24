@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,9 +15,34 @@
         .stat-card { background: linear-gradient(135deg, #1f2937, #111827); border: 1px solid #374151; }
         .stat-card:hover { border-color: #e50914; transform: translateY(-2px); transition: all 0.2s; }
         .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); }
+        @keyframes adminSearchGlowMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .admin-search-shell {
+            position: relative;
+            border-radius: 9999px;
+            padding: 1px;
+            background: linear-gradient(90deg, rgba(59,130,246,0.95), rgba(34,211,238,0.7), rgba(255,255,255,0.35), rgba(59,130,246,0.95));
+            background-size: 220% 220%;
+            animation: adminSearchGlowMove 3.2s linear infinite;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 24px rgba(59,130,246,0.25);
+        }
+        .admin-search-shell input {
+            border-radius: inherit;
+            background: rgba(15, 23, 42, 0.95);
+            border: none;
+            color: #f8fafc;
+            outline: none;
+        }
+        .admin-search-shell input::placeholder {
+            color: #94a3b8;
+        }
     </style>
+    <link rel="stylesheet" href="./assets/glass.css">
 </head>
-<body class="bg-gray-950 text-white min-h-screen flex">
+<body class="bg-white text-gray-900 min-h-screen flex">
 
     <!-- SIDEBAR -->
     <aside class="fixed inset-y-0 left-0 w-64 bg-gray-900 border-r border-gray-800 z-50 flex flex-col">
@@ -151,7 +176,9 @@
         <section id="section-users" class="p-8 space-y-6 hidden">
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-bold">User Management</h2>
-                <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()" class="bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 text-sm w-64 focus:border-red-500 outline-none">
+                <div class="admin-search-shell w-64">
+                    <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()" class="w-full rounded-full px-4 py-2 text-sm">
+                </div>
             </div>
             <div class="glass rounded-2xl overflow-hidden">
                 <table class="w-full text-sm">

@@ -30,13 +30,39 @@
             z-index: 100;
         }
 
+        @keyframes searchGlowMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .search-shell {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            width: min(100%, 32rem);
+            max-width: 100%;
+            border-radius: 9999px;
+            padding: 1px;
+            background: linear-gradient(90deg, rgba(59,130,246,0.95), rgba(34,211,238,0.7), rgba(255,255,255,0.35), rgba(59,130,246,0.95));
+            background-size: 220% 220%;
+            animation: searchGlowMove 3.2s linear infinite;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 24px rgba(59,130,246,0.25);
+        }
+
         .search-box {
-            padding: 10px;
-            width: 60%;
-            max-width: 400px;
+            width: 100%;
+            padding: 12px 16px;
             border: none;
-            border-radius: 4px;
+            border-radius: inherit;
+            background: rgba(15, 23, 42, 0.95);
+            color: #ffffff;
             font-size: 16px;
+            outline: none;
+        }
+
+        .search-box::placeholder {
+            color: #94a3b8;
         }
 
         .search-btn {
@@ -121,13 +147,16 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <link rel="stylesheet" href="./assets/glass.css">
 </head>
 <body>
 
     <header>
         <h1>MovieFlex</h1>
-        <div style="margin-top: 15px;">
-            <input type="text" id="search-input" class="search-box" placeholder="Search for a movie (e.g., Batman)..." value="Marvel">
+        <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <div class="search-shell">
+                <input type="text" id="search-input" class="search-box" placeholder="Search for a movie (e.g., Batman)..." value="Marvel">
+            </div>
             <button id="search-button" class="search-btn">Search</button>
         </div>
     </header>
