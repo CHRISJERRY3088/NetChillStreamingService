@@ -148,9 +148,9 @@ const MOVIES = {
 
       <div id="${sidebarId}" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity duration-300" onclick="document.getElementById('${sidebarId}').classList.add('hidden')"></div>
-        <div class="relative origin-top transform-gpu w-full max-w-[95%] sm:max-w-6xl mx-auto max-h-[90vh] overflow-y-auto rounded-[1.5rem] sidebar-panel p-4 sm:p-6 lg:p-8">
+        <div class="relative origin-top transform-gpu flex max-h-[90vh] w-full max-w-[95%] flex-col overflow-hidden rounded-[1.5rem] sidebar-panel p-4 sm:max-w-6xl sm:p-6 lg:p-8">
           <button onclick="document.getElementById('${sidebarId}').classList.add('hidden')" class="absolute top-4 right-4 text-4xl text-slate-800 transition hover:text-blue-500 dark:text-white sm:right-6">&times;</button>
-          <div class="mb-4 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-4">
+          <div class="mb-4 flex-shrink-0 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between md:gap-4">
             <div>
               <h2 class="text-2xl font-black uppercase tracking-[0.25em] text-blue-500 sm:text-3xl">${title}</h2>
               <p id="${sidebarId}-type" class="text-sm text-slate-300 mt-1">Type: ${typeDisplay}</p>
@@ -160,10 +160,10 @@ const MOVIES = {
                 <input class="sidebar-search-input w-full rounded-full py-3 pl-12 pr-4 text-sm outline-none transition duration-200 ease-out focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30 sm:text-base leading-tight" type="text" placeholder="Search Movies..." data-sidebar-search="${sidebarId}">
                 <span class="search-icon material-symbols-outlined text-slate-400 text-base leading-none pointer-events-none transition-colors duration-200">search</span>
               </div>
-              <div class="sidebar-search-dropdown absolute left-1/2 top-full z-50 mt-2 hidden max-h-64 -translate-x-1/2 overflow-y-auto rounded-3xl border border-slate-800/80 bg-slate-950/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl" data-sidebar-dropdown="${sidebarId}"></div>
+              <div class="sidebar-search-dropdown absolute left-1/2 top-full z-50 mt-2 hidden w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2 max-h-64 overflow-y-auto rounded-3xl border border-slate-800/80 bg-slate-950/95 p-2 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl" data-sidebar-dropdown="${sidebarId}"></div>
             </div>
           </div>
-          <div id="${containerId}-sidebar-grid" class="mx-auto w-full grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"></div>
+          <div id="${containerId}-sidebar-grid" class="mx-auto mt-2 flex-1 min-h-0 w-full grid grid-cols-2 gap-3 overflow-y-auto pr-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"></div>
         </div>
       </div>
     `;
