@@ -49,17 +49,60 @@
     <style>
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(15, 23, 42, 0.35);
+            border-radius: 999px;
         }
         ::-webkit-scrollbar-thumb {
-            background-color: rgba(100, 100, 100, 0.5);
-            border-radius: 4px;
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.95), rgba(37, 99, 235, 0.9));
+            border-radius: 999px;
+            border: 2px solid rgba(15, 23, 42, 0.5);
         }
         ::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(100, 100, 100, 0.7);
+            background: linear-gradient(180deg, rgba(224, 242, 254, 1), rgba(34, 211, 238, 1));
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.95), 0 0 26px rgba(14, 165, 233, 0.9), 0 0 42px rgba(59, 130, 246, 0.65);
+        }
+
+        .sidebar-search-dropdown,
+        #sectionSidebarGrid,
+        [id$="MovieSearchDropdown"],
+        #mobile-menu nav {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(96, 165, 250, 0.9) rgba(15, 23, 42, 0.35);
+        }
+
+        .sidebar-search-dropdown::-webkit-scrollbar,
+        #sectionSidebarGrid::-webkit-scrollbar,
+        [id$="MovieSearchDropdown"]::-webkit-scrollbar,
+        #mobile-menu nav::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .sidebar-search-dropdown::-webkit-scrollbar-track,
+        #sectionSidebarGrid::-webkit-scrollbar-track,
+        [id$="MovieSearchDropdown"]::-webkit-scrollbar-track,
+        #mobile-menu nav::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.35);
+            border-radius: 999px;
+        }
+
+        .sidebar-search-dropdown::-webkit-scrollbar-thumb,
+        #sectionSidebarGrid::-webkit-scrollbar-thumb,
+        [id$="MovieSearchDropdown"]::-webkit-scrollbar-thumb,
+        #mobile-menu nav::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(147, 197, 253, 0.95), rgba(37, 99, 235, 0.9));
+            border-radius: 999px;
+            border: 2px solid rgba(15, 23, 42, 0.5);
+        }
+
+        .sidebar-search-dropdown::-webkit-scrollbar-thumb:hover,
+        #sectionSidebarGrid::-webkit-scrollbar-thumb:hover,
+        [id$="MovieSearchDropdown"]::-webkit-scrollbar-thumb:hover,
+        #mobile-menu nav::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(224, 242, 254, 1), rgba(34, 211, 238, 1));
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.95), 0 0 26px rgba(14, 165, 233, 0.9), 0 0 42px rgba(59, 130, 246, 0.65);
         }
 
         [x-cloak] { display: none !important; }
@@ -262,8 +305,25 @@
         }
 
         .sidebar-search-dropdown {
-            border-color: rgba(148, 163, 184, 0.12);
+            width: min(700px, calc(100vw - 2rem));
+            max-width: calc(100vw - 2rem);
+            left: 50%;
+            transform: translateX(-50%);
+            border-color: rgba(59, 130, 246, 0.55);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 0 40px rgba(59, 130, 246, 0.45), 0 0 82px rgba(59, 130, 246, 0.22);
             backdrop-filter: blur(18px);
+        }
+
+        .dark .sidebar-search-dropdown {
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.45), 0 0 58px rgba(255, 255, 255, 0.18);
+        }
+
+        .search-dropdown-size {
+            width: min(700px, calc(100vw - 2rem));
+            max-width: calc(100vw - 2rem);
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .dark .search-shell {
@@ -324,7 +384,7 @@
     <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex flex-wrap items-center justify-between px-4 py-2 md:px-10">
         
         <div class="flex items-center space-x-4">
-            <button @click="mobileMenu = true" class="text-white text-3xl cursor-pointer hover:text-blue-400">☰</button>
+            <button id="hamburger-button" @click="mobileMenu = true" class="text-white text-3xl cursor-pointer hover:text-blue-400">☰</button>
             <div class="flex items-center space-x-2" onclick="window.location.href='./index.html'">
                 <div class=" flex items-center justify-center font-bold text-white">
                     <img src="./assets/logo.png" alt="Logo" class="w-12 h-12 object-contain logo-img dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)]">
@@ -339,7 +399,7 @@
                 <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
             </div>
             <span class="search-icon material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
-            <div id="movieSearchDropdown" class="absolute left-1/2 transform -translate-x-1/2 top-full z-50 mt-2 hidden search-dropdown-size w-[700px] h-[600px] rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur"></div>
+            <div id="movieSearchDropdown" class="absolute left-1/2 top-full z-50 mt-2 hidden search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 bg-slate-950/95 p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]"></div>
         </div>
 
         <div class="flex items-center space-x-3">
@@ -347,15 +407,13 @@
                 <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
             </button>
             <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 dark:text-black rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
-            <a href="Restored -->
-    <div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
-        <div class="fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
-        <nav class="relative h-full w-full overflow-y-auto p-4 shadow-2xl sm:p-6">
-            <buttonnset-0 z-[55] hidden bg-slate-950/40 backdrop-blur-md transition-opacity duration-300"></div>
+            <a href="./account.html" id="accountButton" class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
+        </div>
+    </nav>
 
     <!-- MOBILE MENU -->
-    <div id="mobile-menu" x-show="mobileMenu" x-cloak class="fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
-        <div id="menu-backdrop" class="fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
+    <div id="mobile-menu" x-show="mobileMenu" x-cloak class="hidden fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
+        <div id="menu-backdrop" class="hidden fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
         <nav class="relative h-full w-full overflow-y-auto p-4 shadow-2xl sm:p-6">
             <button id="close-menu-button" @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-black dark:text-white">&times;</button>
             <div class="mt-6 flex flex-col space-y-3 text-lg dark:text-white text-black font-bold">
@@ -752,13 +810,12 @@
         const openMenu = document.getElementById('hamburger-button');
         const closeMenu = document.getElementById('close-menu-button');
 
-        // Fallback DOM toggles (kept for non-Alpine pages) but prefer Alpine state when available.
+        // Keep the mobile drawer working whether Alpine is ready or whether we fall back to plain DOM toggling.
         function openSidebar() {
             try {
                 const alpineRoot = document.querySelector('[x-data]');
                 if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
                     alpineRoot.__x.$data.mobileMenu = true;
-                    return;
                 }
             } catch (e) {
                 // ignore
@@ -774,7 +831,6 @@
                 const alpineRoot = document.querySelector('[x-data]');
                 if (alpineRoot && alpineRoot.__x && alpineRoot.__x.$data) {
                     alpineRoot.__x.$data.mobileMenu = false;
-                    return;
                 }
             } catch (e) {
                 // ignore
