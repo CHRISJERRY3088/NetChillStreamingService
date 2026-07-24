@@ -6,6 +6,18 @@
     --glass-shadow-hover: 0 28px 96px rgba(15, 23, 42, 0.22);
 }
 
+.sidebar-panel,
+.sidebar-search-dropdown,
+#sectionSidebarGrid,
+#mobile-menu,
+#mobile-menu nav,
+[id$="MovieSearchDropdown"],
+[id$="-sidebar"] {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+}
+
 .dark {
     --glass-surface: rgba(15, 23, 42, 0.62);
     --glass-surface-strong: rgba(15, 23, 42, 0.78);
