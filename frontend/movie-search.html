@@ -90,10 +90,16 @@
         }
 
         .movie-card {
-            background-color: #1f1f1f;
+            background: rgba(15, 23, 42, 0.55);
+            background-image: radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 35%), linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(10, 14, 20, 0.92));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background-clip: padding-box;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.2s;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         .movie-card:hover {

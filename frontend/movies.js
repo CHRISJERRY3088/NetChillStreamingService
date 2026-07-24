@@ -51,7 +51,7 @@ const MOVIES = {
     const movieIdForJs = JSON.stringify(id);
     
     return `
-      <article class="animation-card group rounded-2xl p-2.5 cursor-pointer" data-movie-id="${id}" onclick='MOVIES.goToDownload(${movieIdForJs}, "movie", ${movieJson})'>
+      <article class="animation-card glass-card group rounded-2xl p-2.5 cursor-pointer" data-movie-id="${id}" onclick='MOVIES.goToDownload(${movieIdForJs}, "movie", ${movieJson})'>
         <div class="animation-card__thumb rounded-xl relative overflow-hidden bg-gray-800">
           ${MOVIES.getPosterUrl(poster_path) ? `
             <img src="${MOVIES.getPosterUrl(poster_path)}" 
@@ -81,7 +81,7 @@ const MOVIES = {
 
   createLoadingState: (containerId, count = 6) => {
     const placeholders = Array.from({ length: count }, (_, index) => `
-      <div class="animation-card rounded-2xl border border-white/10 bg-slate-900/80 p-2.5" key="${index}">
+      <div class="animation-card glass-card rounded-2xl border border-white/10 bg-slate-900/80 p-2.5" key="${index}">
         <div class="animation-card__thumb mb-3 rounded-xl bg-slate-800 animate-pulse"></div>
         <div class="space-y-2">
           <div class="h-3 w-3/4 rounded-full bg-slate-800"></div>
