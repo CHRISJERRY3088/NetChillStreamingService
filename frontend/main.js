@@ -99,7 +99,7 @@ function renderTrailerCards(trailers) {
     const buttonLabel = playable ? buttonText : 'Trailer unavailable';
 
     return `
-      <article class="trailer-card glass-card group overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 shadow-lg transition hover:-translate-y-1 hover:shadow-xl sm:rounded-3xl sm:shadow-xl">
+      <article class="trailer-card glass-card group overflow-hidden rounded-2xl border border-white/20 bg-slate-900/50 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_18px_55px_rgba(2,6,23,0.45)] backdrop-blur-2xl transition hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_24px_70px_rgba(2,6,23,0.55)] sm:rounded-3xl">
         <div class="relative h-28 bg-cover bg-center sm:h-40 lg:h-52" style="background-image: ${image};">
           <div class="absolute inset-0 bg-black/30"></div>
           <div class="absolute bottom-0 left-0 right-0 p-2 text-white sm:p-4">
