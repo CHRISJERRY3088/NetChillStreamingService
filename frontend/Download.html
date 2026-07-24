@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: true, mobileMenu: false, sideBar: false }" class="overflow-x-hidden" :class="{ 'dark': darkMode }">
+<html lang="en" x-data="{ darkMode: false, mobileMenu: false, sideBar: false }" class="overflow-x-hidden" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +33,20 @@
     <script src="./api.js" defer></script>
     <script src="./src/movieDownloadLinks.js"></script>
     <script src="./src/uiHelpers.js"></script>
+    <script>
+        function syncDownloadLightMode() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.body.style.backgroundColor = isDark ? '#000000' : '#ffffff';
+            document.body.style.color = isDark ? '#ffffff' : '#111827';
+        }
+
+        window.addEventListener('load', syncDownloadLightMode);
+        const downloadThemeObserver = new MutationObserver(syncDownloadLightMode);
+        downloadThemeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    </script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=download" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -46,6 +60,7 @@
     
     <link rel="stylesheet" href="./components/loading/loading.css">
     <link rel="stylesheet" href="./assets/menu.css">
+    <link rel="stylesheet" href="./assets/glass.css">
     <style>
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
@@ -274,6 +289,10 @@
 
         .search-shell {
             position: relative;
+            display: flex;
+            align-items: center;
+            width: min(100%, 34rem);
+            max-width: 100%;
             border-radius: 9999px;
             padding: 1px;
             background: linear-gradient(90deg, rgba(59,130,246,0.95), rgba(34,211,238,0.7), rgba(255,255,255,0.35), rgba(59,130,246,0.95));
@@ -283,14 +302,20 @@
         }
 
         .search-shell > input {
+            width: 100%;
+            flex: 1 1 auto;
             border-radius: inherit;
         }
 
         .search-icon {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             line-height: 1;
+            z-index: 1;
+            margin-inline: 0.75rem;
         }
 
         .sidebar-search-input {
@@ -305,13 +330,26 @@
         }
 
         .sidebar-search-dropdown {
-            width: min(700px, calc(100vw - 2rem));
-            max-width: calc(100vw - 2rem);
+            width: min(70%, calc(100vw - 2rem));
+            max-width: min(70%, calc(100vw - 2rem));
             left: 50%;
             transform: translateX(-50%);
             border-color: rgba(59, 130, 246, 0.55);
             box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 0 40px rgba(59, 130, 246, 0.45), 0 0 82px rgba(59, 130, 246, 0.22);
             backdrop-filter: blur(18px);
+        }
+
+        .sidebar-panel {
+            border: 1px solid rgba(59, 130, 246, 0.55);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.12), 0 0 30px rgba(59, 130, 246, 0.18);
+            backdrop-filter: blur(22px);
+        }
+
+        .dark .sidebar-panel {
+            border-color: rgba(255, 255, 255, 0.45);
+            background: rgba(15, 23, 42, 0.72);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 30px rgba(255, 255, 255, 0.18);
         }
 
         .dark .sidebar-search-dropdown {
@@ -370,7 +408,7 @@
     </style>
 </head>
 
-<body class="transition-colors duration-300 bg-black dark:bg-black text-gray-900 dark:text-white">
+<body class="transition-colors duration-300 bg-white text-gray-900 dark:bg-black dark:text-white">
 
     <div id="download-loading-overlay" class="download-loading-overlay" aria-live="polite" aria-busy="true">
         <div class="max-w-xl text-center">
@@ -389,21 +427,21 @@
                 <div class=" flex items-center justify-center font-bold text-white">
                     <img src="./assets/logo.png" alt="Logo" class="w-12 h-12 object-contain logo-img dark:bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)] dark:bg-shadow-2xl bg-shadow-2xl bg-shadow-[0_0_40px_10px_rgba(59,130,246,0.85)]">
                 </div>
-                <span class="text-2xl font-bold bg-blue-600/20 border border-blue-500/50 text-blue-400 hidden shadow-2xl dark:bg-blue-600/20 dark:border dark:border-blue-500/50 dark:text-blue-400 dark:shadow-2xl sm:block cursor-pointer">NetChill</span>
+                <span class="text-2xl font-bold text-blue-400 hidden sm:block cursor-pointer">NetChill</span>
             </div>
         </div>
 
         <!-- Search bar: visible on small screens and up -->
-        <div class="flex flex-1 max-w-full sm:max-w-lg mx-2 sm:mx-8 relative">
+        <div class="flex w-full flex-1 max-w-full mx-2 sm:mx-8 sm:max-w-lg relative">
             <div class="search-shell w-full">
                 <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
+                <span class="search-icon material-symbols-outlined text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
             </div>
-            <span class="search-icon material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
             <div id="movieSearchDropdown" class="absolute left-1/2 top-full z-50 mt-2 hidden search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 bg-slate-950/95 p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]"></div>
         </div>
 
         <div class="flex items-center space-x-3">
-            <button @click="darkMode = !darkMode" class="p-2 bg-white/10 rounded-full text-white">
+            <button id="theme-toggle-btn" type="button" onclick="document.documentElement.classList.toggle('dark'); const isDark = document.documentElement.classList.contains('dark'); document.body.style.backgroundColor = isDark ? '#000000' : '#ffffff'; document.body.style.color = isDark ? '#ffffff' : '#111827'; localStorage.setItem('netchill-theme', isDark ? 'dark' : 'light');" class="p-2 bg-white/10 rounded-full text-white">
                 <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
             </button>
             <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 dark:text-black rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
@@ -571,7 +609,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="mt-24 px-2 sm:px-4 max-w-7xl mx-auto">
-        <section class="rounded-[2rem] border border-white/10 bg-slate-900/95 shadow-2xl backdrop-blur-xl overflow-hidden">
+        <section class="rounded-[2rem] sidebar-panel overflow-hidden shadow-2xl">
             <div class="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-[1.8fr_1fr] xl:grid-cols-[2fr_0.9fr] p-4 sm:p-6 md:p-8">
                 <div class="space-y-4 sm:space-y-6">
                     <div class="rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 shadow-inner shadow-black/40">
@@ -591,11 +629,11 @@
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-2">
-                        <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5 shadow-lg">
+                        <div class="rounded-[1.75rem] sidebar-panel p-5 shadow-lg">
                             <p class="text-xs uppercase tracking-[0.25em] text-slate-500">Genre</p>
                             <p id="selected-movie-genre" class="mt-3 text-xl font-semibold text-white">Action · Fantasy</p>
                         </div>
-                        <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5 shadow-lg">
+                        <div class="rounded-[1.75rem] sidebar-panel p-5 shadow-lg">
                             <label class="flex items-center gap-2 text-sm md:text-base">
                                 <span class="font-bold">Season</span>
                                 <select id="season-select-preview" class="bg-gray-800 border border-blue-500/50 rounded-lg px-3 py-2 text-white">
@@ -608,7 +646,7 @@
                 </div>
 
                 <aside class="space-y-6">
-                    <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+                    <div class="rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                         <h2 class="text-xl font-bold text-white">Preview Size</h2>
                         <p class="mt-2 text-sm text-slate-400">Choose a preview panel size for a polished browsing experience.</p>
                         <div class="mt-4 flex flex-wrap gap-3">
@@ -619,7 +657,7 @@
                         </div>
                     </div>
 
-                    <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+                    <div class="rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                         <h2 class="text-xl font-bold text-white">Quick Actions</h2>
                         <div class="mt-4 grid gap-3">
                             <button id="open-download-btn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-4 rounded-3xl transition">Download Now</button>
@@ -630,10 +668,10 @@
             </div>
         </section>
 
-        <section class="mt-10 rounded-[2rem] border border-white/10 bg-slate-900/95 p-8 shadow-2xl backdrop-blur-xl">
+        <section class="mt-10 rounded-[2rem] sidebar-panel p-8 shadow-2xl">
             <h3 class="text-3xl font-bold text-white mb-3">Description</h3>
             <p id="selected-movie-description" class="text-slate-300 leading-8 max-w-3xl">A young boy known as the Avatar must master the four elemental powers to restore balance to the world. Stream the latest episodes, download premium-quality releases, and choose subtitles for the ultimate viewing experience.</p>
-            <div class="mt-8 rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+            <div class="mt-8 rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                 <div class="flex items-center justify-between gap-4 mb-4">
                     <div>
                         <h4 class="text-xl font-bold text-white">Streaming Availability</h4>
@@ -643,7 +681,7 @@
                 </div>
                 <div id="streaming-availability" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
             </div>
-            <div class="mt-8 rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-6 shadow-lg">
+            <div class="mt-8 rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                 <h4 class="text-xl font-bold text-white mb-4">Cast</h4>
                 <div id="selected-movie-cast" class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></div>
             </div>
@@ -656,7 +694,7 @@
 
         <!-- Quality Selector Modal -->
         <div id="qualitySelectModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-            <div class="selection-card relative w-full max-w-xl rounded-[2rem] border border-white/10 bg-slate-950/95 p-6 md:p-8 shadow-2xl">
+            <div class="selection-card relative w-full max-w-xl rounded-[2rem] sidebar-panel p-6 md:p-8 shadow-2xl">
                 <button onclick="closeQualityModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition text-2xl">×</button>
                 <div class="mb-6">
                     <p class="text-xs uppercase tracking-[0.35em] text-cyan-400">Download Setup</p>
@@ -704,14 +742,14 @@
     <!-- DOWNLOAD MODAL (THE PANEL) -->
     <div id="download-container-old" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transform-gpu scale-95 transition-all duration-300 ease-out">
         <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm transition-opacity duration-300"></div>
-        <div class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950/95 p-6 md:p-10 shadow-2xl">
+        <div class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2rem] sidebar-panel p-6 md:p-10">
             <button id="close-download-btn" class="absolute top-5 right-6 text-4xl text-slate-400 hover:text-white transition">&times;</button>
             <div class="grid gap-6 lg:grid-cols-[0.85fr_0.75fr] items-start">
                 <div class="space-y-6">
-                    <div class="rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-white/10 shadow-inner">
+                    <div class="rounded-[1.75rem] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 sidebar-panel shadow-inner">
                         <img src="./src/11ac0844aa55efac1ed50e5afbcd17dc.jpg" alt="Movie cover" class="w-full object-cover">
                     </div>
-                    <div class="rounded-[1.75rem] border border-white/10 bg-slate-900/90 p-5 shadow-lg">
+                    <div class="rounded-[1.75rem] sidebar-panel p-5 shadow-lg">
                         <div class="text-slate-300 text-sm uppercase tracking-[0.3em]">Season</div>
                         <select id="season-select" class="mt-4 w-full rounded-3xl border border-slate-700 bg-slate-800 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500">
                             <option value="season-1">Season 1</option>
@@ -722,11 +760,11 @@
                     </div>
                 </div>
                 <div class="space-y-6">
-                    <div class="rounded-[1.75rem] border border-white/10 bg-slate-900/90 p-6 shadow-lg">
+                    <div class="rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                         <h2 class="text-3xl font-bold text-white mb-2">Download Selection</h2>
                         <p class="text-slate-400">Pick an episode and quality, then start your download instantly.</p>
                     </div>
-                    <div class="rounded-[1.75rem] border border-white/10 bg-slate-900/90 p-6 shadow-lg">
+                    <div class="rounded-[1.75rem] sidebar-panel p-6 shadow-lg">
                         <div class="mb-6">
                             <label class="block mb-3 text-sm font-semibold text-slate-400">Select Episode</label>
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -801,6 +839,7 @@
                 document.documentElement.classList.toggle('dark');
                 const isDark = document.documentElement.classList.contains('dark');
                 localStorage.setItem('netchill-theme', isDark ? 'dark' : 'light');
+                syncDownloadLightMode();
             });
         }
 

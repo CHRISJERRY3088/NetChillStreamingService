@@ -93,3 +93,21 @@ nav.menu-bar .logo-img,
     max-height: 60vh;
   }
 }
+
+html:not(.dark) body {
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+html:not(.dark) .text-white,
+html:not(.dark) .text-slate-300,
+html:not(.dark) .text-slate-400,
+html:not(.dark) .text-slate-500,
+html:not(.dark) .text-gray-300,
+html:not(.dark) .text-gray-400,
+html:not(.dark) .text-gray-500,
+html:not(.dark) .text-zinc-300,
+html:not(.dark) .text-zinc-400,
+html:not(.dark) .text-zinc-500 {
+  color: #111827 !important;
+}

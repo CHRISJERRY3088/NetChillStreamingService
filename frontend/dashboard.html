@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ darkMode: true, mobileMenu: false }" :class="{ 'dark': darkMode }">
+<html lang="en" x-data="{ darkMode: false, mobileMenu: false }" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +14,9 @@
         ::-webkit-scrollbar-thumb { background-color: rgba(100, 100, 100, 0.5); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background-color: rgba(100, 100, 100, 0.7); }
     </style>
+    <link rel="stylesheet" href="./assets/glass.css">
 </head>
-<body class="bg-black text-white overflow-x-hidden">
+<body class="bg-white text-gray-900 overflow-x-hidden">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
         <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex items-center justify-between px-4 py-4 md:px-10">
