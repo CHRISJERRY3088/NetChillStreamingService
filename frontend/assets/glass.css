@@ -33,6 +33,10 @@ body .glass-button,
 body .glass-surface,
 body .glass-card,
 body .movie-card,
+body .animation-card,
+body .section-sidebar-card,
+body .trailer-card,
+body .movie-flex-card,
 body .sidebar-panel,
 body .sidebar-search-dropdown,
 body .search-dropdown-size,
@@ -71,8 +75,13 @@ a[href]:hover,
 .sidebar-search-dropdown,
 .search-dropdown-size,
 .selection-card,
-.search-shell {
+.search-shell,
+.animation-card,
+.section-sidebar-card,
+.trailer-card,
+.movie-flex-card {
     background: var(--glass-surface);
+    background-image: radial-gradient(circle at top left, rgba(59, 130, 246, 0.14), transparent 35%), linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(5, 9, 20, 0.90));
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     border-radius: 1.25rem;
@@ -86,11 +95,52 @@ a[href]:hover,
 .sidebar-search-dropdown:hover,
 .search-dropdown-size:hover,
 .selection-card:hover,
-.search-shell:hover {
+.search-shell:hover,
+.animation-card:hover,
+.section-sidebar-card:hover,
+.trailer-card:hover,
+.movie-flex-card:hover {
     transform: translateY(-1px);
     background: var(--glass-surface-strong);
     border-color: rgba(59, 130, 246, 0.24);
     box-shadow: var(--glass-shadow-hover);
+}
+
+.glass-card,
+.animation-card,
+.section-sidebar-card,
+.movie-card,
+.trailer-card,
+.movie-flex-card {
+    position: relative;
+}
+
+.glass-card::before,
+.animation-card::before,
+.section-sidebar-card::before,
+.movie-card::before,
+.trailer-card::before,
+.movie-flex-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 35%, transparent 55%);
+    mix-blend-mode: screen;
+    transform: translateY(-10px) skewY(-6deg);
+    filter: blur(8px);
+    transition: opacity 0.24s ease, transform 0.24s ease;
+}
+
+.glass-card:hover::before,
+.animation-card:hover::before,
+.section-sidebar-card:hover::before,
+.movie-card:hover::before,
+.trailer-card:hover::before,
+.movie-flex-card:hover::before {
+    opacity: 1;
+    transform: translateY(0) skewY(-6deg);
 }
 
 .movie-card {
