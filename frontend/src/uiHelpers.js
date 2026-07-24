@@ -72,6 +72,73 @@
     }).slice(0, 8);
   }
 
+  function showMovieSuggestions(inputEl, dropdownEl, query, catalog = movieCatalog) {
+    if (!inputEl || !dropdownEl) return null;
+
+    const suggestions = getMovieSuggestions(query, catalog);
+    if (!query || !String(query).trim() || suggestions.length === 0) {
+      dropdownEl.innerHTML = '<div class="px-3 py-2 text-sm text-gray-400">No matching movies found.</div>';
+      dropdownEl.classList.remove('hidden');
+      return suggestions;
+    }
+
+    dropdownEl.innerHTML = suggestions.map((item) => `
+      <button type="button" class="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-left text-sm text-gray-100 transition hover:bg-blue-500/20" data-title="${item.title}" data-link="${item.link}">
+        <span>
+          <span class="block font-semibold text-white">${item.title}</span>
+          <span class="mt-1 block text-xs text-gray-400">${item.category} • ${item.year}</span>
+        </span>
+        <span class="text-xs text-blue-300">Open</span>
+      </button>
+    `).join('');
+    dropdownEl.classList.remove('hidden');
+    return suggestions;
+  }
+
+  function attachMovieSearch(inputElOrId, dropdownElOrId, catalog = movieCatalog) {
+    const inputEl = typeof inputElOrId === 'string'
+      ? (typeof document !== 'undefined' ? document.getElementById(inputElOrId) : null)
+      : inputElOrId;
+    const dropdownEl = typeof dropdownElOrId === 'string'
+      ? (typeof document !== 'undefined' ? document.getElementById(dropdownElOrId) : null)
+      : dropdownElOrId;
+
+    if (!inputEl || !dropdownEl) return null;
+
+    inputEl.addEventListener('input', (event) => {
+      showMovieSuggestions(inputEl, dropdownEl, event.target.value, catalog);
+    });
+
+    inputEl.addEventListener('focus', () => {
+      showMovieSuggestions(inputEl, dropdownEl, inputEl.value, catalog);
+    });
+
+    inputEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        dropdownEl.classList.add('hidden');
+      }
+    });
+
+    inputEl.addEventListener('blur', () => {
+      setTimeout(() => {
+        dropdownEl.classList.add('hidden');
+      }, 180);
+    });
+
+    dropdownEl.addEventListener('click', (event) => {
+      const buttonEl = event.target.closest('button[data-link]');
+      if (!buttonEl) return;
+
+      inputEl.value = buttonEl.dataset.title || inputEl.value;
+      dropdownEl.classList.add('hidden');
+      if (typeof window !== 'undefined' && window.location) {
+        window.location.href = buttonEl.dataset.link;
+      }
+    });
+
+    return { inputEl, dropdownEl };
+  }
+
   const api = {
     movieCatalog,
     getStoredUser,
@@ -80,6 +147,8 @@
     getLogoutDestination,
     navigateToAuthDestination,
     getMovieSuggestions,
+    showMovieSuggestions,
+    attachMovieSearch,
   };
 
   root.NetchillUI = api;

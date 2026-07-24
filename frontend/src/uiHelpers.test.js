@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { getAuthDestination, getLogoutDestination, getMovieSuggestions } = require('./uiHelpers');
+const { getAuthDestination, getLogoutDestination, getMovieSuggestions, attachMovieSearch } = require('./uiHelpers');
 
 test('redirects to dashboard when a saved user exists', () => {
   const storage = {
@@ -41,4 +41,33 @@ test('returns close movie suggestions for similar names', () => {
   ]);
 
   assert.deepEqual(suggestions.map((item) => item.title), ['Sky Riders']);
+});
+
+test('attaches movie search dropdown behavior to a search input', () => {
+  const listeners = {};
+  const input = {
+    value: 'sky',
+    addEventListener: (eventName, handler) => {
+      listeners[eventName] = handler;
+    },
+  };
+  const dropdown = {
+    innerHTML: '',
+    classList: {
+      hidden: false,
+      add: (className) => {
+        if (className === 'hidden') dropdown.classList.hidden = true;
+      },
+      remove: (className) => {
+        if (className === 'hidden') dropdown.classList.hidden = false;
+      },
+    },
+    addEventListener: () => {},
+  };
+
+  attachMovieSearch(input, dropdown);
+  listeners.input({ target: input });
+
+  assert.match(dropdown.innerHTML, /Sky Riders/);
+  assert.equal(dropdown.classList.hidden, false);
 });
