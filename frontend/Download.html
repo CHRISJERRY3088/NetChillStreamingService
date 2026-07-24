@@ -370,6 +370,32 @@
             transform: translateX(-50%);
         }
 
+        @media (max-width: 1024px) {
+            .search-dropdown-size {
+                width: calc(100vw - 2rem);
+                max-width: calc(100vw - 2rem);
+                left: 0;
+                right: auto;
+                transform: none;
+                margin-left: 0;
+                border-radius: 1rem;
+                max-height: 60vh;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .search-dropdown-size {
+                width: calc(100vw - 1rem);
+                max-width: calc(100vw - 1rem);
+                left: 0;
+                right: auto;
+                transform: none;
+                margin-left: 0;
+                border-radius: 1rem;
+                max-height: 55vh;
+            }
+        }
+
         .dark .search-shell {
             box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 24px rgba(255,255,255,0.16);
         }
