@@ -105,12 +105,82 @@
 
     if (!inputEl || !dropdownEl) return null;
 
+    // Utility: position dropdown beneath the input within its parent container and show an arrow
+    function positionDropdown() {
+      if (!inputEl || !dropdownEl) return;
+
+      const rect = inputEl.getBoundingClientRect();
+      const parentEl = dropdownEl.parentElement || document.body;
+      const parentRect = parentEl.getBoundingClientRect();
+      const viewW = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const preferredWidth = 300;
+      const dropdownWidth = Math.min(preferredWidth, Math.max(200, viewW - 32));
+
+      dropdownEl.style.position = 'absolute';
+      dropdownEl.style.width = dropdownWidth + 'px';
+      dropdownEl.style.transform = 'none';
+
+      const isBodyParent = parentEl === document.body;
+      const parentWidth = Math.max(240, isBodyParent ? viewW : Math.round(parentEl.clientWidth || parentRect.width || viewW));
+      const parentLeft = isBodyParent ? window.scrollX : parentRect.left;
+      const parentTop = isBodyParent ? window.scrollY : parentRect.top;
+
+      const left = Math.round(rect.left - parentLeft + (rect.width / 2) - (dropdownWidth / 2));
+      const top = Math.round(rect.bottom - parentTop + 2);
+
+      const clampedLeft = Math.max(8, Math.min(left, parentWidth - dropdownWidth - 8));
+      dropdownEl.style.left = clampedLeft + 'px';
+      dropdownEl.style.top = top + 'px';
+      dropdownEl.style.transform = 'none !important';
+      dropdownEl.style.zIndex = 9999;
+
+      // Create or update arrow pointing to the input center
+      try {
+        let arrow = dropdownEl.querySelector('.netchill-dropdown-arrow');
+        if (!arrow) {
+          arrow = document.createElement('div');
+          arrow.className = 'netchill-dropdown-arrow';
+          arrow.style.position = 'absolute';
+          arrow.style.top = '-8px';
+          arrow.style.width = '0px';
+          arrow.style.height = '0px';
+          arrow.style.pointerEvents = 'none';
+          arrow.innerHTML = '<div style="width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid rgba(15,23,42,0.9);"></div>';
+          dropdownEl.appendChild(arrow);
+        }
+
+        const arrowWidth = 16; // px
+        const inputCenterX = Math.round(rect.left - parentLeft + rect.width / 2);
+        const arrowLeft = inputCenterX - clampedLeft - Math.round(arrowWidth / 2);
+        const arrowClamped = Math.max(8, Math.min(arrowLeft, dropdownWidth - arrowWidth - 8));
+        arrow.style.left = arrowClamped + 'px';
+      } catch (e) {
+        // ignore arrow positioning errors
+      }
+    }
+
+    // Debounced reposition helper
+    let repositionRaf = null;
+    function scheduleReposition() {
+      if (repositionRaf) cancelAnimationFrame(repositionRaf);
+      repositionRaf = requestAnimationFrame(() => {
+        positionDropdown();
+        repositionRaf = null;
+      });
+    }
+
+    // Show/update suggestions and position the dropdown
+    function showAndPosition() {
+      showMovieSuggestions(inputEl, dropdownEl, inputEl.value, catalog);
+      scheduleReposition();
+    }
+
     inputEl.addEventListener('input', (event) => {
-      showMovieSuggestions(inputEl, dropdownEl, event.target.value, catalog);
+      showAndPosition();
     });
 
     inputEl.addEventListener('focus', () => {
-      showMovieSuggestions(inputEl, dropdownEl, inputEl.value, catalog);
+      showAndPosition();
     });
 
     inputEl.addEventListener('keydown', (event) => {
@@ -122,6 +192,8 @@
     inputEl.addEventListener('blur', () => {
       setTimeout(() => {
         dropdownEl.classList.add('hidden');
+        // cleanup handlers when hidden
+        if (dropdownEl._netchillCleanup) dropdownEl._netchillCleanup();
       }, 180);
     });
 
@@ -136,7 +208,31 @@
       }
     });
 
-    return { inputEl, dropdownEl };
+    // Reposition on scroll/resize to keep aligned with input
+    function onWindowChange() {
+      scheduleReposition();
+    }
+
+    window.addEventListener('resize', onWindowChange, { passive: true });
+    window.addEventListener('scroll', onWindowChange, { passive: true });
+
+    // Provide cleanup to remove handlers and arrow when dropdown is removed
+    dropdownEl._netchillCleanup = () => {
+      try {
+        window.removeEventListener('resize', onWindowChange);
+        window.removeEventListener('scroll', onWindowChange);
+        if (repositionRaf) cancelAnimationFrame(repositionRaf);
+        const arrow = dropdownEl.querySelector('.netchill-dropdown-arrow');
+        if (arrow) arrow.remove();
+      } catch (e) {
+        // ignore cleanup errors
+      }
+    };
+
+    // Store a reference for potential external repositioning
+    dropdownEl._netchillPositionHandlers = { scheduleReposition, positionDropdown };
+
+    return { inputEl, dropdownEl, positionDropdown };
   }
 
   const api = {
@@ -161,7 +257,7 @@
   try {
     if (typeof document !== 'undefined') {
       const style = document.createElement('style');
-      style.innerHTML = '[id$="SearchDropdown"]{ width:700px !important; height:600px !important; max-height:none !important; overflow:auto !important; }\n@media (max-width:1024px){ [id$="SearchDropdown"]{ width:calc(100% - 2rem) !important; max-width:calc(100% - 2rem) !important; left:0 !important; right:auto !important; transform:none !important; margin-left:0 !important; max-height:60vh !important; } }\n@media (max-width:640px){ [id$="SearchDropdown"]{ width:calc(100% - 1rem) !important; max-width:calc(100% - 1rem) !important; left:0 !important; right:auto !important; transform:none !important; margin-left:0 !important; max-height:55vh !important; } }';
+      style.innerHTML = '[id$="SearchDropdown"]{ width:700px !important; height:600px !important; max-height:none !important; overflow:auto !important; position:absolute !important; }\n@media (max-width:1280px){ [id$="SearchDropdown"]{ width:300px !important; max-width:calc(100vw - 2rem) !important; max-height:60vh !important; } }\n@media (max-width:768px){ [id$="SearchDropdown"]{ width:300px !important; max-width:calc(100vw - 2rem) !important; max-height:60vh !important; } }\n@media (max-width:640px){ [id$="SearchDropdown"]{ width:300px !important; max-width:calc(100vw - 1rem) !important; max-height:55vh !important; } }';
       document.head.appendChild(style);
     }
   } catch (e) {
