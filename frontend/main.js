@@ -148,7 +148,7 @@ function resolveTrailerVideoUrl() {
   if (!decodedName) return null;
 
   const normalizedName = decodedName.toLowerCase().trim();
-  if (normalizedName === 'tease.mp4' || normalizedName.includes('tease') || normalizedName.includes('hexed')) {
+  if (normalizedName === 'tease.mp4' || normalizedName.includes('tease')) {
     return localTrailerVideoPath;
   }
 

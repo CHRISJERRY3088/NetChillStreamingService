@@ -19,7 +19,7 @@
 <body class="bg-white text-gray-900 overflow-x-hidden">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex items-center justify-between px-4 py-4 md:px-10">
+        <nav class="site-nav menu-bar fixed z-50 top-0 left-0 w-full flex items-center justify-between px-4 py-4 md:px-10 glass-surface">
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2" onclick="window.location.href='./index.html'">
                     <img src="./assets/logo.png" alt="Logo" class="w-12 h-12 object-contain logo-img cursor-pointer">
@@ -28,13 +28,13 @@
             </div>
 
             <div class="flex items-center space-x-3">
-                <button @click="darkMode = !darkMode" class="p-2 bg-white/10 rounded-full text-white">
+                <button @click="darkMode = !darkMode" class="glass-button p-2 rounded-full text-white">
                     <span class="material-symbols-outlined" x-text="darkMode ? 'light_mode' : 'dark_mode'"></span>
                 </button>
-                <button onclick="window.location.href='./account.html'" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold text-sm transition-all">
+                <button onclick="window.location.href='./account.html'" class="glass-button px-4 py-2 text-white rounded-lg font-bold text-sm transition-all">
                     ACCOUNT
                 </button>
-                <button onclick="logout()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-bold text-sm transition-all">
+                <button onclick="logout()" class="glass-button px-4 py-2 text-white rounded-lg font-bold text-sm transition-all">
                     LOGOUT
                 </button>
             </div>
@@ -51,7 +51,7 @@
 
                 <!-- Profile Card -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div class="md:col-span-2 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                    <div class="md:col-span-2 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 glass-surface">
                         <h2 class="text-2xl font-bold mb-6">Profile Information</h2>
                         
                         <div class="space-y-4">
@@ -71,12 +71,12 @@
                             </div>
                         </div>
 
-                        <button onclick="editProfile()" class="mt-8 w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all">
+                        <button onclick="editProfile()" class="glass-button mt-8 w-full py-3 text-white font-bold rounded-xl transition-all">
                             Edit Profile
                         </button>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 glass-surface">
                         <h3 class="text-xl font-bold mb-4">Quick Stats</h3>
                         <div class="space-y-4">
                             <div class="flex justify-between items-center pb-4 border-b border-white/10">
@@ -108,7 +108,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
-                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 glass-surface">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xl font-bold text-blue-300">Saved for Offline</h2>
                             <span id="offlineStatus" class="text-xs px-2 py-1 rounded-full bg-green-600/20 text-green-300">Available</span>
@@ -118,7 +118,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                    <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 glass-surface">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xl font-bold text-blue-300">Last Viewed</h2>
                             <span id="lastViewedStatus" class="text-xs px-2 py-1 rounded-full bg-blue-600/20 text-blue-200">Recent</span>
@@ -129,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="mb-10 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6">
+                <div class="mb-10 bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 glass-surface">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-bold text-blue-300">Billing Status</h2>
                         <span class="text-xs px-2 py-1 rounded-full bg-blue-600/30 text-blue-200">Latest</span>
@@ -170,10 +170,10 @@
                             <div id="editError" class="hidden text-red-400 text-sm"></div>
 
                             <div class="flex gap-3 pt-4">
-                                <button type="button" onclick="closeEditModal()" class="flex-1 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">
+                                <button type="button" onclick="closeEditModal()" class="glass-button flex-1 py-2 text-white rounded-lg">
                                     Cancel
                                 </button>
-                                <button type="submit" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold">
+                                <button type="submit" class="glass-button flex-1 py-2 text-white rounded-lg font-bold">
                                     Save Changes
                                 </button>
                             </div>
@@ -183,8 +183,8 @@
 
                 <!-- Offline Player Modal -->
                 <div id="offlinePlayerModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/80 p-4">
-                    <div class="relative w-full max-w-4xl rounded-3xl bg-slate-950 border border-white/10 shadow-2xl overflow-hidden">
-                        <button id="offlinePlayerClose" class="absolute top-4 right-4 z-10 rounded-full bg-white/10 px-3 py-2 text-white transition hover:bg-white/20">×</button>
+                    <div class="relative w-full max-w-4xl rounded-3xl bg-slate-950 border border-white/10 shadow-2xl overflow-hidden glass-surface">
+                        <button id="offlinePlayerClose" class="glass-button absolute top-4 right-4 z-10 rounded-full px-3 py-2 text-white transition">×</button>
                         <div class="p-4 border-b border-white/10 bg-slate-900/80">
                             <h3 id="offlinePlayerTitle" class="text-lg font-bold text-white">Playing saved movie</h3>
                             <p id="offlinePlayerMeta" class="text-sm text-gray-400">Offline playback</p>
@@ -196,7 +196,7 @@
                 </div>
 
                 <!-- Recent Activity -->
-                <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8">
+                <div class="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 glass-surface">
                     <h2 class="text-2xl font-bold mb-6">Your Content</h2>
                     <p class="text-gray-400">Start watching movies and shows to see them here</p>
                 </div>

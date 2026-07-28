@@ -132,7 +132,7 @@ const normalizeRapidMovie = (item) => {
     : (typeof item.genre === 'string' ? item.genre.split(',').map((name) => ({ name: name.trim() })) : []);
 
   return {
-    id: item.imdbID || item.tmdbID || item.id || item.title || item.name || `movie-${Math.random().toString(36).slice(2, 8)}`,
+    id: item.imdbID || item.id || item.title || item.name || `movie-${Math.random().toString(36).slice(2, 8)}`,
     title: item.title || item.name || item.original_title || item.originalName || 'Untitled',
     overview: item.overview || item.description || item.synopsis || item.plot || '',
     poster_path: poster,
@@ -251,7 +251,6 @@ const searchRapidMovies = async (keyword, page = 1) => {
 
 const trailerQueries = [
   { query: 'Daredevil Season 4', badge: 'Daredevil S4', buttonText: 'Watch Daredevil Season 4 Trailer' },
-  { query: 'Hexed', badge: 'Hexed', buttonText: 'Watch Hexed Trailer' },
   { query: 'Season 4', badge: 'Season 4', buttonText: 'Watch Season 4 Trailer' },
 ];
 
@@ -278,7 +277,7 @@ const normalizeTrailerItem = (item, fallbackQuery) => {
     title,
     subtitle: overview,
     image: formatSlideImage(imageSource),
-    trailer_url: trailerUrl || '../Hexed%20-%20Official%20Teaser%20Trailer.mp4',
+    trailer_url: trailerUrl || '',
     trailer_button_text: `Watch ${title} Trailer`,
   };
 };
