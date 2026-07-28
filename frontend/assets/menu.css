@@ -95,6 +95,18 @@ nav.menu-bar .logo-img,
   }
 }
 
+/* Center dropdown panels on large screens */
+@media (min-width: 1024px) {
+  .search-dropdown-size,
+  [id$="MovieSearchDropdown"],
+  .sidebar-search-dropdown {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+  }
+}
+
 @media (max-width: 768px) {
   .search-dropdown-size {
     width: 300px !important;

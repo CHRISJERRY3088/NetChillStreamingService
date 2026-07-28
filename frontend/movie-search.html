@@ -99,11 +99,15 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
         }
 
         .movie-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-6px) scale(1.04);
+            border-color: rgba(96, 165, 250, 0.6);
+            box-shadow: 0 28px 70px rgba(59, 130, 246, 0.18);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.26), rgba(59, 130, 246, 0.12));
+            background-color: rgba(255, 255, 255, 0.16);
         }
 
         .movie-card img {

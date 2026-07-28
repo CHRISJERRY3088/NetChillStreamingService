@@ -72,6 +72,43 @@
     }).slice(0, 8);
   }
 
+  function setDropdownBackdrop(open) {
+    const backdrop = typeof document !== 'undefined' ? document.getElementById('dropdownBlurBackdrop') : null;
+    if (!backdrop) return;
+    backdrop.classList.toggle('show', Boolean(open));
+  }
+
+  function syncDropdownBackdrop() {
+    const dropdowns = typeof document !== 'undefined'
+      ? Array.from(document.querySelectorAll('[id$="SearchDropdown"], [id$="MovieSearchDropdown"], #sectionSidebarSearchDropdown'))
+      : [];
+    const isOpen = dropdowns.some((dropdownEl) => dropdownEl && !dropdownEl.classList.contains('hidden'));
+    setDropdownBackdrop(isOpen);
+  }
+
+  function hideAllSearchDropdowns() {
+    const dropdowns = typeof document !== 'undefined'
+      ? Array.from(document.querySelectorAll('[id$="SearchDropdown"], [id$="MovieSearchDropdown"], #sectionSidebarSearchDropdown'))
+      : [];
+    dropdowns.forEach((dropdownEl) => dropdownEl.classList.add('hidden'));
+    syncDropdownBackdrop();
+  }
+
+  function ensureDropdownBackdropHandlers() {
+    if (typeof document === 'undefined' || document.__netchillDropdownBackdropBound) return;
+    const backdrop = document.getElementById('dropdownBlurBackdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', hideAllSearchDropdowns);
+    }
+    document.addEventListener('click', (event) => {
+      const clickedInsideDropdown = event.target.closest('[id$="SearchDropdown"], [id$="MovieSearchDropdown"], #sectionSidebarSearchDropdown, .search-shell');
+      if (!clickedInsideDropdown) {
+        hideAllSearchDropdowns();
+      }
+    });
+    document.__netchillDropdownBackdropBound = true;
+  }
+
   function showMovieSuggestions(inputEl, dropdownEl, query, catalog = movieCatalog) {
     if (!inputEl || !dropdownEl) return null;
 
@@ -79,6 +116,7 @@
     if (!query || !String(query).trim() || suggestions.length === 0) {
       dropdownEl.innerHTML = '<div class="px-3 py-2 text-sm text-gray-400">No matching movies found.</div>';
       dropdownEl.classList.remove('hidden');
+      syncDropdownBackdrop();
       return suggestions;
     }
 
@@ -92,6 +130,7 @@
       </button>
     `).join('');
     dropdownEl.classList.remove('hidden');
+    syncDropdownBackdrop();
     return suggestions;
   }
 
@@ -104,6 +143,8 @@
       : dropdownElOrId;
 
     if (!inputEl || !dropdownEl) return null;
+
+    ensureDropdownBackdropHandlers();
 
     // Utility: position dropdown beneath the input within its parent container and show an arrow
     function positionDropdown() {
@@ -186,12 +227,14 @@
     inputEl.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         dropdownEl.classList.add('hidden');
+        syncDropdownBackdrop();
       }
     });
 
     inputEl.addEventListener('blur', () => {
       setTimeout(() => {
         dropdownEl.classList.add('hidden');
+        syncDropdownBackdrop();
         // cleanup handlers when hidden
         if (dropdownEl._netchillCleanup) dropdownEl._netchillCleanup();
       }, 180);
@@ -203,6 +246,7 @@
 
       inputEl.value = buttonEl.dataset.title || inputEl.value;
       dropdownEl.classList.add('hidden');
+      syncDropdownBackdrop();
       if (typeof window !== 'undefined' && window.location) {
         window.location.href = buttonEl.dataset.link;
       }
