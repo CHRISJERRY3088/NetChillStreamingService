@@ -101,7 +101,7 @@ function renderTrailerCards(trailers) {
     return `
       <article class="trailer-card glass-card group overflow-hidden rounded-2xl border border-white/20 bg-slate-900/50 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_18px_55px_rgba(2,6,23,0.45)] backdrop-blur-2xl transition hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_24px_70px_rgba(2,6,23,0.55)] sm:rounded-3xl">
         <div class="relative h-28 bg-cover bg-center sm:h-40 lg:h-52" style="background-image: ${image};">
-          <div class="absolute inset-0 bg-black/30"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-slate-900/10 to-slate-900/30 backdrop-blur-xl"></div>
           <div class="absolute bottom-0 left-0 right-0 p-2 text-white sm:p-4">
             <p class="text-[10px] uppercase tracking-[0.25em] text-blue-200 sm:text-xs">${trailer.badge || 'Trailer'}</p>
             <h3 class="mt-1 text-sm font-bold leading-tight sm:mt-2 sm:text-lg">${title}</h3>
