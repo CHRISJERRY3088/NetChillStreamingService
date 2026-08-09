@@ -107,10 +107,10 @@ const MOVIES = {
     return {
       id: safeMovie.id || safeMovie.movieId || safeMovie.slug || `movie-${Math.random().toString(36).slice(2, 8)}`,
       title: safeMovie.title || safeMovie.name || safeMovie.original_title || fallbackLabel,
-      overview: safeMovie.overview || safeMovie.description || 'A premium movie experience is ready to stream.',
+      overview: safeMovie.overview || safeMovie.description || '',
       poster_path: safeMovie.poster_path || safeMovie.poster || safeMovie.image || '',
-      vote_average: safeMovie.vote_average ?? safeMovie.rating ?? 8.0,
-      release_date: safeMovie.release_date || safeMovie.year || '2024-01-01',
+      vote_average: safeMovie.vote_average ?? safeMovie.rating ?? null,
+      release_date: safeMovie.release_date || safeMovie.year || '',
       genre_ids: safeMovie.genre_ids || []
     };
   },
@@ -456,9 +456,16 @@ const MOVIES = {
       const movieId = JSON.stringify(movie.id);
       const movieTitle = JSON.stringify(movie.title || '');
       const movieMeta = JSON.stringify(movie).replace(/</g, '\u003c');
+      const posterUrl = MOVIES.getPosterUrl(movie.poster_path);
       return `
       <div class="p-2 hover:bg-slate-800/50 rounded-lg cursor-pointer transition flex gap-3" onclick="MOVIES.selectMovie(${movieId}, ${movieTitle}, ${movieMeta})">
-        <img src="${MOVIES.getPosterUrl(movie.poster_path)}" alt="${movie.title}" class="w-12 h-16 object-cover rounded">
+        ${posterUrl ? `
+        <img src="${posterUrl}" alt="${movie.title}" class="w-12 h-16 object-cover rounded">
+        ` : `
+        <div class="w-12 h-16 flex items-center justify-center rounded bg-slate-800 text-gray-400">
+          <span class="material-symbols-outlined text-2xl">movie</span>
+        </div>
+        `}
         <div class="flex-1 min-w-0">
           <p class="text-white text-sm font-semibold truncate">${movie.title}</p>
           <p class="text-gray-400 text-xs">${movie.release_date ? movie.release_date.split('-')[0] : 'N/A'}</p>
