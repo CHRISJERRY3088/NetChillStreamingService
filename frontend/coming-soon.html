@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon | NetChill</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/glass.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 22%),
+                #050816;
+            color: #e2e8f0;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .hero-card {
+            width: min(100%, 42rem);
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px);
+            border-radius: 2rem;
+            padding: 3rem;
+        }
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), transparent 34%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 28%);
+            filter: blur(18px);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .sparkle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 1), rgba(59, 130, 246, 0.6));
+            filter: blur(1px);
+            animation: float 4s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        .sparkle:nth-child(1) { top: 10%; left: 18%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 25%; right: 16%; animation-delay: 0.8s; }
+        .sparkle:nth-child(3) { bottom: 18%; left: 20%; animation-delay: 1.6s; }
+        .sparkle:nth-child(4) { bottom: 22%; right: 24%; animation-delay: 2.4s; }
+        .sparkle:nth-child(5) { top: 52%; left: 52%; animation-delay: 3.2s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-12px) scale(1.25); }
+        }
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .primary-btn, .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 999px;
+            min-width: 10rem;
+            padding: 0.95rem 1.5rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .primary-btn {
+            background: #0ea5e9;
+            color: white;
+            box-shadow: 0 18px 45px rgba(14, 165, 233, 0.26);
+        }
+        .secondary-btn {
+            background: rgba(255,255,255,0.06);
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .primary-btn:hover, .secondary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <section class="hero-card relative overflow-hidden">
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="sparkle"></div>
+            <div class="hero-content text-center">
+                <p class="text-sm uppercase tracking-[0.35em] text-sky-300/80">NetChill</p>
+                <h1 class="mt-4 text-4xl sm:text-5xl font-extrabold text-white">Coming Soon</h1>
+                <p class="mt-6 text-base sm:text-lg leading-8 text-slate-300 max-w-2xl mx-auto">
+                    This mobile menu feature is still being built. We’re polishing the experience and will have it ready for your next visit.
+                </p>
+                <div class="button-row">
+                    <a href="./index.html" class="primary-btn">
+                        Back to Home
+                    </a>
+                    <a href="./dashboard.html" class="secondary-btn">
+                        Visit Dashboard
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -31,6 +31,15 @@ const trailerVideoDefaultSrc = trailerVideo?.querySelector('source')?.getAttribu
 const localTrailerVideoPath = '';
 let currentTrailerUrl = trailerVideoDefaultSrc || localTrailerVideoPath;
 
+let jikanAnimeTrailerCache = null;
+let jikanAnimeTrailerPromise = null;
+
+function isYouTubeUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const normalized = url.trim().toLowerCase();
+  return normalized.includes('youtube.com') || normalized.includes('youtu.be');
+}
+
 function normalizeSlideData(slide) {
   if (!slide || typeof slide !== 'object') return null;
   return {
@@ -45,20 +54,29 @@ function normalizeSlideData(slide) {
 }
 
 async function loadSlideTrailers() {
-  if (!window.moviesAPI?.getTrailers) return;
+  let fetchedSlides = [];
 
   try {
-    const response = await window.moviesAPI.getTrailers();
-    if (response?.results && Array.isArray(response.results) && response.results.length > 0) {
-      const fetchedSlides = response.results
-        .map(normalizeSlideData)
-        .filter(Boolean);
-      if (fetchedSlides.length) {
-        slides.splice(0, slides.length, ...fetchedSlides);
+    if (window.moviesAPI?.getTrailers) {
+      const response = await window.moviesAPI.getTrailers();
+      if (response?.results && Array.isArray(response.results) && response.results.length > 0) {
+        fetchedSlides = response.results.map(normalizeSlideData).filter(Boolean);
       }
     }
   } catch (error) {
     console.warn('Unable to fetch trailer slides from API:', error);
+  }
+
+  if (!fetchedSlides.length) {
+    try {
+      fetchedSlides = await fetchJikanTopAnimeTrailers(5);
+    } catch (error) {
+      console.warn('Unable to fetch Jikan trailer slides:', error);
+    }
+  }
+
+  if (fetchedSlides.length) {
+    slides.splice(0, slides.length, ...fetchedSlides);
   }
 
   renderTrailerCards(slides);
@@ -73,7 +91,51 @@ function isPlayableVideoUrl(url) {
 function resolvePlayableTrailerUrl(url) {
   if (!url || typeof url !== 'string') return null;
   const trimmed = url.trim();
-  return isPlayableVideoUrl(trimmed) ? trimmed : null;
+  return isPlayableVideoUrl(trimmed) || isYouTubeUrl(trimmed) ? trimmed : null;
+}
+
+function normalizeJikanAnimeForTrailer(anime) {
+  if (!anime || typeof anime !== 'object') return null;
+
+  const title = anime.title || anime.title_english || anime.title_japanese || 'Anime Trailer';
+  const synopsis = typeof anime.synopsis === 'string' ? anime.synopsis.replace(/\s+/g, ' ').trim() : '';
+  const poster = anime.images?.jpg?.large_image_url || anime.images?.webp?.large_image_url || anime.images?.jpg?.image_url || '';
+  const trailerUrl = anime.trailer?.youtube_id ? `https://www.youtube.com/watch?v=${anime.trailer.youtube_id}` : anime.trailer?.url || '';
+  const year = anime.year || (anime.aired?.prop?.from?.year ? String(anime.aired.prop.from.year) : '');
+  const genres = Array.isArray(anime.genres) ? anime.genres.map((genre) => genre.name).slice(0, 2) : [];
+
+  return {
+    image: poster,
+    badge: 'Jikan Top Anime',
+    eyebrow: 'Trending anime movies',
+    title,
+    subtitle: synopsis || `${year ? `${year} • ` : ''}${genres.join(' • ') || 'Top-rated anime movie'}`,
+    trailerUrl,
+    trailer_url: trailerUrl,
+    trailerButtonText: 'Watch Trailer',
+  };
+}
+
+async function fetchJikanTopAnimeTrailers(limit = 5) {
+  if (jikanAnimeTrailerCache) return jikanAnimeTrailerCache;
+  if (!jikanAnimeTrailerPromise) {
+      jikanAnimeTrailerPromise = fetch(`/api/movies/jikan/top-anime?limit=${limit}`)
+        .then(async (response) => {
+          if (!response.ok) throw new Error(`Jikan request failed with ${response.status}`);
+          const payload = await response.json();
+          const normalized = (Array.isArray(payload?.results) ? payload.results : [])
+            .map(normalizeJikanAnimeForTrailer)
+            .filter(Boolean);
+          jikanAnimeTrailerCache = normalized;
+          return normalized;
+        })
+      .catch((error) => {
+        console.warn('Unable to fetch Jikan anime trailers:', error);
+        return [];
+      });
+  }
+
+  return jikanAnimeTrailerPromise;
 }
 
 function renderTrailerCards(trailers) {
@@ -93,14 +155,18 @@ function renderTrailerCards(trailers) {
     const buttonText = trailer.trailerButtonText || trailer.trailer_button_text || 'Watch Trailer';
     const safeTrailerUrl = String(trailerUrl).replace(/'/g, "\\'");
     const playable = isPlayableVideoUrl(trailerUrl);
+    const youtube = isYouTubeUrl(trailerUrl);
+    const backgroundImage = image ? (image.startsWith('http') ? `url("${image.replace(/"/g, '&quot;')}")` : image) : 'none';
     const buttonAction = playable
       ? `onclick="openTrailerModal('${safeTrailerUrl}')"`
-      : 'disabled';
-    const buttonLabel = playable ? buttonText : 'Trailer unavailable';
+      : youtube
+        ? `onclick="window.open('${safeTrailerUrl}', '_blank', 'noopener,noreferrer')"`
+        : 'disabled';
+    const buttonLabel = playable || youtube ? buttonText : 'Trailer unavailable';
 
     return `
       <article class="trailer-card glass-card group overflow-hidden rounded-2xl border border-white/20 bg-slate-900/50 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_18px_55px_rgba(2,6,23,0.45)] backdrop-blur-2xl transition hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_24px_70px_rgba(2,6,23,0.55)] sm:rounded-3xl">
-        <div class="relative h-28 bg-cover bg-center sm:h-40 lg:h-52" style="background-image: ${image};">
+        <div class="relative h-28 bg-cover bg-center sm:h-40 lg:h-52" style="background-image: ${backgroundImage};">
           <div class="absolute inset-0 bg-gradient-to-b from-slate-900/10 to-slate-900/30 backdrop-blur-xl"></div>
           <div class="absolute bottom-0 left-0 right-0 p-2 text-white sm:p-4">
             <p class="text-[10px] uppercase tracking-[0.25em] text-blue-200 sm:text-xs">${trailer.badge || 'Trailer'}</p>
@@ -191,6 +257,13 @@ function updateHeroTrailerSource(url) {
   if (!heroSource) return;
 
   const heroVideoUrl = resolvePlayableTrailerUrl(url) || '';
+  if (!heroVideoUrl || isYouTubeUrl(heroVideoUrl)) {
+    heroAutoTrailer.pause();
+    heroAutoTrailer.removeAttribute('src');
+    heroAutoTrailer.load();
+    return;
+  }
+
   heroSource.src = heroVideoUrl;
   heroSource.type = 'video/mp4';
   heroAutoTrailer.load();
@@ -217,6 +290,12 @@ async function openTrailerModal(videoUrl = null) {
   document.body.classList.add('overflow-hidden');
 
   const selectedPlayerUrl = videoUrl || currentTrailerUrl || '';
+  if (isYouTubeUrl(selectedPlayerUrl)) {
+    window.open(selectedPlayerUrl, '_blank', 'noopener,noreferrer');
+    closeTrailerModal();
+    return;
+  }
+
   setTrailerPlayerMode(selectedPlayerUrl);
 
   const nextVideoUrl = resolvePlayableTrailerUrl(selectedPlayerUrl) || trailerVideoDefaultSrc || localTrailerVideoPath;

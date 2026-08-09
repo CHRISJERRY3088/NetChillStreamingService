@@ -65,6 +65,42 @@ nav.menu-bar .logo-img,
   filter: drop-shadow(0 6px 24px rgba(59,130,246,0.24));
 }
 
+nav.bottom-menu-bar {
+  top: auto;
+  bottom: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: var(--glass-surface);
+  background-image: radial-gradient(circle at top left, rgba(59,130,246,0.14), transparent 35%), linear-gradient(145deg, rgba(15,23,42,0.85), rgba(5,9,20,0.90));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+nav.bottom-menu-bar a,
+nav.bottom-menu-bar button {
+  color: inherit;
+}
+
+nav.bottom-menu-bar .glass-button {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+}
+
+@media (max-width: 768px) {
+  nav.bottom-menu-bar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Hide bottom menu on screens larger than medium phones (>=769px) */
+@media (min-width: 769px) {
+  nav.bottom-menu-bar {
+    display: none;
+  }
+}
+
 @media (max-width: 640px) {
   nav.menu-bar,
   .site-nav {

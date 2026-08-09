@@ -39,8 +39,8 @@
       return createPlaceholderPoster(fallbackTitle);
     }
 
-    if (/assets\//i.test(normalized)) {
-      return createPlaceholderPoster(fallbackTitle);
+    if (/^data:/i.test(normalized)) {
+      return normalized;
     }
 
     if (/^https?:\/\//i.test(normalized) || /^\/\//.test(normalized)) {
@@ -48,6 +48,10 @@
     }
 
     if (/^[./]/.test(normalized)) {
+      return normalized;
+    }
+
+    if (/^assets\//i.test(normalized)) {
       return normalized;
     }
 

@@ -6,6 +6,22 @@ build/
 dist/
 coverage/
 
+fetch('https://api.jikan.moe/v4/top/anime?type=movie')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
+  Get Top Rated Anime Movies:
+GET [https://api.jikan.moe/v4/top/anime?type=movie](https://api.jikan.moe/v4/top/anime?type=movie)
+
+Search/Filter Animated Movies:
+GET [https://api.jikan.moe/v4/anime?type=movie&q=YourSearchTerm](https://api.jikan.moe/v4/anime?type=movie&q=YourSearchTerm)
+
+Get Specific Anime Details by ID:
+GET [https://api.jikan.moe/v4/anime/](https://api.jikan.moe/v4/anime/){id}
+
+identify and fix the bug preventing movie card from displaying movies to movie card on my website and run the dev to verify the movie card now appear on my sections/website
+
 fil
 
 # Environment files

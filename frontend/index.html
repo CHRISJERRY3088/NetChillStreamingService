@@ -1010,7 +1010,7 @@
     <link rel="stylesheet" href="./assets/menu.css">
 </head>
 
-<body class="bg-white text-gray-900 dark:bg-black dark:text-white overflow-y-auto">
+<body class="bg-white text-gray-900 dark:bg-black dark:text-white overflow-y-auto pb-24 lg:pb-0">
 
     <header class="relative">
         <div id="slideshow-bg" class="relative h-[470px] md:h-[560px] overflow-hidden rounded-b-[2rem] border border-white/10 bg-blue-900 bg-cover bg-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
@@ -1044,7 +1044,7 @@
                         <input id="movieSearchInput" type="text" placeholder="Search content..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                         <span class="search-icon material-symbols-outlined text-white/90 cursor-pointer hover:text-blue-200 text-base text-lg leading-none">search</span>
                     </div>
-                    <div id="movieSearchDropdown" class="absolute left-1/2 top-full z-50 mt-2 hidden w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2 search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 glass-surface p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]"></div>
+                    <div id="movieSearchDropdown" class="fixed left-1/2 z-50 mt-2 hidden w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2 search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 glass-surface p-2 text-white shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]" style="top: calc(3.5rem + 2.5rem);"></div>
                 </div>
 
                 <div class="flex items-center space-x-3">
@@ -1053,8 +1053,23 @@
                     </button>
                     <a href="./admin.html" data-admin-link class="hidden md:flex px-4 py-2 bg-red-600/90 text-white rounded-3xl text-xs font-bold border border-red-400 shadow-xl">Admin</a>
                     <a href="./dashboard.html" id="dashboardButton" class="border-blue-500 hidden md:flex px-4 py-2 bg-white text-blue-600 dark:text-white rounded-3xl font-bold text-xs shadow-xl border hover:border-blue-500">Dashboard</a>
-                    <a href="./account.html" id="accountButton" class="hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
+                    <a href="./account.html" id="accountButton" class="hidden lg:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
                 </div>
+            </nav>
+
+            <nav id="mobileBottomNav" class="site-nav menu-bar bottom-menu-bar fixed z-50 left-0 w-full items-center justify-between gap-3 px-4 py-3 lg:hidden glass-surface">
+                <a href="./account.html" class="glass-button p-2 rounded-full text-white border border-white/10 bg-blue-500/80 hover:bg-blue-500" aria-label="Account">
+                    <span class="material-symbols-outlined mr-2">settings</span>
+                    Account
+                </a>
+                <a href="./index.html" class="glass-button mx-auto rounded-3xl bg-white px-4 py-2 text-center text-sm font-semibold text-blue-600 shadow-xl border border-blue-500" style="margin:0 auto;" aria-label="Home">
+                    <span class="material-symbols-outlined mr-2">home</span>
+                    Home
+                </a>
+                <a href="./dashboard.html" class="glass-button p-2 rounded-full text-white border border-white/10 bg-white text-blue-600" aria-label="Dashboard">
+                    <span class="material-symbols-outlined mr-2">download</span>
+                    Dashboard
+                </a>
             </nav>
 
             <div id="st" class="relative z-10 flex h-full items-end">
@@ -1137,8 +1152,8 @@
     <div x-show="mobileMenu" x-cloak class="fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
         <div class="fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
         <nav class="relative h-full w-full overflow-y-auto p-4 shadow-2xl sm:p-6">
-            <button @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-black dark:text-white">&times;</button>
-            <div class="mt-6 flex flex-col space-y-3 text-lg dark:text-white text-black font-bold">
+            <button @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-white dark:text-white px-3 py-2 sm:px-4 sm:py-3 hover:bg-slate-200/20 dark:hover:bg-white/10 rounded transition-all">&times;</button>
+            <div class="mt-6 flex flex-col space-y-3 text-lg text-white dark:text-white font-bold">
                 <a href="#english" data-scroll-target="english" class="mobile-menu-link-hover flex items-center gap-1">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     English
@@ -1150,7 +1165,7 @@
                 </a>
                 <a href="#trendingSeries" data-scroll-target="trendingSeries" class="mobile-menu-link-hover flex items-center gap-1">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
-                    Trending Series
+                    Trending Animation Section
                 </a>
                 <a href="#kdrama" data-scroll-target="kdrama" class="mobile-menu-link-hover flex items-center gap-1">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
@@ -1274,8 +1289,13 @@
             syncDropdownBackdrop();
         }
 
-        function showMovieSuggestions(inputEl, dropdownEl, query) {
+        async function showMovieSuggestions(inputEl, dropdownEl, query) {
             if (!inputEl || !dropdownEl) return;
+
+            if (window.NetchillUI?.showMovieSuggestions) {
+                await window.NetchillUI.showMovieSuggestions(inputEl, dropdownEl, query);
+                return;
+            }
 
             const suggestions = window.NetchillUI?.getMovieSuggestions?.(query) || [];
             if (!query.trim() || suggestions.length === 0) {
@@ -1304,12 +1324,12 @@
 
             if (!inputEl || !dropdownEl) return;
 
-            inputEl.addEventListener('input', (event) => {
-                showMovieSuggestions(inputEl, dropdownEl, event.target.value);
+            inputEl.addEventListener('input', async (event) => {
+                await showMovieSuggestions(inputEl, dropdownEl, event.target.value);
             });
 
-            inputEl.addEventListener('focus', () => {
-                showMovieSuggestions(inputEl, dropdownEl, inputEl.value);
+            inputEl.addEventListener('focus', async () => {
+                await showMovieSuggestions(inputEl, dropdownEl, inputEl.value);
             });
 
             inputEl.addEventListener('keydown', (event) => {
@@ -1429,7 +1449,7 @@
                             <button type="button" data-sidebar-close="true" class="rounded-full border border-slate-700/70 bg-slate-950/80 p-3 text-2xl text-slate-300 transition hover:border-blue-400 hover:text-white">&times;</button>
                         </div>
                     </div>
-                    <div id="sectionSidebarSearchDropdown" class="absolute z-[150] hidden max-h-72 w-[300px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-blue-400/70 glass-surface p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_35px_rgba(59,130,246,0.25)] backdrop-blur-xl"></div>
+                    <div id="sectionSidebarSearchDropdown" class="absolute z-[150] hidden max-h-72 w-[300px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-blue-400/70 glass-surface p-2 text-white shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_35px_rgba(59,130,246,0.25)] backdrop-blur-xl"></div>
                     <div id="sectionSidebarGrid" class="mt-4 grid flex-1 gap-4 overflow-y-auto rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-4 grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7"></div>
                 </div>
             `;
@@ -1526,7 +1546,7 @@
             }
 
             const safeSectionTitle = sectionTitle || 'Featured Section';
-            const sectionJson = JSON.stringify(safeSectionTitle).replace(/</g, '\\u003c').replace(/'/g, "\\'");
+            const sectionJson = encodeInlineJson(safeSectionTitle);
 
             grid.innerHTML = filtered.map((item) => {
                 const movieData = item.movieData || {};
@@ -1535,7 +1555,7 @@
                 const tagLabel = movieData.genre || item.subtitle || 'Now Streaming';
 
                 return `
-                    <article class="section-sidebar-card animation-card glass-card group cursor-pointer rounded-[1.1rem] p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                    <article class="section-sidebar-card animation-card glass-card group cursor-pointer rounded-[1.1rem] p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">
                         <div class="animation-card__thumb rounded-xl">
                             ${posterSrc ? `<img src="${posterSrc}" alt="${item.title}" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${item.title}</div>`}
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
@@ -1548,7 +1568,7 @@
                                 <h3 class="animation-card__title text-[11px] font-semibold text-white sm:text-sm">${item.title}</h3>
                                 <p class="animation-card__subtitle mt-1 text-[10px] text-gray-400 sm:text-[11px]">${item.subtitle}</p>
                             </div>
-                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">WATCH NOW</button>
                         </div>
                     </article>
                 `;
@@ -1596,10 +1616,10 @@
             attachSectionSidebarTriggers();
 
             const menuSections = [
-                { id: 'trendingMovies', title: 'Trending Movies' },
+                { id: 'trendingMovies', title: 'Trending Animation Movie' },
                 { id: 'english', title: 'English' },
                 { id: 'upcomingMovie', title: 'Upcoming Movie' },
-                { id: 'trendingSeries', title: 'Trending Series' },
+                { id: 'trendingSeries', title: 'Trending Animation Section' },
                 { id: 'kdrama', title: 'K-Drama' },
                 { id: 'liveShow', title: 'Live Show' },
                 { id: 'porn', title: 'Porn' },
@@ -1628,13 +1648,15 @@
                 if (!normalized) {
                     return window.NetChillMovieContent?.createPlaceholderPoster?.(fallbackTitle || 'Featured Movie') || '';
                 }
-                if (/assets\//i.test(normalized)) {
+                if (/assets\/ad\.jpg$/i.test(normalized) || /assets\/ad-.*\.jpg$/i.test(normalized)) {
                     return window.NetChillMovieContent?.createPlaceholderPoster?.(fallbackTitle || 'Featured Movie') || '';
                 }
                 if (/^https?:\/\//i.test(normalized) || /^\/\//.test(normalized)) return normalized;
                 if (/^[./]/.test(normalized)) return normalized;
                 return normalized;
             });
+
+            const encodeInlineJson = (value) => encodeURIComponent(JSON.stringify(value).replace(/</g, '\u003c'));
 
             window.openSectionMoviePreview = function (movie, sectionTitle) {
                 const normalizedMovie = normalizeMovieForCard(movie, sectionTitle || 'Featured Movie');
@@ -1737,13 +1759,13 @@
             function createMovieCard(movie, sectionTitle) {
                 const displayTitle = getMovieDisplayTitle(movie, sectionTitle || 'Featured Movie');
                 const posterSrc = resolveMoviePoster(movie.poster_path || movie.poster || movie.image || '', displayTitle);
-                const movieJson = JSON.stringify(normalizeMovieForCard(movie, sectionTitle || 'Featured Movie')).replace(/</g, '\\u003c').replace(/'/g, "\\'");
-                const sectionJson = JSON.stringify(sectionTitle).replace(/</g, '\\u003c').replace(/'/g, "\\'");
+                const movieJson = encodeInlineJson(normalizeMovieForCard(movie, sectionTitle || 'Featured Movie')).replace(/</g, '\\u003c').replace(/'/g, "\\'");
+                const sectionJson = encodeInlineJson(sectionTitle).replace(/</g, '\\u003c').replace(/'/g, "\\'");
 
                 const tagLabel = movie?.genre || movie?.subtitle || 'Now Streaming';
 
                 return `
-                    <article class="animation-card glass-card group cursor-pointer rounded-xl p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                    <article class="animation-card glass-card group cursor-pointer rounded-xl p-2 sm:p-2.5" onclick="window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">
                         <div class="animation-card__thumb rounded-xl">
                             ${posterSrc ? `<img src="${posterSrc}" alt="${displayTitle} poster" class="h-full w-full object-cover" loading="lazy" />` : `<div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">${displayTitle}</div>`}
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 bg-black/35">
@@ -1756,7 +1778,7 @@
                                 <h3 class="animation-card__title text-[11px] font-semibold text-white sm:text-sm">${displayTitle}</h3>
                                 <p class="animation-card__subtitle mt-1 text-[10px] text-gray-400 sm:text-[11px]">${movie.subtitle}</p>
                             </div>
-                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(${movieJson}, ${sectionJson})">WATCH NOW</button>
+                            <button type="button" class="animation-card__button mt-auto w-full rounded-lg bg-blue-600/90 py-1.5 text-[9px] font-black text-white transition hover:bg-blue-500 sm:py-2 sm:text-[10px]" onclick="event.stopPropagation(); window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">WATCH NOW</button>
                         </div>
                     </article>
                 `;
@@ -1766,8 +1788,8 @@
                 const normalizedMovie = normalizeMovieForCard(movie, sectionTitle || 'Featured Movie');
                 const displayTitle = normalizedMovie.title;
                 const posterSrc = resolveMoviePoster(normalizedMovie.poster_path || normalizedMovie.poster || normalizedMovie.image || '', displayTitle);
-                const movieJson = JSON.stringify(normalizedMovie).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                const sectionJson = JSON.stringify(sectionTitle).replace(/</g, '\u003c').replace(/'/g, "\\'");
+                const movieJson = encodeInlineJson(normalizedMovie);
+                const sectionJson = encodeInlineJson(sectionTitle);
                 const releaseYear = getMovieDisplayYear(normalizedMovie);
                 const rating = normalizedMovie?.vote_average ? Number(normalizedMovie.vote_average).toFixed(1) : 'N/A';
                 const overview = normalizedMovie?.overview || normalizedMovie?.subtitle || 'A premium movie experience is ready to stream.';
@@ -1792,11 +1814,11 @@
                             <p class="${metaClass}">${releaseYear} • ⭐ ${rating}</p>
                             ${descriptionMarkup}
                             <div class="${actionClass}">
-                                <button type="button" class="netflix-player-button netflix-player-button--play" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                                <button type="button" class="netflix-player-button netflix-player-button--play" onclick="window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">
                                     <span class="material-symbols-outlined">play_arrow</span>
                                     Play
                                 </button>
-                                <button type="button" class="netflix-player-button netflix-player-button--info" onclick="window.openSectionMoviePreview(${movieJson}, ${sectionJson})">
+                                <button type="button" class="netflix-player-button netflix-player-button--info" onclick="window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${movieJson}')), JSON.parse(decodeURIComponent('${sectionJson}')))">
                                     <span class="material-symbols-outlined">info</span>
                                     Details
                                 </button>
@@ -1817,13 +1839,13 @@
                     poster: './assets/logo.png',
                     image: './assets/logo.png'
                 };
-                const spotlightJson = JSON.stringify(spotlightMovie).replace(/</g, '\u003c').replace(/'/g, "\\'");
-                const sectionJson = JSON.stringify('Trending Movies').replace(/</g, '\u003c').replace(/'/g, "\\'");
+                const spotlightJson = encodeInlineJson(spotlightMovie);
+                const sectionJson = encodeInlineJson('Trending Animation Section');
 
                 return `
                     <div class="mb-4 overflow-hidden rounded-[1.4rem] border border-white/10 bg-slate-900/80 shadow-[0_18px_60px_rgba(0,0,0,0.24)]">
                         <div class="grid gap-0 md:grid-cols-[220px_1fr]">
-                            <a href="./Download.html" class="block h-full" onclick="event.preventDefault(); window.openSectionMoviePreview(${spotlightJson}, ${sectionJson});">
+                            <a href="./Download.html" class="block h-full" onclick="event.preventDefault(); window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${spotlightJson}')), JSON.parse(decodeURIComponent('${sectionJson}')));">
                                 <img src="./assets/logo.png" alt="NetChill Premiere poster" class="h-full w-full object-cover" loading="lazy">
                             </a>
                             <div class="flex flex-col justify-between p-4 sm:p-5">
@@ -1832,21 +1854,83 @@
                                     <h3 class="mt-2 text-xl font-black text-white">NetChill Premiere</h3>
                                     <p class="mt-2 text-sm text-slate-300">A featured movie spotlight that opens the download page with the poster, cast, metadata, and more details.</p>
                                 </div>
-                                <button type="button" class="mt-4 w-fit rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(${spotlightJson}, ${sectionJson});">Watch Now</button>
+                                <button type="button" class="mt-4 w-fit rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-500" onclick="event.stopPropagation(); window.openSectionMoviePreview(JSON.parse(decodeURIComponent('${spotlightJson}')), JSON.parse(decodeURIComponent('${sectionJson}')));">Watch Now</button>
                             </div>
                         </div>
                     </div>
                 `;
             }
 
-            function getSectionMoviePoolForContainer(section) {
+            let jikanAnimeMovieCache = null;
+            let jikanAnimeMoviePromise = null;
+
+            function normalizeJikanAnimeForSection(anime) {
+                if (!anime || typeof anime !== 'object') return null;
+
+                const title = anime.title || anime.title_english || anime.title_japanese || 'Anime Movie';
+                const synopsis = typeof anime.synopsis === 'string' ? anime.synopsis.replace(/\s+/g, ' ').trim() : '';
+                const poster = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || anime.images?.webp?.large_image_url || '';
+                const airedYear = anime.year || (anime.aired?.prop?.from?.year ? String(anime.aired.prop.from.year) : '');
+                const genres = Array.isArray(anime.genres) ? anime.genres.map((genre) => genre.name).slice(0, 2) : [];
+                const rating = anime.score ?? anime.rating ?? null;
+
+                return {
+                    id: anime.mal_id || anime.id || `jikan-${Math.random().toString(36).slice(2, 10)}`,
+                    title,
+                    subtitle: synopsis || `${airedYear ? `${airedYear} • ` : ''}${genres.join(' • ') || 'Top-rated anime movie'}`,
+                    overview: synopsis || 'A featured anime movie from Jikan.',
+                    release_date: anime.aired?.prop?.from?.year ? `${anime.aired.prop.from.year}-01-01` : '',
+                    vote_average: rating,
+                    poster_path: poster,
+                    poster,
+                    image: poster,
+                    genre: genres.join(' • ') || 'Animation',
+                    year: airedYear,
+                };
+            }
+
+            async function fetchJikanTopAnimeMovies(limit = 8) {
+                if (jikanAnimeMovieCache && jikanAnimeMovieCache.length >= limit) {
+                    return jikanAnimeMovieCache.slice(0, limit);
+                }
+
+                if (!jikanAnimeMoviePromise) {
+                    jikanAnimeMoviePromise = fetch(`https://api.jikan.moe/v4/top/anime?type=movie&limit=${Math.max(limit, 8)}`)
+                        .then(async (response) => {
+                            if (!response.ok) throw new Error(`Jikan request failed with ${response.status}`);
+                            const payload = await response.json();
+                            const normalized = (Array.isArray(payload?.data) ? payload.data : [])
+                                .map(normalizeJikanAnimeForSection)
+                                .filter(Boolean);
+                            jikanAnimeMovieCache = normalized;
+                            return normalized;
+                        })
+                        .catch((error) => {
+                            console.warn('Unable to load Jikan anime movie data:', error);
+                            return [];
+                        });
+                }
+
+                return jikanAnimeMoviePromise;
+            }
+
+            async function getSectionMoviePoolForContainer(section, limit = 8) {
+                const sectionId = section?.id || '';
+
+                if (['trendingMovies', 'trendingSeries', 'porn'].includes(sectionId)) {
+                    const jikanPool = await fetchJikanTopAnimeMovies(limit);
+                    if (jikanPool.length) {
+                        return jikanPool.slice(0, limit);
+                    }
+                }
+
                 if (section?.id === 'trendingMovies') {
                     return [
                         {
                             id: 'static-trending-premiere',
                             title: 'NetChill Premiere',
                             subtitle: 'Featured release',
-                            overview: 'A featured movie spotlight curated for the trending section.',
+                            overview: 'A featured movie spotlight curated for the trending animation section.',
                             release_date: '2024-01-01',
                             vote_average: 8.8,
                             poster_path: './assets/logo.png',
@@ -1881,13 +1965,15 @@
                     ];
                 }
 
-                return [];
+                const searchResults = await fetchMoviesForSection(section);
+                return Array.isArray(searchResults) ? searchResults.slice(0, limit) : [];
             }
 
-            function createMenuSection(section, index, moviePool = []) {
+            async function createMenuSection(section, index, moviePool = []) {
                 const isHeroSection = section?.hero === true; // use explicit hero flag for single-spotlight sections
+                const isTrendingSection = section?.id === 'trendingMovies';
                 const cardLimit = isHeroSection ? 1 : 3;
-                const resolvedPool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : getSectionMoviePoolForContainer(section);
+                const resolvedPool = Array.isArray(moviePool) && moviePool.length > 0 ? moviePool : await getSectionMoviePoolForContainer(section, 8);
                 const movies = getMovieCardsForSection(index, resolvedPool, cardLimit);
                 const cardsMarkup = isHeroSection && movies.length
                     ? createTrendingHeroCard(movies[0], section.title, 'section')
@@ -1897,14 +1983,14 @@
                 const spotlightMarkup = '';
 
                 return `
-                    <section id="${section.id}" class="section-shell relative" data-section-title="${section.title}" data-section-movies='${JSON.stringify(movies).replace(/</g, '\u003c').replace(/'/g, "\\'")}'>
+                    <section id="${section.id}" class="section-shell relative" data-section-title="${section.title}" data-section-movies='${encodeInlineJson(movies)}'>
                         <div class="section-shell__header">
                             <h2 class="text-2xl font-black uppercase tracking-tighter text-blue-500">${section.title}</h2>
                             <button class="section-shell__button">See All</button>
                         </div>
                         <div class="relative">
                             ${spotlightMarkup}
-                            ${isTrendingSection ? `` : `<div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
+                            <div class="animation-carousel-wrapper scrollbar-none -mx-2 sm:-mx-3">
                                 <div class="animation-carousel gap-2 sm:gap-3">
                                     ${cardsMarkup}
                                 </div>
@@ -1914,26 +2000,15 @@
                             </button>
                             <button type="button" class="animation-scroll-button animation-scroll-button-right" aria-label="Scroll right">
                                 <span class="material-symbols-outlined text-2xl">chevron_right</span>
-                            </button>`}
+                            </button>
                         </div>
                     </section>
                 `;
             }
 
             async function getTrendingSectionMoviePool(limit = 1) {
-                const fallbackPool = getSectionMoviePoolForContainer({ id: 'trendingMovies' });
-                if (typeof window.moviesAPI?.getTrending !== 'function') return fallbackPool.slice(0, limit);
-
-                try {
-                    await ensureMoviesApiReady();
-                    const response = await window.moviesAPI.getTrending();
-                    const results = Array.isArray(response?.results) ? response.results : [];
-
-                    return results.slice(0, limit).map((movie) => normalizeMovieForCard(movie, 'Trending Movie'));
-                } catch (error) {
-                    console.warn('Unable to load trending section movie data.', error);
-                    return fallbackPool.slice(0, limit);
-                }
+                const pool = await getSectionMoviePoolForContainer({ id: 'trendingMovies' }, limit);
+                return pool.slice(0, limit);
             }
 
             async function renderMenuContainers() {
@@ -1942,8 +2017,8 @@
 
                 const sectionMarkup = [];
                 for (const [index, section] of menuSections.entries()) {
-                    const moviePool = section.id === 'trendingMovies' ? await getTrendingSectionMoviePool(8) : getSectionMoviePoolForContainer(section);
-                    sectionMarkup.push(createMenuSection(section, index, moviePool));
+                    const moviePool = section.id === 'trendingMovies' ? await getTrendingSectionMoviePool(8) : await getSectionMoviePoolForContainer(section, 8);
+                    sectionMarkup.push(await createMenuSection(section, index, moviePool));
                 }
 
                 container.innerHTML = sectionMarkup.join('');
@@ -2069,6 +2144,34 @@
                     }
                 });
             });
+
+            function isAllowedMobileMenuLink(link) {
+                const href = (link.getAttribute('href') || '').trim().toLowerCase();
+                const text = (link.textContent || '').trim().toLowerCase();
+                const allowedTexts = ['dashboard', 'account', 'animation', 'porn', 'admin'];
+                const allowedHrefs = ['dashboard.html', 'account.html', '#animation', '#porn', 'admin.html'];
+
+                if (allowedTexts.includes(text)) {
+                    return true;
+                }
+                return allowedHrefs.some((fragment) => href.includes(fragment));
+            }
+
+            function bindMobileMenuComingSoon() {
+                const comingSoonPage = './coming-soon.html';
+                const mobileMenuLinks = document.querySelectorAll('[x-show="mobileMenu"] a');
+                mobileMenuLinks.forEach((link) => {
+                    if (!isAllowedMobileMenuLink(link)) {
+                        link.addEventListener('click', (event) => {
+                            event.preventDefault();
+                            event.stopImmediatePropagation();
+                            window.location.href = comingSoonPage;
+                        }, { once: true });
+                    }
+                });
+            }
+
+            bindMobileMenuComingSoon();
         });
     </script>
 </body>
