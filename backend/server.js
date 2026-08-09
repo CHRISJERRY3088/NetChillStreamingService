@@ -80,8 +80,10 @@ app.use("/api/admin", adminRoute);
 app.use("/api/billing", billingRoute);
 app.use("/api/sse", sseRoute);
 import moviesRoute from "./route/movies.route.js";
+import jikanRoute from "./route/jikan.route.js";
 
 app.use("/api/movies", moviesRoute);
+app.use("/api/jikan", jikanRoute);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "Server is running", timestamp: new Date() });

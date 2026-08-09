@@ -127,6 +127,18 @@
         }
 
         [x-cloak] { display: none !important; }
+        html, body {
+            min-height: 100%;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        body {
+            overflow-y: auto;
+            overscroll-behavior-y: auto;
+        }
+        body.overflow-hidden {
+            overflow: hidden;
+        }
         @keyframes moveRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .animate-ad { animation: moveRight 10s linear infinite; }
         .download-loading-overlay {
@@ -491,7 +503,7 @@
     </style>
 </head>
 
-<body class="download-page transition-colors duration-300 bg-white text-gray-900 dark:bg-black dark:text-white">
+<body class="download-page transition-colors duration-300 bg-white text-gray-900 dark:bg-black dark:text-white pb-24 lg:pb-0">
 
     <div id="download-loading-overlay" class="download-loading-overlay" aria-live="polite" aria-busy="true">
         <div class="max-w-xl text-center">
@@ -520,7 +532,7 @@
                 <input id="movieSearchInput" type="text" placeholder="Search Movies..." class="w-full border border-transparent bg-white/20 py-2 pl-10 pr-10 text-white outline-none placeholder-gray-300 transition focus:ring-2 focus:ring-blue-500 dark:bg-blue-200/20 dark:focus:ring-white leading-tight">
                 <span class="search-icon material-symbols-outlined text-gray-200 cursor-pointer hover:text-blue-500 text-base leading-none">search</span>
             </div>
-            <div id="movieSearchDropdown" class="absolute left-1/2 top-full z-50 mt-2 hidden w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2 search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 p-2 shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]"></div>
+            <div id="movieSearchDropdown" class="absolute left-1/2 top-full z-50 mt-2 hidden w-[300px] max-w-[calc(100vw-2rem)] -translate-x-1/2 search-dropdown-size h-[600px] overflow-y-auto rounded-2xl border border-blue-400/80 p-2 text-white shadow-[0_0_0_1px_rgba(59,130,246,0.55),0_0_40px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.35)] backdrop-blur dark:border-white/40 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.65),0_0_22px_rgba(255,255,255,0.55),0_0_50px_rgba(255,255,255,0.28)]"></div>
         </div>
 
         <div id="dropdownBlurBackdrop" class="dropdown-blur-backdrop" aria-hidden="true"></div>
@@ -533,13 +545,27 @@
             <a href="./account.html" id="accountButton" class="glass-hover-btn hidden sm:flex px-4 py-2 bg-blue-500 text-white rounded-3xl text-xs border border-white cursor-pointer">Account</a>
         </div>
     </nav>
-md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]" style="will-change: transform; contain: layout style paint;
+    <nav id="mobileBottomNav" class="site-nav menu-bar bottom-menu-bar glass-surface" style="display:flex;align-items:center;justify-between;gap:0.75rem;padding:0.8rem 1rem;left:0;width:100%;box-sizing:border-box;">
+        <a href="./account.html" style="flex:0 0 auto;min-width:0;display:inline-flex;align-items:center;justify-content:center;padding:0.75rem 0.9rem;background:rgba(14,165,233,0.85);color:#fff;border:1px solid rgba(255,255,255,0.35);border-radius:999px;font-weight:700;text-decoration:none;" aria-label="Account">
+            <span class="material-symbols-outlined" style="margin-right:0.5rem;">settings</span>
+            Account
+        </a>
+        <a href="./index.html" style="margin:0 auto;display:inline-flex;align-items:center;justify-content:center;padding:0.75rem 0.9rem;background:rgba(255,255,255,0.95);color:#2563eb;border:1px solid rgba(37,99,235,0.55);border-radius:999px;font-weight:700;text-decoration:none;" aria-label="Home">
+            <span class="material-symbols-outlined" style="margin-right:0.5rem;">home</span>
+            Home
+        </a>
+        <a href="./dashboard.html" style="flex:0 0 auto;min-width:0;display:inline-flex;align-items:center;justify-content:center;padding:0.75rem 0.9rem;background:rgba(255,255,255,0.95);color:#2563eb;border:1px solid rgba(37,99,235,0.55);border-radius:999px;font-weight:700;text-decoration:none;" aria-label="Dashboard">
+            <span class="material-symbols-outlined" style="margin-right:0.5rem;">download</span>
+            Dashboard
+        </a>
+    </nav>
+
     <!-- MOBILE MENU -->
     <div id="mobile-menu" x-show="mobileMenu" x-cloak class="hidden fixed inset-0 z-[100] top-12 flex w-full max-w-[18rem] flex-col overflow-y-auto rounded-2xl border border-slate-300/70 bg-white/70 text-base shadow-[0_0_30px_rgba(37,99,235,0.18)] backdrop-blur-xl sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:shadow-[0_0_30px_rgba(255,255,255,0.32)]">
         <div id="menu-backdrop" class="hidden fixed inset-0 -z-10 bg-slate-950/40 backdrop-blur-md" @click="mobileMenu = false"></div>
         <nav class="relative h-full w-full overflow-y-auto p-4 shadow-2xl sm:p-6">
-            <button id="close-menu-button" @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-black dark:text-white">&times;</button>
-            <div class="mt-6 flex flex-col space-y-3 text-lg dark:text-white text-black font-bold">
+            <button id="close-menu-button" @click="mobileMenu = false" class="text-3xl absolute top-4 right-4 text-white dark:text-white px-3 py-2 sm:px-4 sm:py-3 hover:bg-slate-200/20 dark:hover:bg-white/10 rounded transition-all">&times;</button>
+            <div class="mt-6 flex flex-col space-y-3 text-lg text-white dark:text-white font-bold">
                 <a href="#" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
                     English
@@ -551,11 +577,11 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
                 </a>
                 <a href="#" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
-                    Trending Series
+                    Trending Animation Section
                 </a>
                 <a href="#" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
-                    Trending Movies
+                    Trending Animation Movie
                 </a>
                 <a href="#" class="flex items-center gap-1 hover:rounded-2xl hover:py-[2px] hover:px-1 hover:bg-blue-300 hover:text-blue-500">
                     <span class="material-symbols-outlined text-base text-blue-500">work_outline</span>
@@ -918,6 +944,26 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
     <script src="./api.js"></script>
     <script>
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const overlayScrollState = {
+            menu: false,
+            downloadModal: false,
+            watchModal: false,
+            loading: false,
+        };
+
+        function syncBodyScrollLock() {
+            const shouldLock = Object.values(overlayScrollState).some(Boolean);
+            document.body.classList.toggle('overflow-hidden', shouldLock);
+            document.documentElement.classList.toggle('overflow-hidden', shouldLock);
+            document.body.style.overflowY = shouldLock ? 'hidden' : 'auto';
+            document.documentElement.style.overflowY = shouldLock ? 'hidden' : 'auto';
+        }
+
+        function setBodyScrollLock(key, locked) {
+            overlayScrollState[key] = Boolean(locked);
+            syncBodyScrollLock();
+        }
+
         if (themeToggleBtn) {
             themeToggleBtn.addEventListener('click', () => {
                 document.documentElement.classList.toggle('dark');
@@ -946,7 +992,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
 
             if (menu) menu.classList.remove('hidden');
             if (menuBackdrop) menuBackdrop.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
+            setBodyScrollLock('menu', true);
         }
 
         function closeSidebar() {
@@ -961,7 +1007,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
 
             if (menu) menu.classList.add('hidden');
             if (menuBackdrop) menuBackdrop.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
+            setBodyScrollLock('menu', false);
         }
 
         if (openMenu) {
@@ -974,13 +1020,38 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
             menuBackdrop.addEventListener('click', closeSidebar);
         }
 
+        function isAllowedMobileMenuLink(link) {
+            const href = (link.getAttribute('href') || '').trim().toLowerCase();
+            const text = (link.textContent || '').trim().toLowerCase();
+            const allowedTexts = ['dashboard', 'account', 'animation', 'porn', 'admin'];
+            const allowedHrefs = ['dashboard.html', 'account.html', '#animation', '#porn', 'admin.html'];
+
+            if (allowedTexts.includes(text)) {
+                return true;
+            }
+            return allowedHrefs.some((fragment) => href.includes(fragment));
+        }
+
+        function handleMobileMenuLink(link) {
+            if (!link || !link.addEventListener) return;
+            if (!isAllowedMobileMenuLink(link)) {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    closeSidebar();
+                    window.location.href = './coming-soon.html';
+                });
+                return;
+            }
+
+            link.addEventListener('click', () => {
+                closeSidebar();
+            });
+        }
+
         if (menu) {
             const mobileMenuLinks = menu.querySelectorAll('a');
-            mobileMenuLinks.forEach((link) => {
-                link.addEventListener('click', () => {
-                    closeSidebar();
-                });
-            });
+            mobileMenuLinks.forEach(handleMobileMenuLink);
         }
 
         document.addEventListener('keydown', (event) => {
@@ -1018,7 +1089,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
         function openDownloadModal() {
             if (!dlContainer) return;
             dlContainer.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
-            document.body.classList.add('overflow-hidden');
+            setBodyScrollLock('downloadModal', true);
             if (qualitySelectorModal) {
                 qualitySelectorModal.classList.add('hidden');
                 qualitySelectorModal.classList.remove('flex');
@@ -1028,7 +1099,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
         function closeDownloadModal() {
             if (!dlContainer) return;
             dlContainer.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
-            document.body.classList.remove('overflow-hidden');
+            setBodyScrollLock('downloadModal', false);
             if (qualitySelectorModal) {
                 qualitySelectorModal.classList.add('hidden');
                 qualitySelectorModal.classList.remove('flex');
@@ -1333,7 +1404,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
         function startDownloadLoading() {
             if (!downloadLoadingOverlay) return;
             downloadLoadingOverlay.classList.add('show');
-            document.body.classList.add('overflow-hidden');
+            setBodyScrollLock('loading', true);
             let dots = '';
             if (downloadLoadingMessage) downloadLoadingMessage.textContent = 'Fetching movie details and generating your download page.';
             clearInterval(downloadLoadingDotsInterval);
@@ -1346,7 +1417,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
         function stopDownloadLoading() {
             if (!downloadLoadingOverlay) return;
             downloadLoadingOverlay.classList.remove('show');
-            document.body.classList.remove('overflow-hidden');
+            setBodyScrollLock('loading', false);
             clearInterval(downloadLoadingDotsInterval);
             downloadLoadingDotsInterval = null;
         }
@@ -1635,7 +1706,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
             watchQualitySelect.value = quality;
 
             watchModal.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
-            document.body.classList.add('overflow-hidden');
+            setBodyScrollLock('watchModal', true);
 
             watchModalPlayer.src = streamUrl;
             watchModalPlayer.play().catch(() => {
@@ -1652,7 +1723,7 @@ md sm:max-w-[20rem] sm:text-2xl dark:border-white/20 dark:bg-blue-950/25 dark:sh
             watchModalPlayer.pause();
             watchModalPlayer.removeAttribute('src');
             watchModalPlayer.load();
-            document.body.classList.remove('overflow-hidden');
+            setBodyScrollLock('watchModal', false);
         }
 
         function playSelectedWatchStream() {

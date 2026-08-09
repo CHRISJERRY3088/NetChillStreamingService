@@ -439,5 +439,85 @@ router.get('/streaming/:type/:id', async (req, res) => {
   }
 });
 
+// Jikan API endpoints
+const normalizeJikanAnime = (anime) => {
+  if (!anime || typeof anime !== 'object') return null;
+  const score = anime.score ?? null;
+  const year = anime.year || (anime.aired?.from ? new Date(anime.aired.from).getFullYear() : null);
+  const synopsis = anime.synopsis || 'A featured anime from Jikan.';
+
+  return {
+    id: anime.mal_id || `jikan-${Math.random().toString(36).slice(2, 10)}`,
+    title: anime.title || anime.title_english || anime.title_japanese || 'Anime',
+    subtitle: anime.type || 'Anime Movie',
+    overview: synopsis,
+    poster_path: anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || anime.images?.webp?.large_image_url || '',
+    poster: anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || anime.images?.webp?.large_image_url || '',
+    image: anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || anime.images?.webp?.large_image_url || '',
+    release_date: anime.aired?.from ? new Date(anime.aired.from).toISOString().split('T')[0] : (year ? `${year}-01-01` : ''),
+    vote_average: score,
+    rating: score,
+    year,
+    type: 'movie',
+  };
+};
+
+router.get('/jikan/top-anime', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 8, 25);
+    const url = `https://api.jikan.moe/v4/top/anime?type=movie&limit=${limit}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Jikan request failed with ${response.status}`);
+    }
+
+    const data = await response.json();
+    const normalized = (Array.isArray(data?.data) ? data.data : [])
+      .map(normalizeJikanAnime)
+      .filter(Boolean);
+
+    return res.json({ results: normalized });
+  } catch (error) {
+    console.error('Jikan top anime fetch failed:', error.message);
+    return res.json({ results: [] });
+  }
+});
+
+router.get('/jikan/search', async (req, res) => {
+  try {
+    const query = req.query.q || '';
+    if (!query || String(query).trim().length === 0) {
+      return res.json({ results: [] });
+    }
+
+    const limit = Math.min(parseInt(req.query.limit, 10) || 10, 25);
+    const url = `https://api.jikan.moe/v4/anime?type=movie&q=${encodeURIComponent(query)}&limit=${limit}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Jikan search failed with ${response.status}`);
+    }
+
+    const data = await response.json();
+    const normalized = (Array.isArray(data?.data) ? data.data : [])
+      .map(normalizeJikanAnime)
+      .filter(Boolean);
+
+    return res.json({ results: normalized });
+  } catch (error) {
+    console.error('Jikan search failed:', error.message);
+    return res.json({ results: [] });
+  }
+});
+
 export { getFallbackMovieResults };
 export default router;

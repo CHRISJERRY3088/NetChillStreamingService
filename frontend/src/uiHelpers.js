@@ -72,6 +72,69 @@
     }).slice(0, 8);
   }
 
+  root.__netchillSearchPreviewMap = root.__netchillSearchPreviewMap || {};
+
+  function getDownloadLinkForPreview(preview) {
+    if (!preview) return '#';
+
+    const slugSource = preview.id || preview.title || preview.name || 'anime-movie';
+    const slug = typeof root.normalizeMovieDownloadId === 'function'
+      ? root.normalizeMovieDownloadId(slugSource)
+      : String(slugSource).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    if (typeof root.buildMovieDownloadUrl === 'function') {
+      return { link: root.buildMovieDownloadUrl(slug, 'movie'), slug };
+    }
+
+    return { link: `./Download.html?id=${encodeURIComponent(slug)}&type=movie`, slug };
+  }
+
+  async function fetchJikanMovieSuggestions(query, limit = 8) {
+    if (!query || !String(query).trim()) return [];
+
+    const url = `/api/movies/jikan/search?q=${encodeURIComponent(query)}&limit=${limit}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Jikan search failed (${response.status})`);
+      }
+      const payload = await response.json();
+      if (!Array.isArray(payload?.results)) return [];
+
+      return payload.results.map((anime) => {
+        const title = anime.title || anime.title_english || anime.title_japanese || 'Anime Movie';
+        const year = anime.year || (anime.aired?.prop?.from?.year ? String(anime.aired.prop.from.year) : 'N/A');
+        const genres = Array.isArray(anime.genres) ? anime.genres.map((genre) => genre.name).slice(0, 2).join(' • ') : 'Animation';
+        const imageUrl = anime.poster || anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || anime.images?.webp?.large_image_url || '';
+        const malId = anime.id || anime.mal_id || '';
+        const preview = {
+          id: malId || title,
+          title,
+          overview: anime.overview || anime.synopsis || genres || 'Anime movie preview',
+          release_date: anime.release_date || (anime.year ? `${anime.year}-01-01` : ''),
+          genre: genres,
+          poster_path: imageUrl,
+          backdrop_path: imageUrl,
+        };
+        const { link, slug } = getDownloadLinkForPreview(preview);
+        root.__netchillSearchPreviewMap[slug] = preview;
+
+        return {
+          title,
+          category: 'Anime Movie',
+          year,
+          link,
+          image: imageUrl,
+          description: genres,
+          previewKey: slug,
+        };
+      }).filter(Boolean);
+    } catch (error) {
+      console.warn('Jikan movie suggestion fetch failed:', error);
+      return [];
+    }
+  }
+
   function setDropdownBackdrop(open) {
     const backdrop = typeof document !== 'undefined' ? document.getElementById('dropdownBlurBackdrop') : null;
     if (!backdrop) return;
@@ -109,29 +172,42 @@
     document.__netchillDropdownBackdropBound = true;
   }
 
-  function showMovieSuggestions(inputEl, dropdownEl, query, catalog = movieCatalog) {
+  async function showMovieSuggestions(inputEl, dropdownEl, query, catalog = movieCatalog) {
     if (!inputEl || !dropdownEl) return null;
 
-    const suggestions = getMovieSuggestions(query, catalog);
-    if (!query || !String(query).trim() || suggestions.length === 0) {
+    const normalizedQuery = normalizeText(query);
+    const localSuggestions = getMovieSuggestions(query, catalog);
+    const jikanSuggestions = normalizedQuery.length >= 2 ? await fetchJikanMovieSuggestions(query) : [];
+
+    const allSuggestions = [...localSuggestions, ...jikanSuggestions]
+      .filter((item, index, array) => item && item.title)
+      .filter((item, index, array) => array.findIndex((other) => normalizeText(other.title) === normalizeText(item.title)) === index)
+      .slice(0, 10);
+
+    if (!query || !String(query).trim() || allSuggestions.length === 0) {
       dropdownEl.innerHTML = '<div class="px-3 py-2 text-sm text-gray-400">No matching movies found.</div>';
       dropdownEl.classList.remove('hidden');
       syncDropdownBackdrop();
-      return suggestions;
+      return allSuggestions;
     }
 
-    dropdownEl.innerHTML = suggestions.map((item) => `
-      <button type="button" class="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-left text-sm text-gray-100 transition hover:bg-blue-500/20" data-title="${item.title}" data-link="${item.link}">
-        <span>
-          <span class="block font-semibold text-white">${item.title}</span>
-          <span class="mt-1 block text-xs text-gray-400">${item.category} • ${item.year}</span>
+    dropdownEl.innerHTML = allSuggestions.map((item) => `
+      <button type="button" class="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-left text-sm text-gray-100 transition hover:bg-blue-500/20" data-title="${item.title}" data-link="${item.link}"${item.previewKey ? ` data-preview-key="${item.previewKey}"` : ''}>
+        <span class="flex items-center gap-3 min-w-0">
+          <span class="flex h-14 w-12 flex-none items-center justify-center overflow-hidden rounded-xl bg-slate-900">
+            ${item.image ? `<img src="${item.image}" alt="${item.title}" class="h-full w-full object-cover" />` : `<span class="text-[10px] text-slate-400">No Img</span>`}
+          </span>
+          <span class="min-w-0">
+            <span class="block truncate font-semibold text-white">${item.title}</span>
+            <span class="mt-1 block truncate text-xs text-gray-400">${item.category} • ${item.year}</span>
+          </span>
         </span>
         <span class="text-xs text-blue-300">Open</span>
       </button>
     `).join('');
     dropdownEl.classList.remove('hidden');
     syncDropdownBackdrop();
-    return suggestions;
+    return allSuggestions;
   }
 
   function attachMovieSearch(inputElOrId, dropdownElOrId, catalog = movieCatalog) {
@@ -216,8 +292,8 @@
       scheduleReposition();
     }
 
-    inputEl.addEventListener('input', (event) => {
-      showAndPosition();
+    inputEl.addEventListener('input', async (event) => {
+      await showAndPosition();
     });
 
     inputEl.addEventListener('focus', () => {
@@ -247,6 +323,13 @@
       inputEl.value = buttonEl.dataset.title || inputEl.value;
       dropdownEl.classList.add('hidden');
       syncDropdownBackdrop();
+
+      const previewKey = buttonEl.dataset.previewKey;
+      const preview = previewKey && root.__netchillSearchPreviewMap ? root.__netchillSearchPreviewMap[previewKey] : null;
+      if (preview && typeof root.storeMoviePreview === 'function') {
+        root.storeMoviePreview(preview, previewKey);
+      }
+
       if (typeof window !== 'undefined' && window.location) {
         window.location.href = buttonEl.dataset.link;
       }

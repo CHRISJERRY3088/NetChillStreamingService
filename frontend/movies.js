@@ -117,9 +117,9 @@ const MOVIES = {
 
   categorySections: [
     { id: 'animationMoviesCarousel', title: 'Animations', query: 'animation', type: 'search', layout: 'carousel' },
-    { id: 'trendingMoviesCarousel', title: 'Trending Movies', query: '', type: 'trending', layout: 'carousel' },
-    { id: 'trendingSeriesCarousel', title: 'Trending Series', query: 'trending series', type: 'search', layout: 'carousel' },
-    { id: 'popularMoviesGrid', title: 'Popular Movies', query: '', type: 'popular', layout: 'grid' },
+    { id: 'trendingMoviesCarousel', title: 'Trending Animation Movie', query: '', type: 'trending', layout: 'carousel' },
+    { id: 'trendingSeriesCarousel', title: 'Trending Animation Section', query: 'trending series', type: 'search', layout: 'carousel' },
+    { id: 'popularMoviesGrid', title: 'Porn Section', query: '', type: 'popular', layout: 'grid' },
   ],
 
   createCategorySection: (containerId, title, layout = 'carousel', type = '') => {
@@ -280,13 +280,25 @@ const MOVIES = {
       await ensureMoviesApiReady();
       const data = await window.moviesAPI.search(query, 1);
       const results = (data?.results || []).slice(0, 50).map((movie) => MOVIES.normalizeMovie(movie));
+      if (results.length > 0) {
+        grid.innerHTML = results.map((m, i) => MOVIES.createMovieCard(m, i)).join('');
+        return;
+      }
+    } catch (error) {
+      console.warn(`Primary sidebar search failed (${sidebarId}), falling back to Jikan:`, error);
+    }
+
+    try {
+      const response = await fetch(`/api/movies/jikan/search?q=${encodeURIComponent(query)}&limit=50`);
+      const payload = await response.json();
+      const results = (Array.isArray(payload?.results) ? payload.results : []).map((anime) => MOVIES.normalizeMovie(anime));
       if (results.length === 0) {
         grid.innerHTML = `<div class="col-span-full text-center text-slate-400">No results found</div>`;
         return;
       }
       grid.innerHTML = results.map((m, i) => MOVIES.createMovieCard(m, i)).join('');
-    } catch (error) {
-      console.error(`Error searching sidebar ${sidebarId}:`, error);
+    } catch (fallbackError) {
+      console.error(`Error searching Jikan sidebar ${sidebarId}:`, fallbackError);
       grid.innerHTML = `<div class="col-span-full text-center text-red-400">Search failed</div>`;
     }
   },
@@ -382,12 +394,23 @@ const MOVIES = {
     try {
       await ensureMoviesApiReady();
       const data = await window.moviesAPI.search(query, 1);
-      if (data.results) {
+      if (data.results && data.results.length) {
         MOVIES.search = data.results.slice(0, 10);
         MOVIES.renderSearchDropdown('movieSearchDropdown', MOVIES.search);
+        return;
       }
     } catch (error) {
-      console.error('Error searching movies:', error);
+      console.warn('Primary search failed, falling back to Jikan:', error);
+    }
+
+    try {
+      const response = await fetch(`/api/movies/jikan/search?q=${encodeURIComponent(query)}&limit=10`);
+      const payload = await response.json();
+      const results = (Array.isArray(payload?.results) ? payload.results : []).map((anime) => MOVIES.normalizeMovie(anime));
+      MOVIES.search = results.slice(0, 10);
+      MOVIES.renderSearchDropdown('movieSearchDropdown', MOVIES.search);
+    } catch (fallbackError) {
+      console.error('Error searching Jikan movies:', fallbackError);
       MOVIES.showErrorMessage('Search failed');
     }
   },
@@ -432,8 +455,9 @@ const MOVIES = {
     container.innerHTML = movies.map(movie => {
       const movieId = JSON.stringify(movie.id);
       const movieTitle = JSON.stringify(movie.title || '');
+      const movieMeta = JSON.stringify(movie).replace(/</g, '\u003c');
       return `
-      <div class="p-2 hover:bg-slate-800/50 rounded-lg cursor-pointer transition flex gap-3" onclick="MOVIES.selectMovie(${movieId}, ${movieTitle})">
+      <div class="p-2 hover:bg-slate-800/50 rounded-lg cursor-pointer transition flex gap-3" onclick="MOVIES.selectMovie(${movieId}, ${movieTitle}, ${movieMeta})">
         <img src="${MOVIES.getPosterUrl(movie.poster_path)}" alt="${movie.title}" class="w-12 h-16 object-cover rounded">
         <div class="flex-1 min-w-0">
           <p class="text-white text-sm font-semibold truncate">${movie.title}</p>
@@ -447,11 +471,12 @@ const MOVIES = {
   },
 
   // Select movie from search
-  selectMovie: (movieId, title) => {
+  selectMovie: (movieId, title, movieMeta = null) => {
     const input = document.getElementById('movieSearchInput');
-    input.value = title;
-    document.getElementById('movieSearchDropdown').classList.add('hidden');
-    MOVIES.goToDownload(movieId, 'movie');
+    if (input) input.value = title;
+    const dropdown = document.getElementById('movieSearchDropdown');
+    if (dropdown) dropdown.classList.add('hidden');
+    MOVIES.goToDownload(movieId, 'movie', movieMeta);
   },
 
   goToDownload: (movieId, type = 'movie', movieMeta = null) => {
